@@ -30,6 +30,7 @@ msgpack
 oauthlib
 packaging
 pillow
+psycopg2-binary
 pyasn1
 pyasn1_modules
 pycparser
