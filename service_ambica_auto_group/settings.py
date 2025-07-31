@@ -185,9 +185,12 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Allow session to persist on close
 
 domain = os.getenv("DOMAIN_NAME")
 if domain:
+    domain = domain.strip()
+    if not domain.startswith("http"):
+        domain = "https://" + domain
     CORS_ALLOWED_ORIGINS = [domain]
 else:
-    CORS_ALLOWED_ORIGINS = []
+    CORS_ALLOW_ALL_ORIGINS = True
 
 
 ##################################################
