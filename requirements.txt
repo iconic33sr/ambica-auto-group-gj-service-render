@@ -15,7 +15,6 @@ constantly
 cryptography
 daphne
 Django
-django-axes
 django-cors-headers
 django-csp
 django-pwa

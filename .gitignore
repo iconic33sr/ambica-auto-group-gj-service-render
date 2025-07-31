@@ -1,5 +1,4 @@
 .env
-migrations
 __pycache__
 db.sqlite3
 staticfiles
@@ -11,10 +10,6 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-
-# Django migrations (optional, if you want to regenerate in other environments)
-*/migrations/*.py
-*/migrations/*.pyc
 
 # Environment variables
 .env

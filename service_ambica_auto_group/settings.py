@@ -26,7 +26,6 @@ DEBUG = os.environ.get("DEBUG")
 # Application definition
 
 INSTALLED_APPS = [
-    'axes',
     'csp',
     'channels',
     'corsheaders',
@@ -57,7 +56,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'axes.middleware.AxesMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.DeviceDetectionMiddleware',   
@@ -232,14 +230,6 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 
-# For not letting the axes to store login logs in database
-AXES_HANDLER = 'axes.handlers.cache.AxesCacheHandler'
-AXES_DISABLE_ACCESS_LOG = True
-AXES_DISABLE_SUCCESS_ACCESS_LOG = True
-AXES_LOG_FAILURES = False
-AXES_COOLOFF_TIME = timedelta(minutes=30)
-AXES_FAILURE_LIMIT = 5
-
 ##################################################
 # For CSP middleware, before this install django-csp and add its middleware
 CSP_HEADER = {
@@ -254,6 +244,5 @@ CSP_HEADER = {
 
 
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesStandaloneBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
