@@ -1,0 +1,380 @@
+{% extends "claim_manager/claim_manager_base.html" %}
+
+{% load static %}
+
+{% block title %}SELECT IMAGES{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "claim_manager/css/select_faulty_images.css" %}>
+{% endblock manualcss %}
+
+{% block report_active_class %}active{% endblock report_active_class %}
+{% block pending_cir_subactive %}subactive{% endblock pending_cir_subactive %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <div class="page_heading_cont">
+                <div class="heading_side">
+                    <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+
+                <h2 class="page_heading">SELECT IMAGES</h2>
+
+            </div>
+
+            <hr>    
+
+            <div class="cir_data_cont">
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="job_no">job no.</label>
+                        <input type="text" class="form-control normal_text uneditable" id="job_no" name="job_no" value="{{job_no}}" form="save_generate_form" readonly>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="vehicle_no">vehicle no.</label>
+                        <input type="text" class="form-control uneditable" id="vehicle_no" name="vehicle_no" value="{{vehicle_no}}" form="save_generate_form" readonly>
+                    </div>
+
+                </div>
+                <hr style="border: 3px solid #a52020; margin-top: 0; margin-bottom: 15px;">
+            </div>
+
+            {% if sar_report.faulty_image_1 or sar_report.faulty_image_2 or sar_report.faulty_image_3 or sar_report.faulty_image_4 or sar_report.faulty_image_5 or sar_report.faulty_image_6 or sar_report.faulty_image_7 or sar_report.faulty_image_8 or sar_report.faulty_image_9 or sar_report.faulty_image_10 or sar_report.faulty_image_11 or sar_report.faulty_image_12 or sar_report.faulty_image_13 or sar_report.faulty_image_14 or sar_report.faulty_image_15 %}
+                <div class="cir_data_cont">
+
+                    <div class="row">
+                        {% if sar_report.faulty_image_1 or sar_report.faulty1_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_1</label>
+                                    {% if sar_report.faulty1_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_1" name="fault_1" form="save_generate_form" readonly>{{sar_report.faulty1_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_1 %}
+                                        <img src="{{sar_report.faulty_image_1.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_1_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_1_checkbox" name="faulty_image_1_checkbox" value="faulty_image_1">
+                                        <label class="form-check-label" for="faulty_image_1_checkbox" id="faulty_image_1_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_2 or sar_report.faulty2_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_2</label>
+                                    {% if sar_report.faulty2_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_2" name="fault_2" form="save_generate_form" readonly>{{sar_report.faulty2_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_2 %}
+                                        <img src="{{sar_report.faulty_image_2.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_2_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_2_checkbox" name="faulty_image_2_checkbox" value="faulty_image_2">
+                                        <label class="form-check-label" for="faulty_image_2_checkbox" id="faulty_image_2_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_3 or sar_report.faulty3_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_3</label>
+                                    {% if sar_report.faulty3_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_3" name="fault_3" form="save_generate_form" readonly>{{sar_report.faulty3_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_3 %}
+                                        <img src="{{sar_report.faulty_image_3.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_3_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_3_checkbox" name="faulty_image_3_checkbox" value="faulty_image_3">
+                                        <label class="form-check-label" for="faulty_image_3_checkbox" id="faulty_image_3_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_4 or sar_report.faulty4_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_4</label>
+                                    {% if sar_report.faulty4_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_4" name="fault_4" form="save_generate_form" readonly>{{sar_report.faulty4_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_4 %}
+                                        <img src="{{sar_report.faulty_image_4.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_4_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_4_checkbox" name="faulty_image_4_checkbox" value="faulty_image_4">
+                                        <label class="form-check-label" for="faulty_image_4_checkbox" id="faulty_image_4_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_5 or sar_report.faulty5_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_5</label>
+                                    {% if sar_report.faulty5_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_5" name="fault_5" form="save_generate_form" readonly>{{sar_report.faulty5_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_5 %}
+                                        <img src="{{sar_report.faulty_image_5.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_5_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_5_checkbox" name="faulty_image_5_checkbox" value="faulty_image_5">
+                                        <label class="form-check-label" for="faulty_image_5_checkbox" id="faulty_image_5_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_6 or sar_report.faulty6_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_6</label>
+                                    {% if sar_report.faulty6_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_6" name="fault_6" form="save_generate_form" readonly>{{sar_report.faulty6_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_6 %}
+                                        <img src="{{sar_report.faulty_image_6.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_6_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_6_checkbox" name="faulty_image_6_checkbox" value="faulty_image_6">
+                                        <label class="form-check-label" for="faulty_image_6_checkbox" id="faulty_image_6_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_7 or sar_report.faulty7_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_7</label>
+                                    {% if sar_report.faulty7_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_7" name="fault_7" form="save_generate_form" readonly>{{sar_report.faulty7_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_7 %}
+                                        <img src="{{sar_report.faulty_image_7.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_7_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_7_checkbox" name="faulty_image_7_checkbox" value="faulty_image_7">
+                                        <label class="form-check-label" for="faulty_image_7_checkbox" id="faulty_image_7_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_8 or sar_report.faulty8_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_8</label>
+                                    {% if sar_report.faulty8_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_8" name="fault_8" form="save_generate_form" readonly>{{sar_report.faulty8_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_8 %}
+                                        <img src="{{sar_report.faulty_image_8.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_8_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_8_checkbox" name="faulty_image_8_checkbox" value="faulty_image_8">
+                                        <label class="form-check-label" for="faulty_image_8_checkbox" id="faulty_image_8_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_9 or sar_report.faulty9_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_9</label>
+                                    {% if sar_report.faulty9_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_9" name="fault_9" form="save_generate_form" readonly>{{sar_report.faulty9_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_9 %}
+                                        <img src="{{sar_report.faulty_image_9.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_9_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_9_checkbox" name="faulty_image_9_checkbox" value="faulty_image_9">
+                                        <label class="form-check-label" for="faulty_image_9_checkbox" id="faulty_image_9_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_10 or sar_report.faulty10_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_10</label>
+                                    {% if sar_report.faulty10_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_10" name="fault_10" form="save_generate_form" readonly>{{sar_report.faulty10_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_10 %}
+                                        <img src="{{sar_report.faulty_image_10.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_10_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_10_checkbox" name="faulty_image_10_checkbox" value="faulty_image_10">
+                                        <label class="form-check-label" for="faulty_image_10_checkbox" id="faulty_image_10_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_11 or sar_report.faulty11_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_11</label>
+                                    {% if sar_report.faulty11_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_11" name="fault_11" form="save_generate_form" readonly>{{sar_report.faulty11_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_11 %}
+                                        <img src="{{sar_report.faulty_image_11.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_11_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_11_checkbox" name="faulty_image_11_checkbox" value="faulty_image_11">
+                                        <label class="form-check-label" for="faulty_image_11_checkbox" id="faulty_image_11_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_12 or sar_report.faulty12_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_12</label>
+                                    {% if sar_report.faulty12_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_12" name="fault_12" form="save_generate_form" readonly>{{sar_report.faulty12_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_12 %}
+                                        <img src="{{sar_report.faulty_image_12.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_12_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_12_checkbox" name="faulty_image_12_checkbox" value="faulty_image_12">
+                                        <label class="form-check-label" for="faulty_image_12_checkbox" id="faulty_image_12_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_13 or sar_report.faulty13_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_13</label>
+                                    {% if sar_report.faulty13_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_13" name="fault_13" form="save_generate_form" readonly>{{sar_report.faulty13_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_13 %}
+                                        <img src="{{sar_report.faulty_image_13.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_13_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_13_checkbox" name="faulty_image_13_checkbox" value="faulty_image_13">
+                                        <label class="form-check-label" for="faulty_image_13_checkbox" id="faulty_image_13_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_14 or sar_report.faulty14_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_14</label>
+                                    {% if sar_report.faulty14_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_14" name="fault_14" form="save_generate_form" readonly>{{sar_report.faulty14_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_14 %}
+                                        <img src="{{sar_report.faulty_image_14.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_14_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_14_checkbox" name="faulty_image_14_checkbox" value="faulty_image_14">
+                                        <label class="form-check-label" for="faulty_image_14_checkbox" id="faulty_image_14_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sar_report.faulty_image_15 or sar_report.faulty15_description %}
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label">FAULT_15</label>
+                                    {% if sar_report.faulty15_description %}
+                                        <textarea class="form-control multi_line_ta" id="fault_15" name="fault_15" form="save_generate_form" readonly>{{sar_report.faulty15_description}}</textarea>
+                                    {% endif %}
+                                    {% if sar_report.faulty_image_15 %}
+                                        <img src="{{sar_report.faulty_image_15.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                    <div class="form-check" id="faulty_image_15_checkbox_cont">
+                                        <input type="checkbox" class="form-check-input" id="faulty_image_15_checkbox" name="faulty_image_15_checkbox" value="faulty_image_15">
+                                        <label class="form-check-label" for="faulty_image_15_checkbox" id="faulty_image_15_checkbox_label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                    
+                </div>
+
+            {% else %}
+                <h2 style="text-align: center; margin-top: 20px;" id="no_images">No Fault Images To Select</h2>
+            {% endif %}
+
+            <div class="cir_data_cont">
+                <div class="btn_cont">
+                    <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+
+                    <form  method="POST" id="generate_ppt_form" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="hidden" name="cir_uid" value="{{cir_uid}}">
+                        <input type="hidden" name="task" id="task">
+                        <input type="submit" class="success_btn" value="GENERATE" id="generate_btn">
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+
+    <script src={% static "claim_manager/js/select_faulty_images.js" %}></script>
+
+{% endblock content %}

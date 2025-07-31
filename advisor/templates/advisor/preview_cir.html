@@ -1,0 +1,203 @@
+{% extends "advisor/advisor_base.html" %}
+
+{% load static %}
+
+{% block title %}PREVIEW CIR{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "advisor/css/preview_cir.css" %}>
+{% endblock manualcss %}
+
+{% block wm_nav_link %}<a href="{% url "wm_returned_report" %}" class="nav_wm_btn" id="nav_wm_btn">WM<span class="notification-dot" id="wm_dot"></span></a>{% endblock wm_nav_link %}
+
+{% block content %}
+<div class="page_data_cont">
+    <h2 class="page_heading" id="sale_order_heading">PREVIEW CIR</h2>
+
+    <div style="padding-top:8px;" class="field_buttons">
+        <a style="text-decoration:none;" href="{% url "advisor_cir_list" %}" class="danger_btn"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="manual_card">
+        <h5 class="sub_heading" id="first_subheading">VEHICLE DETAILS</h5>
+        <div class="mb-3">
+            <label for="job_no" class="form-label">JOB CARD NO.</label>
+            <input type="text" class="form-control normal_text" id="job_no" name="job_no" value="{{cir_report.job_no}}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="vehicle_no" class="form-label">VEHICLE NO.</label>
+            <input type="text" class="form-control" id="vehicle_no" name="vehicle_no" value="{{cir_report.vehicle_no}}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="kilometer" class="form-label">KILOMETER</label>
+            <input type="text" class="form-control" id="kilometer" name="kilometer" value="{{cir_report.kilometer}}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="claim_category" class="form-label">CLAIM CATEGORY</label>
+            <input type="text" class="form-control" id="claim_category" name="claim_category" value="{{ cir_report.claim_category|join:", " }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">DATE</label>
+            <input type="text" class="form-control" id="date" name="date" value="{{cir_report.cir_date|date:"d-m-Y"}}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="time" class="form-label">TIME</label>
+            <input type="text" class="form-control" id="time" name="time" value="{{cir_report.cir_time}}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="supervisor_name" class="form-label">SUPERVISOR NAME</label>
+            <input type="text" class="form-control" id="supervisor_name" name="supervisor_name" value="{{cir_report.supervisor_name}}" readonly>
+        </div>
+
+        <h5 class="sub_heading">VEHICLE IMAGES</h5>
+
+        {% if cir_report.vehicle_front_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">VEHICLE FRONT IMAGE</label>
+            <img src="{{cir_report.vehicle_front_image.url}}" alt="image" height="100%" width="100%">
+        </div>
+        {% endif %}
+
+        {% if cir_report.vehicle_with_number_plate %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">VEHICLE WITH NUMBER PLATE</label>
+            <img src="{{cir_report.vehicle_with_number_plate.url}}" alt="image" height="100%" width="100%">
+        </div>
+        {% endif %}
+
+        {% if cir_report.chasis %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">CHASIS</label>
+            <img src="{{cir_report.chasis.url}}" alt="image" height="100%" width="100%">
+        </div>
+        {% endif %}
+
+        {% if cir_report.odometer %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">ODOMETER</label>
+            <img src="{{cir_report.odometer.url}}" alt="image" height="100%" width="100%">
+        </div>
+        {% endif %}
+
+        <h5 class="sub_heading">CUSTOMER COMPLAINS</h5>
+
+        {% if cir_report.complaint_1 or cir_report.complaint_1_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_1</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_1" name="complaint_1" readonly>{{cir_report.complaint_1}}</textarea>
+            {% if cir_report.complaint_1_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_1_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_2 or cir_report.complaint_2_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_2</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_2" name="complaint_2" readonly>{{cir_report.complaint_2}}</textarea>
+            {% if cir_report.complaint_2_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_2_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_3 or cir_report.complaint_3_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_3</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_3" name="complaint_3" readonly>{{cir_report.complaint_3}}</textarea>
+            {% if cir_report.complaint_3_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_3_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_4 or cir_report.complaint_4_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_4</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_4" name="complaint_4" readonly>{{cir_report.complaint_4}}</textarea>
+            {% if cir_report.complaint_4_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_4_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_5 or cir_report.complaint_5_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_5</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_5" name="complaint_5" readonly>{{cir_report.complaint_5}}</textarea>
+            {% if cir_report.complaint_5_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_5_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_6 or cir_report.complaint_6_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_6</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_6" name="complaint_6" readonly>{{cir_report.complaint_6}}</textarea>
+            {% if cir_report.complaint_6_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_6_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if cir_report.complaint_7 or cir_report.complaint_7_image %}
+        <div class="mb-3 label_img_cont">
+            <label class="form-label">COMPLAIN_7</label>
+            <textarea class="form-control multi_line_ta complaint" id="complaint_7" name="complaint_7" readonly>{{cir_report.complaint_7}}</textarea>
+            {% if cir_report.complaint_7_image %}
+                <img style="margin-top:7px;" src="{{cir_report.complaint_7_image.url}}" alt="image" height="100%" width="100%">
+            {% else %}
+                <h3>NO IMAGE</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if cir_report.service_advisor_report_draft %}
+        {% comment %} Draft doesnot exist {% endcomment %}
+    {% else %}
+        <div style="margin-bottom:25px;" class="field_buttons">
+            <form method="get" action="{% url 'advisor_edit_cir' cir_report.cir_uid %}">
+                <button id="edit_cir_btn" class="primary_btn" style="padding-left:22px; padding-right:22px;">EDIT</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div id="end_btn" class="field_buttons">
+        <a style="text-decoration:none;" href="{% url "advisor_cir_list" %}" class="danger_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+        <form method="get" action="{% url 'advisor_service_report' cir_report.cir_uid %}">
+            {% if cir_report.sar_status == "drafted" %}
+                <button id="service_report_btn" class="yellow_btn">SERVICE REPORT (DRAFTED)</button>
+            {% else %}
+                <button id="service_report_btn" class="yellow_btn">SERVICE REPORT</button>
+            {% endif %}
+        </form>
+    </div>
+
+</div>
+
+{{ no_of_revision_report|json_script:"no_of_revision_reportJSON" }}
+
+<script src={% static "advisor/js/preview_cir.js" %}></script>
+
+{% endblock content %}

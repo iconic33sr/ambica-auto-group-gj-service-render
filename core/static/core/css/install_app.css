@@ -1,0 +1,66 @@
+body{
+    background-color: lightskyblue;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#install_app_cont{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#icon{
+    width:96px;
+    height:96px;
+    border-radius:20px;
+    margin-bottom:24px;
+}
+
+#icon_heading{
+    color:white;
+    margin-bottom:12px;
+}
+
+#pwaInstallButton{
+    padding:16px 32px; 
+    font-size:22px; 
+    background:#005bea; 
+    color:white; 
+    border:none; 
+    border-radius:10px; 
+    box-shadow:0 4px 16px rgba(0,0,0,0.25); 
+    cursor:pointer;
+}
+
+#appInstalledMsg{
+    display:none; 
+    color:green; 
+    font-size:22px; 
+    margin-top:16px; 
+    font-weight:bold;
+}
+
+#app_installed{
+    font-size:28px;
+}
+
+#safariInstallGuide {
+    display: none;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: #333;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#safariInstallGuide ul {
+    padding-left: 20px;
+    margin-top: 6px;
+}

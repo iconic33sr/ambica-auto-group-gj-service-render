@@ -1,0 +1,226 @@
+{% extends "supervisor/supervisor_base.html" %}
+
+{% load static %}
+
+{% block title %}COMPLAIN INFORMATION REPORT{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "supervisor/css/supervisor_cir_form.css" %}>
+{% endblock manualcss %}
+
+{% block content %}
+<div class="page_data_cont">
+        <h2 class="page_heading" id="sale_order_heading">COMPLAIN INFORMATION REPORT (CIR)</h2>
+
+        <div class="user_details_cont">
+            <div class="user_details">{{request.user.first_name}} {{request.user.last_name}}</div>
+            <div class="user_details">{{request.user.user_profile.user_designation.designation}}</div>
+        </div>
+
+        <form method="POST" autocomplete="off" enctype="multipart/form-data" id="supervisor_cir_form">
+            {% csrf_token %}
+
+            <h5 class="sub_heading" id="first_subheading">VEHICLE DETAILS</h5>
+
+            <div class="mb-3">
+                <label for="job_no" class="form-label"><span class="red_star">*</span>JOB CARD NO.</label>
+                {{cform.job_no}} <span class="required_msg">{{cform.job_no.errors | striptags}}</span>
+            </div> 
+            
+            <div class="mb-3">
+                <label for="vehicle_no" class="form-label"><span class="red_star">*</span>VEHICLE NO.</label>
+                {{cform.vehicle_no}} <span class="required_msg">{{cform.vehicle_no.errors | striptags}}</span>
+            </div> 
+
+            <div class="mb-3">
+                <label for="kilometer" class="form-label"><span class="red_star">*</span>KILOMETER</label>
+                {{cform.kilometer}} <span class="required_msg">{{cform.kilometer.errors | striptags}}</span>
+
+            </div> 
+
+            <div class="mb-3">
+                <label for="claim_category" class="form-label"><span class="red_star">*</span>CLAIM CATEGORY</label>
+                {{cform.claim_category}} <span class="required_msg">{{cform.claim_category.errors | striptags}}</span>
+            </div> 
+            
+            <h5 class="sub_heading">VEHICLE IMAGES</h5>
+
+            <div class="field mb-3" id="field-0">
+                <label class="form-label"><span class="red_star">*</span>VEHICLE FRONT IMAGE</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(0)" id="vehicle_front_img_click_btn">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(0)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(0)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_0" id="photoInput-0" />
+            </div>
+
+            <div class="field mb-3" id="field-1">
+                <label class="form-label"><span class="red_star">*</span>VEHICLE WITH NUMBER PLATE</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(1)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(1)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(1)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_1" id="photoInput-1" />
+            </div>
+
+            <div class="field mb-3" id="field-2">
+                <label class="form-label"><span class="red_star">*</span>CHASIS</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(2)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(2)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(2)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_2" id="photoInput-2" />
+            </div>
+
+            <div class="field mb-3" id="field-3">
+                <label class="form-label"><span class="red_star">*</span>ODOMETER</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(3)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(3)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(3)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_3" id="photoInput-3" />
+            </div>
+
+            <h5 class="sub_heading">CUSTOMER COMPLAINTS</h5>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-4">
+                    <label for="complaint_1" class="form-label"><span class="red_star">*</span>COMPLAIN 1</label>
+                    {{cform.complaint_1}} <span class="required_msg">{{cform.complaint_1.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(4)" id="complaint_1_img_click_btn">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(4)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(4)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_4" id="photoInput-4"/>
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-5">
+                    <label for="complaint_2" class="form-label">COMPLAIN 2</label>
+                    {{cform.complaint_2}} <span class="required_msg">{{cform.complaint_2.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(5)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(5)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(5)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_5" id="photoInput-5" />
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-6">
+                    <label for="complaint_3" class="form-label">COMPLAIN 3</label>
+                    {{cform.complaint_3}} <span class="required_msg">{{cform.complaint_3.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(6)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(6)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(6)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_6" id="photoInput-6" />
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-7">
+                    <label for="complaint_4" class="form-label">COMPLAIN 4</label>
+                    {{cform.complaint_4}} <span class="required_msg">{{cform.complaint_4.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(7)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(7)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(7)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_7" id="photoInput-7" />
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-8">
+                    <label for="complaint_5" class="form-label">COMPLAIN 5</label>
+                    {{cform.complaint_5}} <span class="required_msg">{{cform.complaint_5.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(8)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(8)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(8)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_8" id="photoInput-8" />
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-9">
+                    <label for="complaint_6" class="form-label">COMPLAIN 6</label>
+                    {{cform.complaint_6}} <span class="required_msg">{{cform.complaint_6.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(9)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(9)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(9)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_9" id="photoInput-9" />
+                </div>
+            </div>
+
+            <div class="complaint_cont">
+                <div class="field mb-3" id="field-10">
+                    <label for="complaint_7" class="form-label">COMPLAIN 7</label>
+                    {{cform.complaint_7}} <span class="required_msg">{{cform.complaint_7.errors | striptags}}</span>
+                    <div class="field-buttons">
+                        <button type="button" class="primary_btn" onclick="openCamera(10)">Click Photo</button>
+                        <button type="button" class="view_btn" onclick="viewPhoto(10)" style="display:none">View Photo</button>
+                        <button type="button" class="danger_btn" onclick="removePhoto(10)" style="display:none">Remove</button>
+                    </div>
+                    <input type="hidden" name="photo_10" id="photoInput-10" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="selected_advisor" class="form-label"><span class="red_star">*</span>FORWARD TO ADVISOR</label>
+                <select name="selected_advisor" id="selected_advisor"class="form-select uneditable" required>
+                    {% for advisor in advisor_list %}
+                        <option value="{{advisor.user__username}}" {% if advisor.user__username == alloted_advisor %}selected{% endif %}>{{advisor.user__first_name|upper}} {{advisor.user__last_name|upper}} ({{advisor.user__username}})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="btn_cont">
+                <input type="submit" class="btn btn-success" value="SUBMIT" id="submit_btn">
+            </div>
+        </form>
+
+    <div id="cameraModal">
+        <div id="cameraTopControls">
+            <button id="flashlightBtn" type="button" title="Toggle Flashlight"><span id="flashlightIcon">🔦</span></button>
+            
+            <button id="switchCameraBtn" onclick="switchCamera()">🔄</button>
+
+        </div>
+
+        <div id="cameraPreviewContainer">
+            <video id="video" autoplay fullscreen playsinline></video>
+            <div id="geoOverlay"></div>
+        </div>
+
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+        <div id="cameraControls">
+            <button id="confirmPhoto" class="primary_btn">Take Photo</button>
+            <button id="discardPhoto" class="danger_btn">Cancel</button>
+        </div>
+    </div>
+
+    <div id="photoPopup">
+        <span id="closePopup">&times;</span>
+        <img id="popupImg" src="" />
+    </div>
+
+</div>
+
+<script defer src={% static "core/js/geotag_img.js" %}></script>
+<script src={% static "supervisor/js/supervisor_cir_form.js" %}></script>
+
+{% endblock content %}

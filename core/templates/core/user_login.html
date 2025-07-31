@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AMBICA AUTO GROUP</title>
+  <link rel="stylesheet" href="{% static 'core/css/user_login.css' %}">
+  <link rel="stylesheet" href="{% static "core/css/messages.css" %}">
+  <link rel="icon" type="image/png" href="{% static 'core/images/ambica_motors_transparent_logo.png' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body{  
+      background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("{% static "core/images/tata_commercial_2.jpg" %}") no-repeat center fixed;
+      background-size: cover;
+    }
+  </style>
+
+</head>
+<body>
+
+  {% if login_form.non_field_errors %}
+        {% for er in login_form.non_field_errors %} 
+            <div class="nfrmsg">{{er}}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</div>
+        {% endfor %}
+    {% endif %}
+
+  <div class="tata_motor_branding">
+    <img id="tata_motors_logo"src="{% static 'core/images/tata_branding.png' %}" alt="Tata Motors Logo">
+  </div>
+
+  <div class="container">
+    <div class="login-card">
+      <div class="logo">
+        <img id="ambica_motors_logo" src="{% static 'core/images/ambica_motors_transparent_logo.png' %}" alt="Ambica Motors Group Logo">
+        <h1 class="ambica_logo_text">AMBICA AUTO GROUP</h1>
+
+      </div>
+
+      <h2 class="title">SERVICE PORTAL</h2>
+      <p class="subtitle">LOGIN</p>
+
+      <form action="#" method="post" id="login_form" autocomplete="off">
+        {% csrf_token %}
+
+        <div class="input-group">
+          {{login_form.username.label_tag}}
+          {{login_form.username}} <span class="required_msg">{{login_form.username.errors | striptags}}</span>
+        </div>
+
+        <div class="input-group">
+          {{login_form.password.label_tag}}
+          {{login_form.password}} <span class="required_msg">{{login_form.password.errors | striptags}}</span>
+        </div>
+
+        <input type="submit" class="btn" id="login_btn" value="Sign In">
+      </form>
+
+      <p class="footer">By iConic</p>
+    </div>
+  </div>
+
+  <!-- Submission overlay -->
+  <div id="formSubmittingOverlay" style="display:none;">
+  <div class="form-submitting-modal">
+      <div class="spinner"></div>
+      <div class="submitting-text" id="submitting-text">Submitting...</div>
+  </div>
+  </div>
+
+  <!-- Manual Alert Modal -->
+  <div id="manualAlertOverlay" style="display:none;">
+    <div id="manualAlertModal">
+      <div id="manualAlertMsg"></div>
+      <button id="manualAlertOkBtn" type="button">OK</button>
+    </div>
+  </div>
+
+  <script src={% static "core/js/login.js" %}></script>
+  <script src={% static "core/js/base.js" %}></script>
+
+</body>
+</html>

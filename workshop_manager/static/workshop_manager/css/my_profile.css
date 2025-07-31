@@ -1,0 +1,62 @@
+.page_data_cont{
+    display: block;
+    width: 1200px;
+    padding: 20px 15px;
+    margin: auto;
+}
+
+.page_heading_cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page_heading{
+    margin-bottom: 0;
+    padding: 1px 50px 2px 50px;
+}
+
+hr{
+    margin: 10px 0;
+    opacity: 1;
+    color: gray;
+    border: 1px solid gray;
+}
+
+.manual_card{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 12px;
+    background-color: rgb(252, 252, 252);
+    padding: 25px 20px;
+}
+
+.cir_data_cont{
+    margin: auto;
+    width:820px;
+}
+
+.form-group{
+    margin-bottom: 13px!important;
+}
+
+.form-control {
+    color:#ffffff;
+    background-color: black;
+    border: 1px solid aqua;
+}
+
+.form-control:focus {
+    border: 1px solid aqua;
+}
+
+.uneditable, .uneditable:focus{
+    background-color: purple;
+    color: #ffffff;
+    border: 1px solid aqua;
+    cursor: not-allowed;
+}
+
+.btn_cont{
+    justify-content: space-between;
+}

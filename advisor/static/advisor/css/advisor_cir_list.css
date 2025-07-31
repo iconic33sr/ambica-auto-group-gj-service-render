@@ -1,0 +1,31 @@
+.manual_card{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 12px;
+    background-color: rgb(252, 252, 252);
+    padding: 7px;
+    margin: 20px 0;
+}
+
+.report_heading_cont{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.report_sub_heading_cont{
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+}
+
+.report_heading{
+    font-weight: bold;
+}
+
+
+@media only screen and (max-width: 390px){
+    .report_heading_cont{
+        flex-direction:column;
+        gap:0px;
+    }
+}

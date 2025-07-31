@@ -1,0 +1,43 @@
+{% load static %}
+{% load pwa %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICONIC</title>
+
+    <link rel="icon" type="image/png" href="{% static 'core/icons/iconic_logo_192.png' %}">
+
+    <link rel="stylesheet" href={% static "core/css/install_app.css" %}>
+
+    <link rel="manifest" crossorigin="use-credentials" href="/manifest.json"/>
+
+</head>
+<body>
+    <div id="install_app_cont">
+        <img id="icon" src="/static/core/icons/iconic_logo_192.png" alt="App Icon">
+        <h2 id="icon_heading">CV-Service</h2>
+
+        <button id="pwaInstallButton">Install App</button>
+
+        <div id="appInstalledMsg">
+            <span id="app_installed">&#10003;</span> App installed
+        </div>
+
+        <div id="safariInstallGuide" style="display: none;">
+            <p style="margin-top: 10px;">To install this app:</p>
+            <ul>
+                <li>Tap the <strong>Share</strong> button <span style="font-size: 18px;">&#x1F5D2;</span> in Safari</li>
+                <li>Select <strong>"Add to Home Screen"</strong></li>
+                <li>Then tap <strong>Add</strong></li>
+            </ul>
+        </div>
+
+        <br>
+    </div>
+
+    <script src={% static "core/js/install_app.js" %}></script>
+
+</body>
+</html>

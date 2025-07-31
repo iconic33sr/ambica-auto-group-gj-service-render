@@ -1,0 +1,159 @@
+{% extends "workshop_manager/workshop_manager_base.html" %}
+
+{% load static %}
+
+{% block title %}COMPLAIN INFORMATION REPORT{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "workshop_manager/css/cir_list.css" %}>   
+{% if cir_report.workshop_manager_preview == "pending" %}
+<style>
+    .manual_card{
+        background-color: rgb(255, 150, 150);
+    }
+</style>
+{% endif %}
+{% endblock manualcss %}
+
+{% block pending_cir_active_class %}active{% endblock pending_cir_active_class %}
+
+{% block content %}
+<div class="page_data_cont">
+    <div class="page_heading_cont">
+        <h2 class="page_heading">COMPLAIN INFORMATION REPORT SUMMARY</h2>
+        <div class="user_details_cont">
+            <div class="user_details">{{request.user.first_name}} {{request.user.last_name}}</div>
+            <div class="user_details">{{request.user.user_profile.user_designation.designation}}</div>
+        </div>
+    </div>
+
+    {% if cir_reports.paginator.num_pages > 1 %}
+    <div class="main_pagination" style="margin-top:15px;">
+
+        <div class="pagination" >
+            <span>
+                {% if cir_reports.has_previous %}
+                    <a class = "nav_links" href="?page={{cir_reports.previous_page_number}}">Previous - </a>
+                {% endif %}
+            </span>
+            <span class="sr_no">{{cir_reports.number}}</span><span class = "of">of</span><span class="sr_no">{{cir_reports.paginator.num_pages}}</span>
+            <span>
+                {% if cir_reports.has_next %}
+                    <a class = "nav_links" href="?page={{cir_reports.next_page_number}}"> - Next</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+    {% endif %}
+
+    <div class="search_bar_cont">
+        <div class="search_bar_wrapper">
+            <input id="cir_search_input" class="form-control" type="text" placeholder="Search by Job Card No or Vehicle No..." >
+            <button id="cir_search_clear" type="button" class="danger_btn">CLEAR</button>
+        </div>
+    </div>
+
+    <div class="cards_cont">
+        {% if cir_reports %}
+
+            {% for cir_report in cir_reports %}
+                {% if cir_report.workshop_manager_preview == "pending" %}
+                <div class="manual_card" style="background-color: rgb(255, 150, 150);" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
+                {% else %}
+                <div class="manual_card" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
+                {% endif %}
+                    <div class="report_heading_cont">
+                        <div class="report_heading" id="job_no_cont">
+                            <span class="normal_text">{{cir_report.job_no}}</span>
+                        </div>
+                        <div class="report_heading" id="vehicle_no_cont">
+                            {{cir_report.vehicle_no}}
+                        </div>
+                    </div>
+
+                    <div class="report_heading_cont">
+                        <div class="report_sub_heading">
+                            {{cir_report.supervisor_name}}<span class="name_label"> (Supervisor) </span>
+                        </div>
+                        <div class="report_sub_heading">
+                            {{cir_report.cir_date_time|date:"d-m-Y g:i A"}}
+                        </div>
+                    </div>
+
+                    <div class="report_heading_cont">
+                        <div class="report_sub_heading">
+                            {{cir_report.service_advisor_report__advisor_name}}<span class="name_label"> (Advisor) </span>
+                        </div>
+                        <div class="report_sub_heading">
+                            {{cir_report.service_advisor_report__sar_date_time|date:"d-m-Y g:i A"}}
+                        </div>
+                    </div>
+
+                    <div class="field_buttons">
+                        {% if cir_report.workshop_manager_preview == "pending" %}
+                            {% comment %} Preview pending {% endcomment %}
+                        {% else %}
+                            {% if cir_report.workshop_manager_verification == "pending" %}
+                                <div class="wm_verification" style="color: #ff9900; border: 1px solid #ff9900;">Verification Pending</div>
+                            {% else %}
+                                <div class="wm_verification" style="color:darkgreen; border: 1px solid darkgreen;">Verified &#10004;</div>
+                            {% endif %}
+                        {% endif %}
+                        <form method="get" class="preview_cir_btn" action="{% url 'workshop_manager_preview_cir' cir_report.cir_uid %}">
+                            <button class="primary_btn" style="margin:auto;">Preview CIR</button>
+                        </form>
+
+                        {% if cir_report.report_type == "revision" %}
+                            <div class="revised_report" style="color:rgb(132, 0, 255); border: 1px solid rgb(132, 0, 255)">Revised Report</div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        
+        {% else %}
+            <h2 style="text-align: center; margin-top: 20px;" id="no_pending_cir_heading">No Pending CIR</h2>
+        {% endif %}
+    </div>
+
+    {% if cir_reports.paginator.num_pages > 1 %}
+    <div class="main_pagination">
+
+        <div class="pagination" >
+            <span>
+                {% if cir_reports.has_previous %}
+                    <a class = "nav_links" href="?page={{cir_reports.previous_page_number}}">Previous - </a>
+                {% endif %}
+            </span>
+            <span class="sr_no">{{cir_reports.number}}</span><span class = "of">of</span><span class="sr_no">{{cir_reports.paginator.num_pages}}</span>
+            <span>
+                {% if cir_reports.has_next %}
+                    <a class = "nav_links" href="?page={{cir_reports.next_page_number}}"> - Next</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+    {% endif %}
+    
+</div>
+
+<script>
+    let socket = null;
+    const workshopmanagerUsername = "{{ request.user.username }}";
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsUrl = `${wsScheme}://${window.location.host}/ws/workshopmanager_cir/${workshopmanagerUsername}/`;
+
+    if (navigator.onLine || (socket && (socket.readyState !== WebSocket.OPEN || socket.readyState !== WebSocket.CONNECTING))) {
+        socket = new WebSocket(wsUrl);
+    }
+
+    {% comment %} Connection is here only because in cir_list.js we just have to reload the page and there is no socket message listener in wm_base.js page also {% endcomment %}
+
+    
+</script>
+
+<script src={% static "workshop_manager/js/cir_list.js" %}></script>
+
+{% endblock content %}

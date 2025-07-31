@@ -1,0 +1,50 @@
+.btn_cont{
+    justify-content: space-between;
+}
+
+#vehicle_gate_entry_form{
+    margin-top: 15px;
+}
+
+#job_no.uneditable{
+    border: 1px solid #0066ff;
+}
+
+#job_no:focus{
+    border: 1px solid #0066ff;
+}
+
+#job_no::placeholder {
+  color: lightgray;
+  opacity: 0.8;
+}
+
+#checkBtn{
+    position: absolute; 
+    right: 0; 
+    top: 0; 
+    height: 100%; 
+    border: none; 
+    background: #007bff; 
+    color: white; 
+    padding: 0 13px; 
+    border-radius: 0 4px 4px 0; 
+    cursor: pointer; 
+    font-size:16px;
+}
+
+.field-buttons {
+    margin-top: 1px;
+}
+
+#entry_already_submitted{
+    display: none;
+    text-align: center;
+}
+
+hr{
+    margin: 10px 0;
+    opacity: 1;
+    color: gray;
+    border: 1px solid gray;
+}

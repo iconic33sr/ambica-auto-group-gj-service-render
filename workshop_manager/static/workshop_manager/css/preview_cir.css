@@ -1,0 +1,176 @@
+.page_data_cont{
+    display: block;
+    width: 1200px;
+    padding: 20px 15px;
+    margin: auto;
+}
+
+.page_heading_cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page_heading {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0; /* Remove default margins */
+    white-space: nowrap;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.heading_side {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.heading_side:last-child {
+    justify-content: flex-end;
+}
+
+h4{
+    text-align: center;
+    text-decoration: underline;
+    color: black;
+    text-decoration-thickness: 2px; 
+    text-underline-offset: 3px; 
+    text-decoration-color: black;
+    margin-top: 20px;
+}
+
+hr{
+    margin: 10px 0;
+    opacity: 1;
+    color: gray;
+    border: 1px solid gray;
+}
+
+.manual_card{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 12px;
+    background-color: rgb(252, 252, 252);
+    padding: 25px 20px;
+}
+
+.cir_data_cont{
+    margin: auto;
+    width:820px;
+}
+
+.form-group{
+    margin-bottom: 13px!important;
+}
+
+.form-control {
+    color:#ffffff;
+    background-color: black;
+    border: 1px solid aqua;
+}
+
+.form-control:focus {
+    border: 1px solid aqua;
+}
+
+.label_img_cont{
+    border: 2px solid #000000;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+img{
+    margin-top:7px;
+}
+
+.service_symbol{
+    margin-left: 5px;
+}
+
+.wm_verification{
+    text-transform: capitalize;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0 5px;
+}
+
+/* For checkbox */
+
+#wm_verify_cont{
+    margin-top: 20px;
+}
+
+#wm_verify_label{
+    color: green;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.form-check-input{
+    width: 1.3em;
+    height: 1.3em;
+    margin-right: 5px;
+}
+
+.form-check-input[type=checkbox] {
+    border: 1px solid darkgreen;
+}
+
+#workshop_manager_remark{
+    color: black;
+    border: 1px solid aqua;
+    background-color: lightgrey;
+}
+
+#workshop_manager_remark:focus{
+    color: #ffffff;
+    background-color: black;
+    border: 1px solid aqua;
+}
+
+/* ------------ */
+
+#selected_cm, #selected_cm option{
+  text-transform: none!important;
+  
+}
+
+/* ------------ */
+/* For popup form */
+.popup {
+    width: 500px;
+}
+
+.popup input {
+    padding: 3px 6px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#reason_label{
+    font-size: 20px;
+}
+
+#popupOverlay h2{
+    margin-top: 20px;
+}
+
+#popupOverlay .btn_cont{
+    justify-content: space-around;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#popupOverlay .btn_cont button{
+    flex: 0;
+}
+
+/* ---------------- */
+
+.btn_cont{
+    justify-content: space-between;
+}

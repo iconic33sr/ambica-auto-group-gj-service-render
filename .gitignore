@@ -1,0 +1,53 @@
+.env
+migrations
+__pycache__
+db.sqlite3
+staticfiles
+media
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Django migrations (optional, if you want to regenerate in other environments)
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Environment variables
+.env
+*.env
+
+# SQLite DB (if you ever use it locally)
+*.sqlite3
+
+# Django static and media files (if built locally)
+staticfiles/
+media/
+*.log
+
+# VSCode, PyCharm & IDE configs
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# PWA/Builds
+build/
+dist/
+node_modules/
+
+# Capacitor/Android/iOS (if used)
+android/
+ios/
+
+# Others
+*.bak
+*.swp
+
+# Ignore compiled translation files
+*.mo

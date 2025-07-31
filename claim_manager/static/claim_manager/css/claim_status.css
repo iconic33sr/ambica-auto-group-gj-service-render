@@ -1,0 +1,165 @@
+.page_data_cont{
+    display: block;
+    width: 1000px;
+    padding: 20px 15px;
+    margin: auto;
+}
+
+.page_heading_cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page_heading{
+    margin-bottom: 0;
+    padding: 1px 50px 2px 50px;
+}
+
+hr{
+    margin: 10px 0;
+    opacity: 1;
+    color: gray;
+    border: 1px solid gray;
+}
+
+.manual_card{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 12px;
+    background-color: rgb(252, 252, 252);
+    padding: 25px 20px;
+}
+
+.cir_data_cont{
+    margin: auto;
+    width:650px;
+}
+
+.form-group{
+    margin-bottom: 13px!important;
+}
+
+.form-control{
+    color:#ffffff;
+    background-color: black;
+    border: 1px solid aqua;
+}
+
+.form-control:focus {
+    border: 1px solid aqua;
+}
+
+/* Controls the dropdown’s max height and enables scrolling */
+.select2-container--default .select2-selection--single {
+    border: 1px solid aqua !important; 
+    border-radius: 5px !important;
+    outline: none !important;     
+    box-shadow: none !important;  
+    background-color: #000 !important; 
+    color: #fff !important;            
+}
+
+.select2-selection__rendered{
+    color:#ffffff!important;
+    line-height: 25px !important;
+}
+
+.custom-select-dropdown .select2-results__options {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+.select2-selection__arrow b {
+    border-color: #fff transparent transparent transparent !important;
+}
+
+.select2.uneditable .select2-selection--single {
+  background: purple !important;
+  color: #ffffff !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  border: 1px solid aqua !important;
+}
+
+.select2.uneditable .select2-selection__rendered {
+  color: #ffffff !important;
+  border: none;
+}
+
+.select2.uneditable{
+    border: none!important;
+    background: #ffffff !important;
+}
+
+/* -------------------------------------------------------------- */
+
+h4{
+    text-align: center;
+    text-decoration: underline;
+    color: black;
+    text-decoration-thickness: 2px; 
+    text-underline-offset: 3px; 
+    text-decoration-color: black;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+#dispatch_detail_heading{
+    margin-top: 15px;
+    margin-bottom: 18px;
+}
+
+.display_data_cont{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+#vehicle_no, #job_card_no{
+    background-color:purple!important; 
+    text-align:center; 
+    width:150px;
+    font-size: 17px;
+}
+
+#job_card_no{
+    width:350px;
+}
+
+#vehicle_no::placeholder, #job_card_no::placeholder {
+  color: lightgray;
+  opacity: 0.9;
+}
+
+#job_no::placeholder {
+  color: lightgray;
+  opacity: 0.8;
+}
+
+.comma_format{
+    font-size: 18px;
+    padding: 1px 6px;
+}
+
+/* For date icon */
+input[type="date"].custom-date::-webkit-calendar-picker-indicator {
+    background-color: #fff;
+    border-radius: 3px;
+}
+/* -------------------- */
+
+.view_img_btn_cont{
+    display: none; 
+}
+
+.view_img_btn{
+    padding: 1px 30px 1px 30px; 
+}
+
+.btn_cont {
+    margin-top: 10px;
+    margin-bottom: 0;
+    justify-content: space-between;
+}

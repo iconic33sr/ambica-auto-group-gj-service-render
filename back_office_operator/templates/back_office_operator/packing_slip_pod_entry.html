@@ -1,0 +1,79 @@
+{% extends "back_office_operator/backo_base.html" %}
+
+{% load static %}
+
+{% block title %}PACKING SLIP POD ENTRY{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "back_office_operator/css/packing_slip_pod_entry.css" %}>
+{% endblock manualcss %}
+
+{% block entry_active_class %}active{% endblock entry_active_class %}
+{% block packing_slip_pod_entry_subactive %}subactive{% endblock packing_slip_pod_entry_subactive %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <div class="page_heading_cont">
+
+                <h2 class="page_heading">PACKING SLIP POD ENTRY</h2>
+                <div class="user_details_cont">
+                    <div class="user_details">{{request.user.first_name}} {{request.user.last_name}}</div>
+                    <div class="user_details">{{request.user.user_profile.user_designation.designation}}</div>
+                </div>
+
+            </div>
+
+            <hr>    
+
+            <form  method="POST" enctype="multipart/form-data" autocomplete="off" id="packing_slip_pod_form" >
+                {% csrf_token %}
+
+                <div class="cir_data_cont">
+
+                    <div class="packing_slip_cont">
+                        <input type="text" id="packing_slip_no" class="form-control uneditable" placeholder="Packing Slip No." disabled>
+                    </div>
+
+                    <div class="docket_no_cont">
+                        <label for="docket_no" class="form-label"><span class="red_star">*</span>DOCKET NO.</label>
+                        <input type="text" name="docket_no" id="docket_no" class="form-control" placeholder="0000000000 - Press Enter" autofocus>
+                    </div>
+
+                </div>
+
+
+                <div class="cir_data_cont" id="pod_details_cont" style="display:none;">
+
+                    <h4>POD DETAILS</h4>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="received_date" class="form-label"><span class="red_star">*</span>RECEIVED DATE</label>
+                            {{pform.received_date}} <span class="required_msg">{{pform.received_date.errors | striptags}}</span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="pod_pdf" class="form-label"><span class="red_star">*</span>ATTACH POD PDF FILE </label>
+                            {{pform.pod_pdf}} <span class="required_msg">{{pform.pod_pdf.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="btn_cont">
+                        <button type="button" class="danger_btn" id="reset_btn">RESET</button>
+                        <input type="submit" class="success_btn" value="SUBMIT" id="submit_btn">
+                    </div>
+                </div>
+
+            </form>
+                
+        </div>
+
+    </div>
+
+    <script src={% static "back_office_operator/js/packing_slip_pod_entry.js" %}></script>
+
+{% endblock content %}

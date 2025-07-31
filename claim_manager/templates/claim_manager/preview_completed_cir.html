@@ -1,0 +1,774 @@
+{% extends "claim_manager/claim_manager_base.html" %}
+
+{% load static %}
+
+{% block title %}PREVIEW COMPLETED CIR{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "claim_manager/css/preview_completed_cir.css" %}>
+{% endblock manualcss %}
+
+{% block report_active_class %}active{% endblock report_active_class %}
+{% block completed_cir_subactive %}subactive{% endblock completed_cir_subactive %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <div class="page_heading_cont">
+                <div class="heading_side">
+                    <a style="text-decoration:none;" href="{% url "claim_manager_completed_cir_list" %}" class="danger_btn back_btn" id="back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+
+                <h2 class="page_heading">COMPLETED CIR & SAR REPORT</h2>
+
+            </div>
+
+            <hr>    
+
+            {% if cir_report %}
+
+                <h4>COMPLAINT INFORMATION REPORT</h4>
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading" id="first_subheading">SUPERVISOR DETAILS</h5>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="supervisor_name">name</label>
+                            <input type="text" class="form-control" id="supervisor_name" value="{{cir_report.supervisor_name}}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="supervisor_id">user_id</label>
+                            <input type="text" class="form-control normal_text" id="supervisor_id" value="{{cir_report.supervisor_id}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="supervisor_date">report submission date</label>
+                            <input type="text" class="form-control" id="supervisor_date" value="{{cir_report.cir_date|date:"d-m-Y" }}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="supervisor_time">report submission time</label>
+                            <input type="text" class="form-control" id="supervisor_time" value="{{cir_report.cir_time }}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading">VEHICLE DETAILS</h5>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="job_no">job no.</label>
+                            <input type="text" class="form-control normal_text" id="job_no" name="job_no" value="{{cir_report.job_no}}" required readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="vehicle_no">vehicle no.</label>
+                            <input type="text" class="form-control" id="vehicle_no" name="vehicle_no" value="{{cir_report.vehicle_no}}" required readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="chassis_no">chassis no.</label>
+                            <input type="text" class="form-control" id="chassis_no" name="chassis_no" value="{{cir_report.chassis_no}}" readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="model">model</label>
+                            <input type="text" class="form-control" id="model" name="model" value="{{cir_report.model}}" readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="kilometer">kilometer</label>
+                            <input type="number" class="form-control" id="kilometer" name="kilometer" value="{{cir_report.kilometer|default_if_none:""}}" required readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="hours">hours</label>
+                            <input type="number" class="form-control" id="hours" name="hours" value="{{cir_report.hours|default_if_none:""}}" readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="sale_date">sale date</label>
+                            <input type="date" class="form-control custom-date" id="sale_date" name="sale_date" value="{% if cir_report.sale_date %}{{cir_report.sale_date|date:'Y-m-d'}}{% endif %}" readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="claim_category">claim category</label>
+                            <input type="text" class="form-control" id="claim_category" name="claim_category" value="{{cir_report.claim_category|join:", "}}" readonly required>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading" style="margin-bottom: 20px;">VEHICLE IMAGES</h5>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="label_img_cont">
+                                <label>vehicle front image</label>
+                                <img src="{{cir_report.vehicle_front_image.url}}" alt="image" height="100%" width="100%">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="label_img_cont">
+                                <label>VEHICLE WITH NUMBER PLATE</label>
+                                <img src="{{cir_report.vehicle_with_number_plate.url}}" alt="image" height="100%" width="100%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="label_img_cont">
+                                <label>chasis</label>
+                                <img src="{{cir_report.chasis.url}}" alt="image" height="100%" width="100%">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="label_img_cont">
+                                <label>ODOMETER</label>
+                                <img src="{{cir_report.odometer.url}}" alt="image" height="100%" width="100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading" style="margin-bottom: 20px;">CUSTOMER COMPLAIN</h5>
+
+                    {% if cir_report.complaint_1 or cir_report.complaint_1_image %}
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <div class="label_img_cont">
+                                    <label class="form-label" id="complaint_1">COMPLAIN_1</label>
+                                    {% if cir_report.complaint_1 %}
+                                        <textarea class="form-control multi_line_ta" id="complaint_1"  name="complaint_1" readonly>{{cir_report.complaint_1}}</textarea>
+                                    {% endif %}
+                                    {% if cir_report.complaint_1_image %}
+                                        <img src="{{cir_report.complaint_1_image.url}}" alt="image" height="100%" width="100%">
+                                    {% else %}
+                                        <h5>NO IMAGE</h5>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if cir_report.complaint_2 or cir_report.complaint_2_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label class="form-label" id="complaint_2">COMPLAIN_2</label>
+                                        {% if cir_report.complaint_2 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_2" name="complaint_2" readonly>{{cir_report.complaint_2}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_2_image %}
+                                            <img src="{{cir_report.complaint_2_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.complaint_3 or cir_report.complaint_3_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont" id="complaint_3">
+                                        <label class="form-label">COMPLAIN_3</label>
+                                        {% if cir_report.complaint_3 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_3" name="complaint_3" readonly>{{cir_report.complaint_3}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_3_image %}
+                                            <img src="{{cir_report.complaint_3_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.complaint_4 or cir_report.complaint_4_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label class="form-label" id="complaint_4">COMPLAIN_4</label>
+                                        {% if cir_report.complaint_4 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_4" name="complaint_4" readonly>{{cir_report.complaint_4}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_4_image %}
+                                            <img src="{{cir_report.complaint_4_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.complaint_5 or cir_report.complaint_5_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label class="form-label" id="complaint_5">COMPLAIN_5</label>
+                                        {% if cir_report.complaint_5 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_5" name="complaint_5" readonly>{{cir_report.complaint_5}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_5_image %}
+                                            <img src="{{cir_report.complaint_5_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.complaint_6 or cir_report.complaint_6_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label class="form-label" id="complaint_6">COMPLAIN_6</label>
+                                        {% if cir_report.complaint_6 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_6" name="complaint_6" readonly>{{cir_report.complaint_6}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_6_image %}
+                                            <img src="{{cir_report.complaint_6_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.complaint_7 or cir_report.complaint_7_image %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label class="form-label" id="complaint_7">COMPLAIN_7</label>
+                                        {% if cir_report.complaint_7 %}
+                                            <textarea class="form-control multi_line_ta" id="complaint_7" name="complaint_7" readonly>{{cir_report.complaint_7}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.complaint_7_image %}
+                                            <img src="{{cir_report.complaint_7_image.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% endif %}
+                    <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                </div>
+
+                <h4>SERVICE ADVISOR REPORT</h4>
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading">ADVISOR DETAILS</h5>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="advisor_name">name</label>
+                            <input type="text" class="form-control" id="advisor_name" value="{{cir_report.service_advisor_report.advisor_name}}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="advisor_id">user_id</label>
+                            <input type="text" class="form-control normal_text" id="advisor_id" value="{{cir_report.service_advisor_report.advisor_id}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="advisor_date">sar submission date</label>
+                            <input type="text" class="form-control" id="advisor_date" value="{{cir_report.service_advisor_report.sar_date|date:'d-m-Y'}}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="advisor_time">sar submission time</label>
+                            <input type="text" class="form-control" id="advisor_time" value="{{cir_report.service_advisor_report.sar_time}}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cir_data_cont">
+                    <h5 class="sub_heading">SERVICE HISTORY</h5>
+
+                    <div class="row">
+
+                        {% if cir_report.service_advisor_report.first_service != None or cir_report.service_advisor_report.first_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="first_service_remark" class="form-label normal_text">1st SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.first_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.first_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.first_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="first_service_remark" name="first_service_remark" readonly>{{cir_report.service_advisor_report.first_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.second_service  != None or cir_report.service_advisor_report.second_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="second_service_remark" class="form-label normal_text">2nd SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.second_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.second_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.second_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="second_service_remark" name="second_service_remark" readonly>{{cir_report.service_advisor_report.second_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.third_service != None or cir_report.service_advisor_report.third_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="third_service_remark" class="form-label normal_text">3rd SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.third_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.third_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.third_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="third_service_remark" name="third_service_remark" readonly>{{cir_report.service_advisor_report.third_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.fourth_service  != None or cir_report.service_advisor_report.fourth_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="fourth_service_remark" class="form-label normal_text">4th SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.fourth_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.fourth_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.fourth_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="fourth_service_remark" name="fourth_service_remark" readonly>{{cir_report.service_advisor_report.fourth_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.fifth_service != None or cir_report.service_advisor_report.fifth_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="fifth_service_remark" class="form-label normal_text">5th SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.fifth_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.fifth_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.fifth_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="fifth_service_remark" name="fifth_service_remark" readonly>{{cir_report.service_advisor_report.fifth_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.sixth_service != None or cir_report.service_advisor_report.sixth_service_remark %}
+                            <div class="form-group col-md-6">
+                                <div class="one_line_radio_cont">
+                                    <label for="sixth_service_remark" class="form-label normal_text">6th SERVICE :</label>
+                                    <div>
+                                        {% if cir_report.service_advisor_report.sixth_service == True %}
+                                            <span class="service_symbol">&#9989;</span>
+                                        {% elif cir_report.service_advisor_report.sixth_service == False %}
+                                            <span class="service_symbol">&#10060;</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if cir_report.service_advisor_report.sixth_service_remark %}
+                                    <textarea class="form-control multi_line_ta" id="sixth_service_remark" name="sixth_service_remark" readonly>{{cir_report.service_advisor_report.sixth_service_remark}}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if cir_report.service_advisor_report.service_remark %}
+                            <div class="form-group col-md-12">
+                                <label for="service_remark">service remark</label>
+                                    <textarea class="form-control multi_line_ta" id="service_remark" name="service_remark" readonly>{{cir_report.service_advisor_report.service_remark}}</textarea>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                
+
+                {% if cir_report.service_advisor_report.faulty_image_1 or cir_report.service_advisor_report.faulty_image_2 or cir_report.service_advisor_report.faulty_image_3 or cir_report.service_advisor_report.faulty_image_4 or cir_report.service_advisor_report.faulty_image_5 or cir_report.service_advisor_report.faulty_image_6 or cir_report.service_advisor_report.faulty_image_7 or cir_report.service_advisor_report.faulty_image_8 or cir_report.service_advisor_report.faulty_image_9 or cir_report.service_advisor_report.faulty_image_10 or cir_report.service_advisor_report.faulty_image_11 or cir_report.service_advisor_report.faulty_image_12 or cir_report.service_advisor_report.faulty_image_13 or cir_report.service_advisor_report.faulty_image_14 or cir_report.service_advisor_report.faulty_image_15 or cir_report.service_advisor_report.faulty1_description or cir_report.service_advisor_report.faulty2_description or cir_report.service_advisor_report.faulty3_description or cir_report.service_advisor_report.faulty4_description or cir_report.service_advisor_report.faulty5_description or cir_report.service_advisor_report.faulty6_description or cir_report.service_advisor_report.faulty7_description or cir_report.service_advisor_report.faulty8_description or cir_report.service_advisor_report.faulty9_description or cir_report.service_advisor_report.faulty10_description or cir_report.service_advisor_report.faulty11_description or cir_report.service_advisor_report.faulty12_description or cir_report.service_advisor_report.faulty13_description or cir_report.service_advisor_report.faulty14_description or cir_report.service_advisor_report.faulty15_description %}
+                    <div class="cir_data_cont">
+                        <h5 class="sub_heading" style="margin-bottom:20px">OBSERVATION</h5>
+
+                        <div class="row">
+                            {% if cir_report.service_advisor_report.faulty_image_1 or cir_report.service_advisor_report.faulty1_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_1" class="form-label">FAULT_1</label>
+                                        {% if cir_report.service_advisor_report.faulty1_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_1" name="fault_1" readonly>{{cir_report.service_advisor_report.faulty1_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_1 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_1.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_2 or cir_report.service_advisor_report.faulty2_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_2" class="form-label">FAULT_2</label>
+                                        {% if cir_report.service_advisor_report.faulty2_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_2" name="fault_2" readonly>{{cir_report.service_advisor_report.faulty2_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_2 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_2.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_3 or cir_report.service_advisor_report.faulty3_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_3" class="form-label">FAULT_3</label>
+                                        {% if cir_report.service_advisor_report.faulty3_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_3" name="fault_3" readonly>{{cir_report.service_advisor_report.faulty3_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_3 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_3.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_4 or cir_report.service_advisor_report.faulty4_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_4" class="form-label">FAULT_4</label>
+                                        {% if cir_report.service_advisor_report.faulty4_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_4" name="fault_4" readonly>{{cir_report.service_advisor_report.faulty4_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_4 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_4.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_5 or cir_report.service_advisor_report.faulty5_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_5" class="form-label">FAULT_5</label>
+                                        {% if cir_report.service_advisor_report.faulty5_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_5" name="fault_5" readonly>{{cir_report.service_advisor_report.faulty5_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_5 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_5.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_6 or cir_report.service_advisor_report.faulty6_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_6" class="form-label">FAULT_6</label>
+                                        {% if cir_report.service_advisor_report.faulty6_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_6" name="fault_6" readonly>{{cir_report.service_advisor_report.faulty6_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_6 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_6.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_7 or cir_report.service_advisor_report.faulty7_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_7" class="form-label">FAULT_7</label>
+                                        {% if cir_report.service_advisor_report.faulty7_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_7" name="fault_7" readonly>{{cir_report.service_advisor_report.faulty7_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_7 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_7.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_8 or cir_report.service_advisor_report.faulty8_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_8" class="form-label">FAULT_8</label>
+                                        {% if cir_report.service_advisor_report.faulty8_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_8" name="fault_8" readonly>{{cir_report.service_advisor_report.faulty8_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_8 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_8.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_9 or cir_report.service_advisor_report.faulty9_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_9" class="form-label">FAULT_9</label>
+                                        {% if cir_report.service_advisor_report.faulty9_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_9" name="fault_9" readonly>{{cir_report.service_advisor_report.faulty9_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_9 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_9.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_10 or cir_report.service_advisor_report.faulty10_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_10" class="form-label">FAULT_10</label>
+                                        {% if cir_report.service_advisor_report.faulty10_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_10" name="fault_10" readonly>{{cir_report.service_advisor_report.faulty10_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_10 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_10.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_11 or cir_report.service_advisor_report.faulty11_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_11" class="form-label">FAULT_11</label>
+                                        {% if cir_report.service_advisor_report.faulty11_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_11" name="fault_11" readonly>{{cir_report.service_advisor_report.faulty11_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_11 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_11.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_12 or cir_report.service_advisor_report.faulty12_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_12" class="form-label">FAULT_12</label>
+                                        {% if cir_report.service_advisor_report.faulty12_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_12" name="fault_12" readonly>{{cir_report.service_advisor_report.faulty12_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_12 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_12.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_13 or cir_report.service_advisor_report.faulty13_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_13" class="form-label">FAULT_13</label>
+                                        {% if cir_report.service_advisor_report.faulty13_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_13" name="fault_13" readonly>{{cir_report.service_advisor_report.faulty13_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_13 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_13.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_14 or cir_report.service_advisor_report.faulty14_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_14" class="form-label">FAULT_14</label>
+                                        {% if cir_report.service_advisor_report.faulty14_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_14" name="fault_14" readonly>{{cir_report.service_advisor_report.faulty14_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_14 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_14.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if cir_report.service_advisor_report.faulty_image_15 or cir_report.service_advisor_report.faulty15_description %}
+                                <div class="form-group col-md-6">
+                                    <div class="label_img_cont">
+                                        <label for="fault_15" class="form-label">FAULT_15</label>
+                                        {% if cir_report.service_advisor_report.faulty15_description %}
+                                            <textarea class="form-control multi_line_ta" id="fault_15" name="fault_15" readonly>{{cir_report.service_advisor_report.faulty15_description}}</textarea>
+                                        {% endif %}
+                                        {% if cir_report.service_advisor_report.faulty_image_15 %}
+                                            <img src="{{cir_report.service_advisor_report.faulty_image_15.url}}" alt="image" height="100%" width="100%">
+                                        {% else %}
+                                            <h5>NO IMAGE</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                        {% if cir_report.service_advisor_report.action_remark or cir_report.service_advisor_report.advisor_remark %}
+                            {% comment %} Action remark or advisor remark is present {% endcomment %}
+                        {% else  %}
+                            <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+
+                {% if cir_report.service_advisor_report.action_remark %}
+                    <div class="cir_data_cont">
+                        <h5 class="sub_heading" style="margin-bottom: 10px;">ACTION REMARK</h5>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <textarea class="form-control multi_line_ta" id="service_advisor_action_remark" name="service_advisor_action_remark" readonly>{{cir_report.service_advisor_report.action_remark}}</textarea>
+                            </div>
+                        </div>
+
+                        {% if cir_report.service_advisor_report.advisor_description %}
+                            {% comment %} Advisor remark present {% endcomment %}
+                        {% else %}
+                            <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+
+                {% if cir_report.service_advisor_report.advisor_description %}
+                    <div class="cir_data_cont">
+                        <h5 class="sub_heading" style="margin-bottom: 10px;">ADVISOR REMARK</h5>
+
+                        <div class="row">
+                            <div class="form-group col-md-12" style="margin-bottom: 0!important;">
+                                <textarea class="form-control multi_line_ta" id="advisor_remark" name="advisor_remark" readonly>{{cir_report.service_advisor_report.advisor_description}}</textarea>
+                            </div>
+                        </div>
+
+                        <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                        
+                    </div>
+                {% endif %}
+
+
+                {% if cir_report.workshop_manager_remark %}
+                    <div class="cir_data_cont">
+                        <h4>WORKSHOP MANAGER</h4>
+
+                        <h5 class="sub_heading" style="margin-bottom: 10px;">REMARK</h5>
+
+                        <div class="row">
+                            <div class="form-group col-md-12" style="margin-bottom: 0!important;">
+                                <textarea class="form-control multi_line_ta" id="workshop_manager_remark" name="workshop_manager_remark" readonly>{{cir_report.workshop_manager_remark}}</textarea>
+                            </div>
+                        </div>
+
+                        <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                        
+                    </div>
+                {% endif %}
+                
+
+                {% if cir_report.claim_manager_investigation or cir_report.claim_manager_action_taken %}
+                    <div class="cir_data_cont">
+                        <h4>CLAIM MANAGER</h4>
+
+                        <div id="claim_manager_remark_cont">
+
+                            {% if cir_report.claim_manager_investigation %}
+                                <h5 class="sub_heading" style="margin-bottom: 10px;">INVESTIGATION</h5>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <textarea class="form-control multi_line_ta" id="claim_manager_investigation" name="claim_manager_investigation" readonly>{% if cir_report.claim_manager_investigation %}{{cir_report.claim_manager_investigation}}{% endif %}</textarea>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                            {% if cir_report.claim_manager_action_taken %}
+                                <h5 class="sub_heading" style="margin-bottom: 10px;">ACTION TAKEN</h5>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12" style="margin-bottom: 0!important;">
+                                        <textarea class="form-control multi_line_ta" id="claim_manager_action_taken" name="claim_manager_action_taken" readonly>{% if cir_report.claim_manager_action_taken %}{{cir_report.claim_manager_action_taken}}{% endif %}</textarea>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <hr style="border: 3px solid #a52020; margin: 30px 0px;">
+                            
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="cir_data_cont">
+                <div class="btn_cont">
+                    <a style="text-decoration:none;" href="{% url "claim_manager_completed_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+
+                    <a href="{{ cir_report.presentation_report.url }}" download class="success_btn" id="download_ppt">DOWNLOAD PPT</a>
+
+                </div>
+            </div>
+                
+        </div>
+
+
+    </div>
+
+    <script src={% static "claim_manager/js/preview_completed_cir.js" %}></script>
+
+{% endblock content %}

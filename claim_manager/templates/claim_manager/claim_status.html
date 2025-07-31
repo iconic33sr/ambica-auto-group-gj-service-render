@@ -1,0 +1,168 @@
+{% extends "claim_manager/claim_manager_base.html" %}
+
+{% load static %}
+
+{% block title %}CLAIM STATUS{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "claim_manager/css/claim_status.css" %}>
+
+{% endblock manualcss %}
+
+{% block entry_active_class %}active{% endblock entry_active_class %}
+{% block claim_status_subactive %}subactive{% endblock claim_status_subactive %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <h2 class="page_heading">CLAIM STATUS</h2>
+
+            <hr>    
+
+            <form  method="POST" autocomplete="off" id="claim_status_form">
+                {% csrf_token %}
+
+                <div class="cir_data_cont">
+
+                    <div class="display_data_cont">
+                        <input type="text" name="job_card_no" id="job_card_no" class="form-control normal_text uneditable" placeholder="JOB CARD NO." readonly required>
+                        <input type="text" name="vehicle_no" id="vehicle_no" class="form-control uneditable" placeholder="Vehicle No." disabled required>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="year" class="form-label"><span class="red_star">*</span>YEAR</label>
+                            <select name="year" id="year" class="form-select" required>
+                                {% for year in ac_years %}
+                                    <option value="{{year.ac_year}}">{{year.ac_year}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="job_no" class="form-label"><span class="red_star">*</span>JOB NO</label>
+                            <input type="text" name="job_no" id="job_no" class="form-control normal_text" placeholder="Press Enter" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="claim_no" class="form-label"><span class="red_star">*</span>CLAIM NO</label>
+                            {{cform.claim_no}} <span class="required_msg">{{cform.claim_no.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="claim_amount" class="form-label">CLAIM AMOUNT</label>
+                            {{cform.claim_amount}} <span class="required_msg">{{cform.claim_amount.errors | striptags}}</span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="claim_date" class="form-label">CLAIM DATE</label>
+                            {{cform.claim_date}} <span class="required_msg">{{cform.claim_date.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="submission_date" class="form-label">SUBMISSION DATE</label>
+                            {{cform.submission_date}} <span class="required_msg">{{cform.submission_date.errors | striptags}}</span>
+                        </div>
+
+                        <div class="form-group col-md-6" id="claim_settled_date_cont" style="display:none">
+                            <label for="claim_settled_date" class="form-label">CLAIM SETTLED DATE</label>
+                            {{cform.claim_settled_date}} <span class="required_msg">{{cform.claim_settled_date.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:12px; margin-bottom:20px;">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <div class="one_line_radio_cont">
+                                <label class="form-label">CLAIM STATUS :</label>
+                                {% for radio in cform.claim_status %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="crm_rejection_reason_cont" style="display:none;">
+                        <div class="form-group col-md-12">
+                            <label for="crm_rejection_reason" class="form-label"><span class="red_star">*</span>REJECTED REASON</label>
+                            {{cform.crm_rejection_reason}} <span class="required_msg">{{cform.crm_rejection_reason.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <h4 id="dispatch_images_heading" style="display:none;">DISPATCH IMAGES</h4>
+
+                    <div class="row" id="first_img_row" style="display:none;">
+
+                        <div class="form-group col-md-4 view_img_btn_cont" id="view_image1_btn_cont">
+                            <label class="form-label">IMAGE 1</label>
+                            <button type="button" class="primary_btn view_img_btn" id="view_image1_btn">View</button>
+                        </div>
+
+                        <div class="form-group col-md-4 view_img_btn_cont" id="view_image2_btn_cont">
+                            <label class="form-label">IMAGE 2</label>
+                            <button type="button" class="primary_btn view_img_btn" id="view_image2_btn">View</button>
+                        </div>
+
+                        <div class="form-group col-md-4 view_img_btn_cont" id="view_image3_btn_cont">
+                            <label class="form-label">IMAGE 3</label>
+                            <button type="button" class="primary_btn view_img_btn" id="view_image3_btn">View</button>
+                        </div>
+                    </div>
+
+                    <div class="row" id="second_img_row" id="display:none;">
+                        <div class="form-group col-md-4 view_img_btn_cont" id="view_image4_btn_cont">
+                            <label class="form-label">IMAGE 4</label>
+                            <button type="button" class="primary_btn view_img_btn" id="view_image4_btn">View</button>
+                        </div>
+
+                        <div class="form-group col-md-4 view_img_btn_cont" id="view_image5_btn_cont">
+                            <label class="form-label">IMAGE 5</label>
+                            <button type="button" class="primary_btn view_img_btn" id="view_image5_btn">View</button>
+                        </div>
+                    </div>
+
+                    <!-- Modal (For closing the image displaying on entire screen, with download button)--> 
+                    <div id="imageModal" class="img_fc_modal">
+                        <span class="close" id="close_img_btn" onclick="closeImgModal()">&times;</span>
+                        <img class="img_fc_modal_content" id="modalImg">
+                        <!-- Download button is optional: just remove this <a> tag to skip -->
+                        <a id="download_img_btn" class="download-btn" href="#" download>
+                            <svg height="26" width="26" viewBox="0 0 20 20" fill="white" style="vertical-align:middle;">
+                                <path d="M7 10V3h6v7h3l-6 7-6-7z"/>
+                            </svg>
+                            Download
+                        </a>
+                        {% comment %} Just use openImgModal(), for more refrence see ambica_motors tata cars demo, for use of openImgModal() in html file, here i have used this in claim_status.js file {% endcomment %}
+                    </div>
+
+                    <!-- Modal (For closing the image displaying on entire screen, without download)--> 
+                    <div id="imageModal_wd" class="img_fc_modal_wd">
+                        <span class="close_wd" id="close_img_btn_wd" onclick="closeImgModal_wd()">&times;</span>
+                        <img class="img_fc_modal_content_wd" id="modalImg_wd">
+                        {% comment %} Just use openImgModal_wd() {% endcomment %}
+                    </div>
+
+                    <hr>
+
+                    <div class="btn_cont">
+                        <input type="reset" class="danger_btn" style="padding-left: 30px!important; padding-right: 30px!important;" value="CANCEL" id="cancel_btn">
+                        <input type="submit" class="success_btn" style="padding-left: 30px!important; padding-right: 30px!important; display:none;" value="SAVE" id="save_btn">
+                    </div>
+                    <span id="job_no_error" style="color:red; display:none;">Invalid Job No. Format</span>
+                </div>
+
+            </form>
+                
+        </div>
+
+    </div>
+
+    <script src={% static "claim_manager/js/claim_status.js" %}></script>
+
+{% endblock content %}

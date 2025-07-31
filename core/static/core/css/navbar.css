@@ -1,0 +1,419 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav{
+    display: flex;
+    background-color: #333;
+    box-shadow: 0 0 3px #000000;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    z-index: 100;
+}
+
+nav ul{
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li{
+    margin: 0 10px;
+    padding: 7px 0;
+    position: relative;
+}
+
+nav ul li a{
+    font-size: 1em;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 2px 4px;
+    color: white;   
+    text-decoration: none;
+    transition: border 0.2s;
+    text-transform: uppercase;
+    display: block;
+    outline: none;
+    margin: 0;
+}
+
+nav ul li a:hover{
+    border: 1px solid orange;
+}
+
+
+.dropdown_link{
+    cursor: default;
+    position: relative;
+    padding-right: 15px;
+}
+
+.left ul li:hover > ul{
+    display: block;
+}
+
+.left ul ul{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 44px;     /* Change this*/
+    background-color: #333;
+    display: none;
+    box-shadow: 0 0 10px #000000;
+    z-index: 2;
+    padding: 0;
+    margin: 0;
+}
+
+.left ul ul li{
+    display: block;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #ffffff;  
+    position: relative;
+    max-width: 200px;    
+    outline: none;
+    transition: all 0.3s;
+}
+
+.left ul ul li:hover{
+    border-radius: 0;
+}
+
+.left ul ul li a{
+    display: inline-block;
+    color: #ffffff;
+    border: 0;
+    border-radius: 0;
+    padding: 4px 4px;
+    font-size: 0.9em;   /* Previously it was 0.8em */
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    outline: none;
+    transition: all 0.3s;
+    height: 100%;
+    text-wrap: nowrap;
+    overflow-wrap: break-word;
+
+
+}
+
+.left ul ul li:hover> a{
+    color: orange;
+}
+
+.left ul li:hover > .dropdown_link{
+    border: 1px solid orange;
+}
+
+.left ul li:hover > .active{
+    border: 1px solid #ffffff;
+}
+
+.left ul ul li:hover .rightarrow{
+    border-color: orange;
+}
+
+.left ul ul ul{
+    position: absolute;
+    top: 0;
+    right: -200px;
+    margin: 0;
+    padding: 0;
+    display: none;
+    z-index: 2;
+}
+
+.left ul ul ul li{
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid #ffffff;  
+    max-width: 200px;    
+    outline: none;
+    transition: all 0.3s;
+}
+
+
+.left ul ul ul li a{
+    display: inline-block;
+    color: #ffffff;
+    border: 0;
+    border-radius: 0;
+    padding: 3px 4px;
+    font-size: 0.8em;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    outline: none;
+    transition: all 0.3s;
+    height: 100%;
+
+    overflow-wrap: break-word;
+
+}
+
+.right ul li input[type=Submit]{
+    border: 1px solid orange;
+    background-color: #333;
+    font-size: 1em;
+    border-radius: 5px;
+    padding: 2px 4px;
+    color: white;   
+    text-decoration: none;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    display: block;
+    
+}
+
+.right ul li input[type=Submit]:hover{
+    cursor: pointer;
+    color: orange;
+}
+
+
+/* Down Right arrow */
+.downarrow {
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    top: 10px;       /* Change this*/
+    right: 4px;
+    position: absolute;
+}
+
+.rightarrow {
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    top: 9px;
+    right:5px;
+    position: absolute;
+}
+
+.active{
+    font-size: 1em;
+    background-color: orange;
+    color: #000000;
+    font-weight: 500;
+    border: 1px solid #ffffff;
+    cursor: default;
+}
+
+.active:hover{
+    border: 1px solid #ffffff;
+}
+
+.active .downarrow{
+    border-color: #000000;
+}
+
+nav ul ul li a.subactive{
+    background-color: orange;
+    color: #000000;
+    font-weight: 500;
+    border-top: 1px solid orange;
+    cursor: default;
+}
+
+nav ul ul li a.subactive .rightarrow{
+    border-color: #000000;
+}
+
+nav ul ul li:hover a.subactive{
+    color: #000000;
+}
+
+nav ul ul li:hover a.subactive .rightarrow{
+    border-color: #000000;
+}
+
+nav ul ul ul li a.subactive{
+    background-color: orange;
+    color: #000000;
+    font-weight: 500;
+    border-top: 1px solid orange;
+}
+
+nav ul ul ul li:hover a.subactive{
+    color: #000000;
+}
+
+.nav_wm_btn {
+  background: #339dff;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px #0002;
+  user-select: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  border: 1px solid #fff;
+  text-decoration: none;
+  padding: 0 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  position: relative;
+}
+
+.nav_wm_btn_disabled{
+    background: lightgray;
+    color: #000000;
+}
+
+/* Red notification dot */
+.nav_wm_btn .notification-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  border: 1px solid #fff; /* White border for clarity */
+  box-shadow: 0 0 2px #0005;
+  content: '';
+  display: none;
+}
+
+/* -------------------------- */
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger .line {
+width: 25px;
+height: 1px;
+background-color: #ffffff;
+display: block;
+margin: 7px auto;
+transition: all 0.3s ease-in-out;
+}
+
+.hamburger-active {
+transition: all 0.3s ease-in-out;
+transition-delay: 0.6s;
+transform: rotate(45deg);
+}
+
+.hamburger-active .line:nth-child(2) {
+width: 0px;
+}
+
+.hamburger-active .line:nth-child(1),
+.hamburger-active .line:nth-child(3) {
+transition-delay: 0.3s;
+}
+
+.hamburger-active .line:nth-child(1) {
+transform: translateY(12px);
+}
+
+.hamburger-active .line:nth-child(3) {
+transform: translateY(-5px) rotate(90deg);
+}
+
+.menubar {
+position: absolute;
+top: 31px;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+width: 100vw;
+height:0;
+background: #333;
+transition: height 0.5s ease-in;
+z-index: 20;
+overflow:hidden;
+}
+
+.menu_active {
+height: calc(100dvh - 31px);
+overflow:hidden;
+box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.menubar ul {
+padding: 10px;
+padding-top: 30px;
+list-style: none;
+width: 100%;
+}
+
+.menubar ul li {
+display: flex;
+margin-bottom: 32px;
+justify-content: center;
+}
+
+.menubar ul li a {
+text-decoration: none;
+color: #ffffff;
+border-bottom: 2px solid orange;
+font-weight: 400;
+padding: 5px 10px;
+border-radius: 5px;
+}
+
+.menubar ul li.mobile_active_link{
+background-color: orange;
+border: 2px solid #ffffff;
+border-radius: 3px;
+}
+
+.menubar ul li.mobile_active_link a{
+color: #000000;
+font-weight: 500;
+font-size: 17px;
+padding: 4px 10px;
+}
+
+.menubar ul li input[type=submit] {
+text-decoration: none;
+color: #ffffff;
+border: 2px solid orange;
+background-color: #333;
+font-size: 16px;
+font-weight: 400;
+padding: 5px 10px;
+border-radius: 5px;
+box-sizing: border-box;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.menubar ul li a:hover {
+color: orange;
+}
+
+@media screen and (max-width: 790px) {
+.hamburger {
+    display: block;
+    margin-right: 7px;
+}
+nav ul {
+    display: none;
+}
+}

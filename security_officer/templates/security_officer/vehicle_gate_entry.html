@@ -1,0 +1,119 @@
+{% extends "security_officer/security_officer_base.html" %}
+
+{% load static %}
+
+{% block title %}VEHICLE OUT ENTRY{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "security_officer/css/vehicle_gate_entry.css" %}>
+{% endblock manualcss %}
+
+{% block content %}
+<div class="page_data_cont">
+    <h2 class="page_heading" id="sale_order_heading">VEHICLE IN/OUT ENTRY</h2>
+
+    <div class="user_details_cont">
+        <div class="user_details">{{request.user.first_name}} {{request.user.last_name}}</div>
+        <div class="user_details">{{request.user.user_profile.user_designation.designation}}</div>
+    </div>
+
+    <form method="POST" autocomplete="off" enctype="multipart/form-data" id="vehicle_gate_entry_form">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="year" class="form-label"><span class="red_star">*</span>YEAR</label>
+            <select name="year" id="year" class="form-select" required>
+                {% for year in ac_years %}
+                    <option value="{{year.ac_year}}">{{year.ac_year}}</option>
+                {% endfor %}
+            </select>
+        </div> 
+
+        <div class="mb-3">
+            <label for="job_no" class="form-label"><span class="red_star">*</span>JOB NO.</label>
+            <div style="position: relative; display: inline-block; width: 100%;">
+                <input type="number" name="job_no" id="job_no" class="form-control normal_text" required style="padding-right: 75px;">
+                <button type="button" id="checkBtn">
+                    CHECK
+                </button>
+            </div>
+        </div> 
+        
+        <div class="mb-3">
+            <label for="vehicle_no" class="form-label"><span class="red_star">*</span>VEHICLE NO.</label>
+            <input type="text" name="vehicle_no" id="vehicle_no" class="form-control uneditable" disabled>
+        </div> 
+
+        <div id="details_cont" style="display:none;">
+
+            <div class="mb-3">
+                <hr>
+                <label for="gate_pass_no" class="form-label"><span class="red_star">*</span>GATE PASS NO.</label>
+                <input type="number" name="gate_pass_no" id="gate_pass_no" class="form-control" required>
+            </div> 
+
+            <div class="field mb-3" id="field-0">
+                <label class="form-label">GATE PASS IMAGE</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn click_photo_btn" onclick="openCamera(0)">Click Photo</button>
+                    <button type="button" class="view_btn view_photo_btn" onclick="viewPhoto(0)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn remove_photo_btn" onclick="removePhoto(0)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_0" id="photoInput-0" class="photoInput" />
+            </div>
+
+            <div class="field mb-3" id="field-1">
+                <label class="form-label">GATE REGISTER IMAGE</label>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn click_photo_btn" onclick="openCamera(1)">Click Photo</button>
+                    <button type="button" class="view_btn view_photo_btn" onclick="viewPhoto(1)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn remove_photo_btn" onclick="removePhoto(1)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_1" id="photoInput-1" class="photoInput" />
+            </div>
+
+        </div>
+
+        <h3 id="entry_already_submitted">Entry already submitted</h3>
+
+        <div class="btn_cont">
+            <input type="reset" class="danger_btn" value="CANCEL" id="cancel_btn">
+            <input type="submit" class="btn btn-success" value="SUBMIT" id="submit_btn" style="display:none;">
+        </div>
+        
+        <span id="job_no_error" style="color:red; display:none;">Invalid Job No. Format</span>
+
+    </form>
+
+    <div id="cameraModal">
+        <div id="cameraTopControls">
+            <button id="flashlightBtn" type="button" title="Toggle Flashlight"><span id="flashlightIcon">🔦</span></button>
+            
+            <button  id="switchCameraBtn" onclick="switchCamera()">🔄</button>
+
+        </div>
+
+        <div id="cameraPreviewContainer">
+            <video id="video" autoplay fullscreen playsinline></video>
+            <div id="geoOverlay"></div>
+        </div>
+
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+        <div id="cameraControls">
+            <button id="confirmPhoto" class="primary_btn">Take Photo</button>
+            <button id="discardPhoto" class="danger_btn">Cancel</button>
+        </div>
+    </div>
+
+    <div id="photoPopup">
+        <span id="closePopup">&times;</span>
+        <img id="popupImg" src="" />
+    </div>
+
+</div>
+
+<script src={% static "security_officer/js/vehicle_gate_entry.js" %}></script>
+<script src={% static "core/js/geotag_img.js" %}></script>
+
+{% endblock content %}

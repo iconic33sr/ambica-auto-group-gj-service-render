@@ -1,0 +1,401 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-transform: uppercase;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(70, 184, 255)), to(#e6feff)) fixed;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+       -webkit-appearance: none;
+        margin: 0;
+}
+
+
+/* For Manual Alert Model */
+#manualAlertOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+#manualAlertModal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  padding: 2rem 1.5rem 1.2rem 1.5rem;
+  max-width: 90vw;
+  width: 350px;
+  text-align: center;
+  animation: popupAlertFadeIn 0.22s cubic-bezier(0.39, 0.58, 0.57, 1) both;
+}
+
+#manualAlertMsg {
+  font-size: 1.12rem;
+  color: #222;
+  margin-bottom: 1.6rem;
+  word-break: break-word;
+  text-transform: none;
+}
+
+#manualAlertOkBtn {
+  padding: 0.7em 2.5em;
+  background: #6a5af9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(106, 90, 249, 0.14);
+  cursor: pointer;
+  transition: background 0.16s;
+}
+#manualAlertOkBtn:hover,
+#manualAlertOkBtn:focus {
+  background: #5848c2;
+}
+
+@media (max-width: 500px) {
+  #manualAlertModal {
+    padding: 1.2rem 0.5rem 0.9rem 0.5rem;
+    width: 95vw;
+    max-width: 98vw;
+  }
+  #manualAlertMsg { font-size: 1rem; }
+}
+
+/* Fade-in animation */
+@keyframes popupAlertFadeIn {
+  from { opacity: 0; transform: scale(0.94);}
+  to   { opacity: 1; transform: scale(1);}
+}
+
+
+/* For Toast Message */
+#toast_overlay{
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 9998;
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+#toast_msg{
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 80, 80, 0.95);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 20px 32px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    display: none;
+    z-index: 9999;
+    animation: fadeInAnimation 0.4s ease-out;
+}
+
+
+/* For Popup Confirmation Box */
+#confirmOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  text-align: center;
+  min-width: 240px;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.confirm-message {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #222;
+  word-break: break-word;
+}
+
+.confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirm-actions button {
+  flex: 1 1 120px;
+  min-width: 100px;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .confirm-modal {
+    padding: 1rem 0.5rem;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    text-align: center;
+    min-width: 240px;
+    max-width: 96vw;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .confirm-message {
+    font-size: 1rem;
+  }
+  .confirm-actions {
+    gap: 0.5rem;
+  }
+  .confirm-actions button {
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem;
+    min-width: 80px;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------- */
+
+/* CSS for Modal to view the image in entire screen without download button*/
+.img_fc_modal_wd {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn_wd 0.3s ease-in-out;
+}
+
+.img_fc_modal_content_wd {
+    max-width: 90%;
+    max-height: 90%;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px white;
+    transform: scale(0.5);
+    opacity: 0;
+    animation: zoomIn_wd 0.3s ease-in-out forwards;
+}
+
+/* Show animation */
+.img_fc_modal_wd.show_wd .img_fc_modal_content_wd {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.close_wd {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: white;
+    font-size: 60px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.close_wd:hover {
+    transform: scale(1.2);
+}
+
+/* Fade-in background effect */
+@keyframes fadeIn_wd {
+    from { background-color: rgba(0, 0, 0, 0); }
+    to { background-color: rgba(0, 0, 0, 0.8); }
+}
+
+/* Smooth zoom-in effect */
+@keyframes zoomIn_wd {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ------------------------------------------------------------- */
+/* CSS for Modal to view the image in entire screen with download button*/
+
+.img_fc_modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.img_fc_modal_content {
+    max-width: 90%;
+    max-height: 90%;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px white;
+    transform: scale(0.5);
+    opacity: 0;
+    animation: zoomIn 0.3s ease-in-out forwards;
+}
+
+/* Show animation */
+.img_fc_modal.show .img_fc_modal_content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: white;
+    font-size: 60px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.close:hover {
+    transform: scale(1.2);
+}
+
+/* Download button: bottom-right, only shows if present */
+.download-btn {
+    position: absolute;
+    right: 32px;
+    bottom: 32px;
+    background: darkgreen;
+    color: #fff;
+    padding: 12px 22px 12px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.15rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1;
+    opacity: 0.96;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.download-btn:hover {
+    background: darkgreen;
+    color: #ffd600;
+    opacity: 1;
+}
+
+/* Fade-in background effect */
+@keyframes fadeIn {
+    from { background-color: rgba(0, 0, 0, 0); }
+    to { background-color: rgba(0, 0, 0, 0.8); }
+}
+/* Smooth zoom-in effect */
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+
+/* ---------------------------------------------------------- */
+/* For Pagination */
+.main_pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination{
+    display: inline-block;
+}
+
+.nav_links{
+    font-weight: bold;
+    font-size: 1em;
+    border: none;
+    padding: 2px 4px;
+    color: #000000;   
+    text-decoration: none;
+    transition: border 0.2s;
+    text-transform: uppercase;
+    display: inline-block;
+    outline: none;
+    margin: 0;
+}
+
+.nav_links:hover{
+    border: none;
+}
+
+.sr_no{
+    font-size: 1em;
+    border: 1px solid #ffffff;
+    background-color: orange;
+    border-radius: 5px;
+    padding: 2px 10px;
+    color: #000000;   
+    text-decoration: none;
+    transition: border 0.2s;
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 0 0;
+    cursor: default;
+}
+
+.of{
+    cursor: default;
+    margin: 0 5px;
+}

@@ -1,0 +1,64 @@
+{% extends "advisor/advisor_base.html" %}
+
+{% load static %}
+
+{% block title %}MY PROFILE{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "advisor/css/my_profile.css" %}>
+{% endblock manualcss %}
+
+{% block wm_nav_link %}<a href="{% url "wm_returned_report" %}" class="nav_wm_btn" id="nav_wm_btn">WM<span class="notification-dot" id="wm_dot"></span></a>{% endblock wm_nav_link %}
+
+{% block mobile_my_profile_active_class %}mobile_active_link{% endblock mobile_my_profile_active_class %}
+
+
+{% block content %}
+<div class="page_data_cont">
+        <h2 class="page_heading" id="sale_order_heading">MY PROFILE</h2>
+
+        <div style="margin-top:8px; margin-bottom:14px;" class="field_buttons">
+            <a style="text-decoration:none;" href="{% url "advisor_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+        </div>
+
+        <div class="mb-3">
+            <label for="user_id" class="form-label">USER_ID</label>
+            <input type="text" name="user_id" id="user_id" class="form-control normal_text uneditable" autocomplete="off" value={{request.user.username}} readonly>
+        </div>
+        
+        <div class="mb-3">
+            <label for="designation" class="form-label">DESIGNATION</label>
+            <input type="text" name="designation" id="designation" class="form-control uneditable" autocomplete="off" value={{request.user.user_profile.user_designation.designation}} readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="branch" class="form-label">BRANCH</label>
+            <input type="text" name="branch" id="branch" class="form-control uneditable" autocomplete="off" value={{request.user.user_profile.user_branch.branch}} readonly>
+        </div>
+
+        <form method="POST" autocomplete="off" enctype="multipart/form-data" id="my_profile_form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="user_name" class="form-label"><span class="red_star">*</span>NAME</label>
+                {{mform.user_name}} <span class="required_msg">{{mform.user_name.errors | striptags}}</span>
+            </div> 
+            
+            <div class="mb-3">
+                <label for="mobile_no" class="form-label"><span class="red_star">*</span>MOBILE NO.</label>
+                {{mform.mobile_no}} <span class="required_msg">{{mform.mobile_no.errors | striptags}}</span>
+            </div> 
+
+            <div class="btn_cont">
+                <a style="text-decoration:none;" href="{% url "advisor_change_password" %}" class="yellow_btn">CHANGE PASSWORD</a>
+
+                <input type="submit" class="btn btn-success" style="padding-left: 30px!important; padding-right: 30px!important;" value="SAVE" id="save_btn">
+            </div>
+        </form>
+</div>
+
+{{ no_of_revision_report|json_script:"no_of_revision_reportJSON" }}
+
+<script src={% static "advisor/js/advisor_my_profile.js" %}></script>
+
+{% endblock content %}

@@ -1,0 +1,10 @@
+.uneditable, .uneditable:focus{
+    background-color: purple;
+    color: #ffffff;
+    border: 1px solid aqua;
+    cursor: not-allowed;
+}
+
+.btn_cont{
+    justify-content: space-between;
+}

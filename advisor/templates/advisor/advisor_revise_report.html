@@ -1,0 +1,60 @@
+{% extends "advisor/advisor_base.html" %}
+
+{% load static %}
+
+{% block title %}
+REVISE REPORT
+{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "advisor/css/advisor_revise_report.css" %}>
+{% endblock manualcss %}
+
+{% block wm_nav_link %}<a href="{% url "wm_returned_report" %}" class="nav_wm_btn" id="nav_wm_btn">WM<span class="notification-dot" id="wm_dot"></span></a>{% endblock wm_nav_link %}
+
+{% block content %}
+<div class="page_data_cont">
+        <h2 class="page_heading" id="sale_order_heading">REVISE DETAIL</h2>
+
+        <div class="mb-3">
+            <label for="job_no" class="form-label" style="display:block; text-align:center;">JOB CARD NO.</label>
+            <input type="text" class="form-control normal_text readonly" id="job_no" name="job_no" readonly value="{{job_no}}">
+        </div>
+
+        <div class="mb-3">
+            <label for="vehicle_no" class="form-label" style="display:block; text-align:center;">VEHICLE NO.</label>
+            <input type="text" class="form-control readonly" id="vehicle_no" name="vehicle_no" readonly value="{{vehicle_no}}">
+        </div>
+
+        <div class="mb-3" id="wm_revision_remark_cont">
+            <label class="form-label">WM Revision Remark</label>
+            <textarea class="form-control multi_line_ta" id="wm_revision_remark" name="wm_revision_remark" readonly>{{revision_remark}}</textarea>
+        </div>
+
+        <hr>
+
+        <div style="padding-top:8px;" class="field_buttons">
+            <a style="text-decoration:none;" href="{% url "advisor_edit_cir" cir_uid %}" class="primary_btn"> Open CIR</a>
+            <a style="text-decoration:none;" href="{% url "advisor_service_report" cir_uid %}" class="yellow_btn"> Open SAR</a>
+        </div>
+
+        <div class="form-check" id="report_revised_cont">
+            <input type="checkbox" class="form-check-input" id="report_revised" name="report_revised" value="completed">
+            <label class="form-check-label" for="report_revised" id="report_revised_label">Report revised</label>
+        </div>
+
+        <form method="POST" id="revise_form" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="cir_uid" value="{{cir_uid}}">
+        </form>
+
+        <div style="padding-top:8px;" class="field_buttons">
+            <a style="text-decoration:none;" href="{% url "wm_returned_report" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+            <input type="submit" style="display:none;" form="revise_form" class="success_btn" value="SUBMIT" id="submit_btn">
+        </div>
+
+{{ no_of_revision_report|json_script:"no_of_revision_reportJSON" }}
+
+<script src={% static "advisor/js/advisor_revise_report.js" %}></script>
+
+{% endblock content %}

@@ -1,0 +1,152 @@
+{% extends "advisor/advisor_base.html" %}
+
+{% load static %}
+
+{% block title %}CUSTOMER INFORMATION REPORT{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "advisor/css/advisor_cir_list.css" %}>
+{% endblock manualcss %}
+
+{% block wm_nav_link %}<a href="{% url "wm_returned_report" %}" class="nav_wm_btn" id="nav_wm_btn">WM<span class="notification-dot" id="wm_dot"></span></a>{% endblock wm_nav_link %}
+
+{% block content %}
+<div class="page_data_cont">
+    <h2 class="page_heading" id="sale_order_heading">CIR SUMMARY</h2>
+
+    <div class="user_details_cont">
+        <div class="user_details">{{request.user.first_name}} {{request.user.last_name}}</div>
+        <div class="user_details">{{request.user.user_profile.user_designation.designation}}</div>
+    </div>
+
+    {% if cir_reports.paginator.num_pages > 1 %}
+    <div class="main_pagination" style="margin-top:15px;">
+
+        <div class="pagination" >
+            <span>
+                {% if cir_reports.has_previous %}
+                    <a class = "nav_links" href="?page={{cir_reports.previous_page_number}}">Previous - </a>
+                {% endif %}
+            </span>
+            <span class="sr_no">{{cir_reports.number}}</span><span class = "of">of</span><span class="sr_no">{{cir_reports.paginator.num_pages}}</span>
+            <span>
+                {% if cir_reports.has_next %}
+                    <a class = "nav_links" href="?page={{cir_reports.next_page_number}}"> - Next</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+    {% endif %}
+
+    <div class="search_bar_cont">
+        <div class="search_bar_wrapper">
+            <input id="cir_search_input" class="form-control" type="text" placeholder="Search by Job Card No or Vehicle No..." >
+            <button id="cir_search_clear" type="button" class="danger_btn">CLEAR</button>
+        </div>
+    </div>
+
+    <div class="cards_cont">
+        {% if cir_reports %}
+
+            {% for cir_report in cir_reports %}
+                {% if cir_report.advisor_preview == "pending" %}
+                    <div class="manual_card" style="background-color: rgb(255, 150, 150);" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
+                        <div class="report_heading_cont">
+                            <div class="report_heading">
+                                {{cir_report.vehicle_no}}
+                            </div>
+                            <div class="report_heading">
+                                <span class="normal_text">{{cir_report.job_no}}</span>
+                            </div>
+                        </div>
+                        <div class="report_sub_heading_cont">
+                            <div>
+                                {{cir_report.supervisor_name}}
+                            </div>
+                        </div>
+                        <div class="report_sub_heading_cont">
+                            <div>
+                                {{cir_report.cir_date_time|date:"d-m-Y g:i A"}}
+                            </div>
+                        </div>
+                        <div class="field_buttons">
+                            <form method="get" action="{% url 'advisor_preview_cir' cir_report.cir_uid %}">
+                                <button class="primary_btn">PREVIEW CIR</button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="manual_card" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
+                        <div class="report_heading_cont">
+                            <div class="report_heading">
+                                {{cir_report.vehicle_no}}
+                            </div>
+                            <div class="report_heading normal_text">
+                                {{cir_report.job_no}}
+                            </div>
+                        </div>
+                        <div class="report_sub_heading_cont">
+                            <div>
+                                {{cir_report.supervisor_name}}
+                            </div>
+                        </div>
+                        <div class="report_sub_heading_cont">
+                            <div>
+                                {{cir_report.cir_date_time|date:"d-m-Y g:i A"}}
+                            </div>
+                        </div>
+                        <div class="field_buttons">
+                            <form method="get" action="{% url 'advisor_preview_cir' cir_report.cir_uid %}">
+                                <button class="primary_btn">PREVIEW CIR</button>
+                            </form>
+                            <form method="get" action="{% url 'advisor_service_report' cir_report.cir_uid %}">
+                                {% if cir_report.sar_status == "drafted" %}
+                                    <button id="service_report_btn" class="yellow_btn">SERVICE REPORT (DRAFTED)</button>
+                                {% else %}
+                                    <button id="service_report_btn" class="yellow_btn">SERVICE REPORT </button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        {% else %}
+
+            <h2 style="text-align: center; margin-top: 20px;" id="no_pending_cir_heading">No Pending CIR</h2>
+
+        {% endif %}
+    </div>
+
+    {% if cir_reports.paginator.num_pages > 1 %}
+    <div class="main_pagination">
+
+        <div class="pagination" >
+            <span>
+                {% if cir_reports.has_previous %}
+                    <a class = "nav_links" href="?page={{cir_reports.previous_page_number}}">Previous - </a>
+                {% endif %}
+            </span>
+            <span class="sr_no">{{cir_reports.number}}</span><span class = "of">of</span><span class="sr_no">{{cir_reports.paginator.num_pages}}</span>
+            <span>
+                {% if cir_reports.has_next %}
+                    <a class = "nav_links" href="?page={{cir_reports.next_page_number}}"> - Next</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{{ no_of_revision_report|json_script:"no_of_revision_reportJSON" }}
+
+<script src={% static "advisor/js/advisor_cir_list.js" %}></script>
+
+<script>
+    
+</script>
+
+{% endblock content %}

@@ -1,0 +1,24 @@
+#vehicle_no::placeholder {
+  color: rgb(158, 158, 158);
+  opacity: 1; /* Firefox */
+}
+
+.complaint_cont{
+    padding: 3px;
+    border-radius: 10px;
+    background-color: rgb(252, 252, 252);
+    margin-bottom: 20px;
+}
+
+.complaint_cont .complaint{
+    margin-bottom: 8px;
+}
+
+#selected_advisor, #selected_advisor option{
+  text-transform: none!important;
+}
+
+#selected_advisor {
+  pointer-events: none;
+  background: #eee; /* make it look disabled */
+}

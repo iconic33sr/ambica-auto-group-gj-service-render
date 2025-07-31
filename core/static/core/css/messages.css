@@ -1,0 +1,78 @@
+@keyframes non_field_errors_msg{
+    0%   {background-color:white;  top:-50px; color:white; box-shadow: 0 0 0;}
+    25%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    50%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    75%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    100% {background-color:white;  top:-50px; color:white; box-shadow: 0 0 0;display: none;}
+}
+
+@keyframes error_msg{
+    0%   {background-color:white;  top:-50px; color:white; box-shadow: 0 0 0;}
+    25%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    50%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    75%  {background-color:red;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    100% {background-color:white;  top:-50px; display:none; color:white; box-shadow: 0 0 0;}
+}
+
+@keyframes success_msg{
+    0%   {background-color:white;  top:-50px; color:white; box-shadow: 0 0 0;}
+    25%  {background-color:green;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    50%  {background-color:green;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    75%  {background-color:green;  top:15px; color:white; box-shadow: 0 0 7px #000000;}
+    100% {background-color:white;  top:-50px; display:none; color:white; box-shadow: 0 0 0;}
+}
+
+@keyframes info_msg{
+    0%   {background-color:white;  top:-50px; color:black; box-shadow: 0 0 0;}
+    20%  {background-color:yellow;  top:15px; color:black; box-shadow: 0 0 7px #000000;}
+    50%  {background-color:yellow;  top:15px; color:black; box-shadow: 0 0 7px #000000;}
+    80%  {background-color:yellow;  top:15px; color:black; box-shadow: 0 0 7px #000000;}
+    100% {background-color:white;  top:-50px; display:none; color:black; box-shadow: 0 0 0;}
+}
+
+.success, .nfrmsg, .error, .info {
+    display: inline-block;
+    text-align: center;
+    font-size: 1em;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: fixed;
+    top: -50px;
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 40;
+    animation-duration: 4s;
+    animation-timing-function: ease-out;
+    padding: 8px 16px;
+    border-radius: 4px;
+    animation-delay: -0.1s;
+    box-sizing: border-box;
+    width:clamp(200px,95%, 400px);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    animation-fill-mode: forwards;
+}
+
+.success{
+    animation-name: success_msg;
+}
+
+.nfrmsg{
+    animation-name: non_field_errors_msg;
+}
+
+.error{
+    animation-name: error_msg;
+}
+
+.info{
+    animation-name: info_msg;
+}
+
+
+@media screen and (max-width: 600px) {
+    .success, .nfrmsg, .error, .info {
+        font-size: 0.9em;
+        padding: 6px 12px;
+    }
+}

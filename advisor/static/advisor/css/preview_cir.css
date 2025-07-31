@@ -1,0 +1,21 @@
+.form-control {
+    color:#ffffff;
+    background-color: black;
+    border: 1px solid aqua;
+}
+
+.form-control:focus {
+    border: 1px solid aqua;
+}
+
+.label_img_cont{
+    border: 2px solid #000000;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 25px!important;
+    background-color: rgb(252, 252, 252);
+}
+
+#end_btn{
+    padding-bottom: 40px;
+}

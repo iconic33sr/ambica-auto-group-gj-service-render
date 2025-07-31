@@ -1,0 +1,260 @@
+.disableBodyScroll{
+    overflow: hidden;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.field label {
+    flex: 1 1 100%;
+}
+.field-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+button {
+    padding: 10px;
+    flex: 1;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.output-img {
+    display: none;
+    max-width: 100%;
+    margin: 10px 0;
+}
+
+#cameraModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100dvw; 
+    height: 100dvh;
+    background: black;
+    z-index: 1000;
+    display: none;
+    gap:5px;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#cameraModal.native-camera {
+    background: transparent !important;
+}
+
+
+#cameraPreviewContainer {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    background-color: black;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+}
+
+#video {
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+}
+
+#cameraPreviewImage {
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  aspect-ratio: 4 / 3;
+}
+
+
+#cameraPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scaleX(-1);
+}
+
+#cameraControls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-block:25px;
+}
+
+#cameraControls button {
+    max-width: 150px;
+}
+
+#cameraTopControls {
+    width: 100%;
+    display: flex;
+    gap:5px;
+    justify-content: center;
+    padding-block:15px;
+}
+
+#cameraTopControls button {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 20px;
+    width: auto;
+    min-width: 40px;
+    max-width: 60px;
+    text-align: center;
+}
+
+#geoOverlay {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 16px 12px 16px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 2;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+  align-items: flex-start;      
+  text-align: left;             
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+#geoOverlay > div {
+  margin-bottom: 2px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  width: 100%;                  
+  text-align: left;             
+  margin-bottom: 2px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;       
+  padding: 0; 
+}
+
+#geoOverlay > div:last-child {
+  margin-bottom: 0;
+}
+
+#photoPopup {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,1);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+#photoPopup img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#closePopup {
+    position: absolute;
+    top: 10px; right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.photo-warning {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 5px;
+  display: block;
+}
+
+.field label.warning::before {
+  content: "⚠️ ";
+  color: #dc3545;
+}
+
+/* For landscape */
+#cameraModal.landscape {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#cameraModal.landscape #cameraPreviewContainer {
+  max-width: none;
+  width: 60vw;
+  aspect-ratio: 4 / 3;
+  height: 90vh;
+}
+
+#cameraModal.landscape #cameraControls,
+#cameraModal.landscape #cameraTopControls {
+  flex-direction: column;
+  align-items: flex-start;
+  width: auto;
+  gap: 15px;
+  padding-block: 0;
+  padding-left: 20px;
+}
+
+#cameraModal.landscape #cameraControls button,
+#cameraModal.landscape #cameraTopControls button {
+  max-width: 180px;
+  min-width: 80px;
+  font-size: 18px;
+}
+
+#cameraModal.landscape #geoOverlay {
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  transform: none;
+  position: absolute;
+  align-items: flex-start;
+  text-align: left;             
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* Optional: make overlay font a bit larger in landscape */
+#cameraModal.landscape #geoOverlay {
+    font-size: 12px;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    min-height: 40px;
+    max-width: 100vw;
+    padding: 14px 24px 14px 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}

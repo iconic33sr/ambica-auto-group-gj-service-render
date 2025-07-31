@@ -1,0 +1,49 @@
+#service_advisor_report_form{
+    margin-top: 10px;
+}
+
+/* For Radio Button */
+.form-check-label{
+    font-size: 18px;
+}
+
+.card_cont{
+    padding: 3px 7px;
+    border-radius: 10px;
+    background-color: rgb(252, 252, 252);
+    margin-bottom: 20px;
+}
+
+.card_cont .input_field{
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#selected_wm, #selected_wm option{
+  text-transform: none!important;
+}
+
+/* For checkbox */
+
+#report_completed_label{
+    color: green;
+}
+
+.form-check-input{
+    width: 1.3em;
+    height: 1.3em;
+    margin-right: 5px;
+}
+
+#report_completed_cont{
+    padding-left: 2em;
+    margin-top: 25px;
+}
+
+/* --------------------------------- */
+
+.btn_cont{
+    justify-content: space-between;
+    padding: 0 5px;
+}
+

@@ -1,0 +1,43 @@
+#wm_revision_remark_cont{
+    margin: 5px 0 13px 0!important;
+}
+
+#wm_revision_remark_cont label{
+    display: block;
+    text-align: center;
+    color: darkred;
+    color: #222;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#wm_revision_remark_cont textarea{
+    background-color: purple;
+    color: #ffffff;
+    border: 1px solid aqua;
+}
+
+hr{
+    margin: 0 0;
+    opacity: 1;
+    color: gray;
+    border: 2px solid black;
+}
+
+/* For checkbox */
+#report_revised_label{
+    font-size: 18px;
+    color: green;
+}
+
+.form-check-input{
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: 5px;
+}
+
+#report_revised_cont{
+    padding-left: 2em;
+    margin-top: 20px;
+    margin-bottom: 12px!important;
+}

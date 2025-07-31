@@ -1,0 +1,43 @@
+.btn_cont{
+    justify-content: space-between;
+}
+
+#parts_dispatch_image_form{
+    margin-top: 15px;
+}
+
+#claim_no.uneditable{
+    border: 1px solid #0066ff;
+}
+
+#claim_no:focus{
+    border: 1px solid #0066ff;
+}
+
+#claim_no::placeholder {
+  color: lightgray;
+  opacity: 0.8;
+}
+
+#checkBtn{
+    position: absolute; 
+    right: 0; 
+    top: 0; 
+    height: 100%; 
+    border: none; 
+    background: #007bff; 
+    color: white; 
+    padding: 0 13px; 
+    border-radius: 0 4px 4px 0; 
+    cursor: pointer; 
+    font-size:16px;
+}
+
+.field-buttons {
+    margin-top: 1px;
+}
+
+#img_already_captured{
+    display: none;
+    text-align: center;
+}

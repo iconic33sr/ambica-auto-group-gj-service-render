@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DOWNLOAD PPT</title>
+
+    <link rel="stylesheet" href={% static "claim_manager/css/presentation_download.css" %}>   
+
+  </head>
+  <body>
+    <div class="overlay" id="downloadOverlay">
+      <div id="ppt-icon" class="ppt-icon" style="margin-bottom: 12px;">
+        <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+          <rect width="70" height="70" rx="14" fill="#F44336"/>
+          <rect x="13" y="18" width="44" height="34" rx="6" fill="#fff" stroke="#B71C1C" stroke-width="2"/>
+          <text x="35" y="43" text-anchor="middle" font-size="20" font-family="Arial,sans-serif" fill="#F44336" font-weight="bold">PPT</text>
+        </svg>
+      </div>
+
+      
+
+
+      <div class="downloading-text" id="downloadingText">
+        Click the button below to download PPT.<br />
+      </div>
+      <button class="download-btn" id="downloadBtn">Download File</button>
+      <button class="after-download-btn" id="doneBtn">Continue</button>
+    </div>
+    <script>
+      document.getElementById("downloadBtn").onclick = function () {
+        // Open the file in a new tab/window (this will be allowed)
+        window.location.href = "{{ file_url }}";
+        setTimeout(function () {
+          document.getElementById("doneBtn").style.display = "inline-block";
+          document.getElementById("downloadBtn").style.display = "none";
+          document.getElementById("downloadingText").textContent ="Click below to continue.";
+          document.getElementById("ppt-icon").style.display = "none";
+        }, 2000); // 3000 ms = 3 seconds
+        
+      };
+      document.getElementById("doneBtn").onclick = function () {
+        window.location.href = "{{ redirect_url }}";
+      };
+    </script>
+  </body>
+</html>

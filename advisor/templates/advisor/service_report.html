@@ -1,0 +1,473 @@
+{% extends "advisor/advisor_base.html" %}
+
+{% load static %}
+
+{% block title %}
+{% if revision_remark != "no_remark" %}
+EDIT SAR
+{% else %}
+SERVICE ADVISOR REPORT
+{% endif %}
+{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "advisor/css/service_report.css" %}>
+
+{% if revision_remark != "no_remark" %}
+<style>
+    #wm_revision_remark_cont{
+        margin: 5px 0 0 0;
+    }
+
+    #wm_revision_remark_cont label{
+        display: block;
+        text-align: center;
+        color: darkred;
+        color: #222;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    #wm_revision_remark_cont textarea{
+        background-color: purple;
+        color: #ffffff;
+        border: 1px solid aqua;
+    }
+
+    hr{
+        margin: 10px 0;
+        opacity: 1;
+        color: gray;
+        border: 2px solid black;
+    }
+
+    #first_subheading{
+        margin-top: 10px;
+    }
+</style>
+{% endif %}
+{% endblock manualcss %}
+
+{% block wm_nav_link %}<a href="{% url "wm_returned_report" %}" class="nav_wm_btn" id="nav_wm_btn">WM<span class="notification-dot" id="wm_dot"></span></a>{% endblock wm_nav_link %}
+
+{% block content %}
+<div class="page_data_cont">
+    {% if revision_remark != "no_remark" %}
+    <h2 class="page_heading" id="sale_order_heading">EDIT SAR</h2>
+    {% else %}
+    <h2 class="page_heading" id="sale_order_heading">SERVICE ADVISOR REPORT</h2>
+    {% endif %}
+
+    <div style="padding-top:8px;" class="field_buttons">
+        {% if revision_remark != "no_remark" %}
+        <a style="text-decoration:none;" href="{% url "advisor_revise_report" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+        {% else %}
+        <a style="text-decoration:none;" href="{% url "advisor_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+        {% endif %}
+    </div>
+
+    {% if revision_remark != "no_remark" %}
+        <div class="mb-3" id="wm_revision_remark_cont">
+            <label class="form-label">WM Revision Remark</label>
+            <textarea class="form-control multi_line_ta" id="wm_revision_remark" name="wm_revision_remark" readonly>{{revision_remark}}</textarea>
+        </div>
+        <hr>
+    {% endif %}
+
+    <form method="POST" autocomplete="off" enctype="multipart/form-data" id="service_advisor_report_form">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="job_no" class="form-label">JOB CARD NO.</label>
+            <input type="text" class="form-control readonly normal_text" id="job_no" name="job_no" readonly value="{{job_no}}">
+        </div>
+
+        <div class="mb-3">
+            <label for="vehicle_no" class="form-label">VEHICLE NO.</label>
+            <input type="text" class="form-control readonly" id="vehicle_no" name="vehicle_no" readonly value="{{vehicle_no}}">
+        </div>
+
+        <h5 class="sub_heading">SERVICE HISTORY</h5>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="first_service_remark" class="form-label normal_text">1st Service :</label>
+                    <div>
+                        {% for radio in sar_form.first_service %}
+                        <div class="form-check form-check-inline">
+                            {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {{sar_form.first_service_remark}}
+            </div>
+        </div>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="second_service_remark" class="form-label normal_text">2nd Service :</label>
+                    {% for radio in sar_form.second_service %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{sar_form.second_service_remark}}
+            </div>
+        </div>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="third_service_remark" class="form-label normal_text">3rd Service :</label>
+                    {% for radio in sar_form.third_service %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{sar_form.third_service_remark}}
+            </div>
+        </div>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="fourth_service_remark" class="form-label normal_text">4th Service :</label>
+                    {% for radio in sar_form.fourth_service %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{sar_form.fourth_service_remark}}
+            </div>
+        </div>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="fifth_service_remark" class="form-label normal_text">5th Service :</label>
+                    {% for radio in sar_form.fifth_service %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{sar_form.fifth_service_remark}}
+            </div>
+        </div>
+
+        <div class="card_cont">
+            <div class="mb-3">
+                <div class="one_line_radio_cont">
+                    <label for="sixth_service_remark" class="form-label normal_text">6th Service :</label>
+                    {% for radio in sar_form.sixth_service %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{sar_form.sixth_service_remark}}
+            </div>
+        </div>
+
+        <div class="mb-3" style="margin-top:20px; margin-bottom:20px!important;">
+            <label for="service_remark" class="form-label">SERVICE REMARK</label>
+            {{sar_form.service_remark}}
+        </div>
+        
+        <h5 class="sub_heading">OBSERVATION</h5>
+
+        <div class="card_cont" id="card_cont_0" style="display: block;">
+            <div class="field mb-3" id="field-0">
+                <label for="faulty1_description" class="form-label">FAULT_1</label>
+                {{sar_form.faulty1_description}} <span class="required_msg">{{sar_form.faulty1_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(0)" id="fault_1_image_btn">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(0)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(0)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_0" id="photoInput-0" />
+            </div>
+        </div>
+
+        <div class="card_cont"  id="card_cont_1" style="display: none;">
+            <div class="field mb-3" id="field-1">
+                <label for="faulty2_description" class="form-label">FAULT_2</label>
+                {{sar_form.faulty2_description}} <span class="required_msg">{{sar_form.faulty2_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(1)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(1)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(1)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_1" id="photoInput-1" />
+            </div>
+        </div>
+
+        <div class="card_cont"  id="card_cont_2" style="display: none;">
+            <div class="field mb-3" id="field-2">
+                <label for="faulty3_description" class="form-label">FAULT_3</label>
+                {{sar_form.faulty3_description}} <span class="required_msg">{{sar_form.faulty3_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(2)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(2)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(2)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_2" id="photoInput-2" />
+            </div>
+        </div>
+
+        <div class="card_cont"  id="card_cont_3" style="display: none;">
+            <div class="field mb-3" id="field-3">
+                <label for="faulty4_description" class="form-label">FAULT_4</label>
+                {{sar_form.faulty4_description}} <span class="required_msg">{{sar_form.faulty4_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(3)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(3)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(3)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_3" id="photoInput-3" />
+            </div>
+        </div>
+
+        <div class="card_cont" id="card_cont_4" style="display: none;">
+            <div class="field mb-3" id="field-4">
+                <label for="faulty5_description" class="form-label">FAULT_5</label>
+                {{sar_form.faulty5_description}} <span class="required_msg">{{sar_form.faulty5_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(4)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(4)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(4)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_4" id="photoInput-4" />
+            </div>
+        </div>
+
+        <div class="card_cont" id="card_cont_5" style="display: none;">
+            <div class="field mb-3" id="field-5">
+                <label for="faulty6_description" class="form-label">FAULT_6</label>
+                {{sar_form.faulty6_description}} <span class="required_msg">{{sar_form.faulty6_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(5)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(5)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(5)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_5" id="photoInput-5" />
+            </div>
+        </div>
+        
+        <div class="card_cont" id="card_cont_6" style="display: none;">
+            <div class="field mb-3" id="field-6">
+                <label for="faulty7_description" class="form-label">FAULT_7</label>
+                {{sar_form.faulty7_description}} <span class="required_msg">{{sar_form.faulty7_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(6)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(6)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(6)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_6" id="photoInput-6" />
+            </div>
+        </div>
+                
+        <div class="card_cont" id="card_cont_7" style="display: none;">
+            <div class="field mb-3" id="field-7">
+                <label for="faulty8_description" class="form-label">FAULT_8</label>
+                {{sar_form.faulty8_description}} <span class="required_msg">{{sar_form.faulty8_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(7)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(7)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(7)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_7" id="photoInput-7" />
+            </div>
+        </div>
+                        
+        <div class="card_cont" id="card_cont_8" style="display: none;">
+            <div class="field mb-3" id="field-8">
+                <label for="faulty9_description" class="form-label">FAULT_9</label>
+                {{sar_form.faulty9_description}} <span class="required_msg">{{sar_form.faulty9_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(8)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(8)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(8)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_8" id="photoInput-8" />
+            </div>
+        </div>
+                                
+        <div class="card_cont" id="card_cont_9" style="display: none;">
+            <div class="field mb-3" id="field-9">
+                <label for="faulty10_description" class="form-label">FAULT_10</label>
+                {{sar_form.faulty10_description}} <span class="required_msg">{{sar_form.faulty10_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(9)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(9)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(9)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_9" id="photoInput-9" />
+            </div>
+        </div>
+                                
+        <div class="card_cont" id="card_cont_10" style="display: none;">
+            <div class="field mb-3" id="field-10">
+                <label for="faulty11_description" class="form-label">FAULT_11</label>
+                {{sar_form.faulty11_description}} <span class="required_msg">{{sar_form.faulty11_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(10)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(10)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(10)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_10" id="photoInput-10" />
+            </div>
+        </div>
+                                        
+        <div class="card_cont" id="card_cont_11" style="display: none;">
+            <div class="field mb-3" id="field-11">
+                <label for="faulty12_description" class="form-label">FAULT_12</label>
+                {{sar_form.faulty12_description}} <span class="required_msg">{{sar_form.faulty12_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(11)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(11)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(11)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_11" id="photoInput-11" />
+            </div>
+        </div>
+                                                
+        <div class="card_cont" id="card_cont_12" style="display: none;">
+            <div class="field mb-3" id="field-12">
+                <label for="faulty13_description" class="form-label">FAULT_13</label>
+                {{sar_form.faulty13_description}} <span class="required_msg">{{sar_form.faulty13_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(12)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(12)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(12)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_12" id="photoInput-12" />
+            </div>
+        </div>
+                                                        
+        <div class="card_cont" id="card_cont_13" style="display: none;">
+            <div class="field mb-3" id="field-13">
+                <label for="faulty14_description" class="form-label">FAULT_14</label>
+                {{sar_form.faulty14_description}} <span class="required_msg">{{sar_form.faulty14_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(13)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(13)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(13)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_13" id="photoInput-13" />
+            </div>
+        </div>
+                                                        
+        <div class="card_cont" id="card_cont_14" style="display: none;">
+            <div class="field mb-3" id="field-14">
+                <label for="faulty15_description" class="form-label">FAULT_15</label>
+                {{sar_form.faulty15_description}} <span class="required_msg">{{sar_form.faulty15_description.errors | striptags}}</span>
+                <div class="field-buttons">
+                    <button type="button" class="primary_btn" onclick="openCamera(14)">Click Photo</button>
+                    <button type="button" class="view_btn" onclick="viewPhoto(14)" style="display:none">View Photo</button>
+                    <button type="button" class="danger_btn" onclick="removePhoto(14)" style="display:none">Remove</button>
+                </div>
+                <input type="hidden" name="photo_14" id="photoInput-14" />
+            </div>
+        </div>
+
+        <h5 class="sub_heading">ACTION TAKEN</h5>
+
+        <div class="mb-3">
+            {{sar_form.action_remark}} <span class="required_msg">{{sar_form.action_remark.errors | striptags}}</span>
+        </div>
+
+        <h5 class="sub_heading">ADVISOR REMARK</h5>
+
+        <div class="mb-3">
+            {{sar_form.advisor_description}} <span class="required_msg">{{sar_form.advisor_description.errors | striptags}}</span>
+        </div>
+
+        {% if revision_remark == "no_remark" %}
+        <div class="form-check" id="report_completed_cont">
+            <input type="checkbox" class="form-check-input" id="report_completed" name="report_completed" value="completed">
+            <label class="form-check-label" for="report_completed" id="report_completed_label">Report completed</label>
+        </div>
+        {% endif %}
+
+        {% if revision_remark == "no_remark" %}
+        <div class="mb-3" style="margin-top: 20px; display: none;" id="forward_to_wm">
+            <label for="selected_wm" class="form-label"><span class="red_star">*</span>FORWARD TO WORKS MANAGER</label>
+            <select name="selected_wm" id="selected_wm"class="form-select" required>
+                {% for wm in wm_list %}
+                    <option value="{{wm.user__username}}" {% if wm.user__username == alloted_wm %}selected{% endif %}>{{wm.user__first_name|upper}} {{wm.user__last_name|upper}} ({{wm.user__username|lower}})</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <input type="hidden" name="cir_report_uid" value="{{cir_uid}}">
+
+        <input type="hidden" name="task" id="task" value="draft">
+
+        <input type="hidden" name="action" id="action_field">
+
+        <input type="hidden" name="imageUrlsJSONPassed" id="imageUrlsJSONPassed">
+
+        <div class="btn_cont">
+            {% if revision_remark != "no_remark" %}
+            <a style="text-decoration:none;" href="{% url "advisor_revise_report" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>    
+            {% else %}
+            <a style="text-decoration:none;" href="{% url "advisor_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+            {% endif %}
+
+            {% if revision_remark == "no_remark" %}
+            <div class="submit_draft_cont">
+                <input type="submit" class="btn yellow_btn" value="Draft" id="draft_btn" style="padding-left:19px!important; padding-right:19px!important;">
+                <input type="submit" style="display:none;" class="success_btn" value="SUBMIT" id="submit_btn">
+            </div>
+            {% else %}
+            <input type="submit" class="success_btn" value="SAVE" id="save_btn">
+            {% endif %}
+        </div>
+    </form>
+
+    <div id="cameraModal">
+        <div id="cameraTopControls">
+        <button id="flashlightBtn" type="button" title="Toggle Flashlight"><span id="flashlightIcon">🔦</span></button>
+
+        <button  id="switchCameraBtn" onclick="switchCamera()">🔄</button>
+        </div>
+        <div id="cameraPreviewContainer">
+        <video id="video" autoplay fullscreen playsinline></video>
+        <div id="geoOverlay"></div>
+        </div>
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+        <div id="cameraControls">
+        <button id="confirmPhoto" class="primary_btn">Take Photo</button>
+        <button id="discardPhoto" class="danger_btn">Cancel</button>
+        </div>
+    </div>
+
+    <div id="photoPopup">
+        <span id="closePopup">&times;</span>
+        <img id="popupImg" src="" />
+    </div>
+
+</div>
+
+{{ last_faulty_description_index|json_script:"lastFaultyDescriptionIndexJSON" }}
+{{ revision_remark|json_script:"revision_remarkJSON" }}
+{{ no_of_revision_report|json_script:"no_of_revision_reportJSON" }}
+
+{{ image_urls|json_script:"imageUrlsJSON" }}
+
+<script>
+    const wmReturnedReportUrl = "{% url 'wm_returned_report' %}";
+</script>
+
+<script src={% static "advisor/js/service_report.js" %}></script>
+<script defer src={% static "core/js/geotag_img.js" %}></script>
+
+{% endblock content %}
