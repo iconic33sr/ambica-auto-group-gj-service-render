@@ -230,13 +230,9 @@ def advisor_edit_cir(request, cir_uid):
 ########################################################################################################################################
 
 def base64_to_image(base64_str, filename_prefix):
-    """
-    Converts base64 string to Django ContentFile for use in ImageField
-    """
-    format, imgstr = base64_str.split(';base64,')  # format ~= data:image/jpeg
+    format, imgstr = base64_str.split(';base64,')
     ext = format.split('/')[-1]
-    file_name = f"{filename_prefix}_{uuid.uuid4()}.{ext}"
-    return ContentFile(base64.b64decode(imgstr), name=file_name)
+    return ContentFile(base64.b64decode(imgstr), name=f"{uuid.uuid4()}.{ext}")
 
 ####################################################################################
 
