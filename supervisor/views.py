@@ -15,7 +15,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from core.decorators import login_active_user_required
 import logging
-
+from django.core.files.storage import default_storage
 
 ########################################################################################################################################
 
@@ -97,10 +97,6 @@ def supervisor_cir_form(request):
                     logger.warning("FILENAME: %s", report.vehicle_front_image.name)
                     logger.warning("URL: %s", report.vehicle_front_image.url)
 
-                    from django.core.files.storage import default_storage
-                    import logging
-
-                    logger = logging.getLogger(__name__)
                     logger.warning("Using storage: %s", default_storage.__class__)
                 if data.get('photo_1'):
                     image_file = base64_to_image(data['photo_1'], 'vehicle_number_plate')
