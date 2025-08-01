@@ -73,3 +73,48 @@ background: #009c41;
 display: none;
 margin-top: 18px;
 }
+
+/* Form submission overlay style */
+#formSubmittingOverlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.62);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+}
+
+.form-submitting-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(32,32,32,0.93);
+  padding: 40px 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.27);
+}
+
+.spinner {
+  border: 6px solid #f3f3f3; /* Light gray */
+  border-top: 6px solid #007bff; /* Blue */
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 22px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.submitting-text {
+  color: #fff;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  margin-top: 8px;
+  text-transform: none;
+}
+
