@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from core.models import Customer_Information_Report, Service_Advisor_Report, Claim_Status, Accounting_Year
@@ -17,10 +16,8 @@ from core.decorators import login_active_user_required
 import uuid
 import os
 import io
-from django.db import models
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404
 from django.conf import settings # Make sure settings.py has MEDIA_ROOT configured
 
 # Import python-pptx libraries
@@ -32,17 +29,19 @@ from pptx.enum.shapes import MSO_SHAPE
 from PIL import Image # Required for image dimension/DPI reading
 
 from pptx.util import Inches, Pt
-from pptx.enum.shapes import MSO_AUTO_SHAPE_TYPE
 from pptx.dml.color import RGBColor
 from pptx.enum.text import MSO_ANCHOR
 import textwrap
+import requests
+from urllib.request import urlopen
+from io import BytesIO
 
 ####################################################################################################################
 
 @login_active_user_required
 def claim_manager_pending_cir_list(request):
     if request.user.user_profile.user_designation.designation == "claim_manager":
-        cir_reports = Customer_Information_Report.objects.filter(workshop_manager_verification="verified", presentation_report_status="pending", claim_manager_rejection="", branch=request.user.user_profile.user_branch, selected_claim_manager=request.user.username).values('cir_uid', 'job_no', 'vehicle_no', 'supervisor_name', 'cir_date_time', 'service_advisor_report__advisor_name', 'service_advisor_report__sar_date_time', 'workshop_manager_name', 'workshop_manager_verification_date_time', 'claim_manager_preview').order_by('cir_date_time')
+        cir_reports = Customer_Information_Report.objects.filter(workshop_manager_verification="verified", presentation_report_status="pending",claim_manager_rejection="", branch=request.user.user_profile.user_branch, selected_claim_manager=request.user.username).values('cir_uid', 'job_no', 'vehicle_no', 'supervisor_name', 'cir_date_time', 'service_advisor_report__advisor_name', 'service_advisor_report__sar_date_time', 'workshop_manager_name', 'workshop_manager_verification_date_time', 'claim_manager_preview').order_by('cir_date_time')
         paginator = Paginator(cir_reports, 30)
         page_no = request.GET.get('page')
         page_obj = paginator.get_page(page_no)
@@ -434,17 +433,7 @@ def claim_manager_generate_ppt(request, cir_uid):
 
                 if cir_report:
 
-                    try:
-
-                        cir_report.presentation_report_status="created"
-                        cir_report.claim_manager_last_save_date_time=datetime.now()
-                        cir_report.presentation_date_time=datetime.now()
-                        cir_report.presentation_date=date.today()
-                        cir_report.presentation_time=timezone.now()
-                        cir_report.claim_manager_name=request.user.first_name+ " " + request.user.last_name
-                        cir_report.claim_manager_id=request.user.username
-
-                        cir_report.save()
+                    # try:
 
                         branch_name = cir_report.branch.branch.strip().capitalize()
 
@@ -832,11 +821,24 @@ def claim_manager_generate_ppt(request, cir_uid):
                             If label or image_path is None/blank, handle gracefully.
                             """
                             label = (label or '').strip()
-                            image_present = image_path and os.path.exists(image_path)
                             label_present = bool(label)
+
+                            def file_exists(path_or_url):
+                                if not path_or_url:
+                                    return False
+                                try:
+                                    if path_or_url.startswith('http://') or path_or_url.startswith('https://'):
+                                        response = requests.head(path_or_url)
+                                        return response.status_code == 200
+                                    return os.path.exists(path_or_url)
+                                except Exception:
+                                    return False
+
+                            image_present = image_path and file_exists(image_path)
 
                             # -- Both present --
                             if image_present and label_present:
+                                print(label)
                                 # Add label box at top
                                 label_box = slide.shapes.add_textbox(left, top, width, Inches(label_height))
                                 tf = label_box.text_frame
@@ -860,10 +862,22 @@ def claim_manager_generate_ppt(request, cir_uid):
                                 img_top = top + Inches(label_height)
                                 img_height = height - Inches(label_height)
                                 if img_height < Inches(1): img_height = Inches(1)
-                                slide.shapes.add_picture(image_path, left, img_top, width=width, height=img_height)
+                                if image_path.startswith('http://') or image_path.startswith('https://'):
+                                    # It's a remote image — fetch and use as file-like object
+                                    image_stream = BytesIO(urlopen(image_path).read())
+                                    slide.shapes.add_picture(image_stream, left, img_top, width=width, height=img_height)
+                                else:
+                                    # It's a local image path
+                                    slide.shapes.add_picture(image_path, left, img_top, width=width, height=img_height)
                             # -- Only image --
                             elif image_present and not label_present:
-                                slide.shapes.add_picture(image_path, left, top, width=width, height=height)
+                                if image_path.startswith('http://') or image_path.startswith('https://'):
+                                    # It's a remote image — fetch and use as file-like object
+                                    image_stream = BytesIO(urlopen(image_path).read())
+                                    slide.shapes.add_picture(image_stream, left, top, width=width, height=height)
+                                else:
+                                    # It's a local image path
+                                    slide.shapes.add_picture(image_path, left, top, width=width, height=height)
                             # -- Only label --
                             elif label_present and not image_present:
                                 label_box = slide.shapes.add_textbox(left, top, width, height)
@@ -933,7 +947,7 @@ def claim_manager_generate_ppt(request, cir_uid):
                                     left = block_left + col * (image_width + spacing_x)
                                     top = CONTENT_TOP + spacing_top
                                     label = img_data.get('label')
-                                    image_path = img_data.get('path')
+                                    image_path = img_data.get('path_url')
                                     add_label_and_image_optional(
                                         slide, left, top, image_width, image_height,
                                         label=label, image_path=image_path, font_size=14, label_height=0.6
@@ -1068,13 +1082,13 @@ def claim_manager_generate_ppt(request, cir_uid):
                         # --- Vehicle Images ---
                         vehicle_images = []
                         if cir_report.vehicle_front_image:
-                            vehicle_images.append({'path': cir_report.vehicle_front_image.path, 'label': 'VEHICLE FRONT'})
+                            vehicle_images.append({'path_url': cir_report.vehicle_front_image.url, 'label': 'VEHICLE FRONT'})
                         if cir_report.vehicle_with_number_plate:
-                            vehicle_images.append({'path': cir_report.vehicle_with_number_plate.path, 'label': 'VEHICLE WITH NUMBER PLATE'})
+                            vehicle_images.append({'path_url': cir_report.vehicle_with_number_plate.url, 'label': 'VEHICLE WITH NUMBER PLATE'})
                         if cir_report.chasis:
-                            vehicle_images.append({'path': cir_report.chasis.path, 'label': 'CHASSIS'})
+                            vehicle_images.append({'path_url': cir_report.chasis.url, 'label': 'CHASSIS'})
                         if cir_report.odometer:
-                            vehicle_images.append({'path': cir_report.odometer.path, 'label': 'ODOMETER'})
+                            vehicle_images.append({'path_url': cir_report.odometer.url, 'label': 'ODOMETER'})
 
                         if vehicle_images:
                             _add_image_slide(prs, "Vehicle Images", vehicle_images)
@@ -1082,19 +1096,19 @@ def claim_manager_generate_ppt(request, cir_uid):
                         # --- Complaint Images ---
                         complaint_images = []
                         if cir_report.complaint_1_image or cir_report.complaint_1:
-                            complaint_images.append({'path': cir_report.complaint_1_image.path if cir_report.complaint_1_image else '', 'label': cir_report.complaint_1.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_1_image.url if cir_report.complaint_1_image else '', 'label': cir_report.complaint_1.upper() or ''})
                         if cir_report.complaint_2_image  or cir_report.complaint_2:
-                            complaint_images.append({'path': cir_report.complaint_2_image.path if cir_report.complaint_2_image else '', 'label': cir_report.complaint_2.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_2_image.url if cir_report.complaint_2_image else '', 'label': cir_report.complaint_2.upper() or ''})
                         if cir_report.complaint_3_image  or cir_report.complaint_3:
-                            complaint_images.append({'path': cir_report.complaint_3_image.path if cir_report.complaint_3_image else '', 'label': cir_report.complaint_3.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_3_image.url if cir_report.complaint_3_image else '', 'label': cir_report.complaint_3.upper() or ''})
                         if cir_report.complaint_4_image  or cir_report.complaint_4:
-                            complaint_images.append({'path': cir_report.complaint_4_image.path if cir_report.complaint_4_image else '', 'label': cir_report.complaint_4.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_4_image.url if cir_report.complaint_4_image else '', 'label': cir_report.complaint_4.upper() or ''})
                         if cir_report.complaint_5_image  or cir_report.complaint_5:
-                            complaint_images.append({'path': cir_report.complaint_5_image.path if cir_report.complaint_5_image else '', 'label': cir_report.complaint_5.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_5_image.url if cir_report.complaint_5_image else '', 'label': cir_report.complaint_5.upper() or ''})
                         if cir_report.complaint_6_image  or cir_report.complaint_6:
-                            complaint_images.append({'path': cir_report.complaint_6_image.path if cir_report.complaint_6_image else '', 'label': cir_report.complaint_6.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_6_image.url if cir_report.complaint_6_image else '', 'label': cir_report.complaint_6.upper() or ''})
                         if cir_report.complaint_7_image  or cir_report.complaint_7:
-                            complaint_images.append({'path': cir_report.complaint_7_image.path if cir_report.complaint_7_image else '', 'label': cir_report.complaint_7.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_7_image.url if cir_report.complaint_7_image else '', 'label': cir_report.complaint_7.upper() or ''})
 
                         if complaint_images:
                             _add_image_slide(prs, "Customer Complain", complaint_images)
@@ -1114,7 +1128,7 @@ def claim_manager_generate_ppt(request, cir_uid):
                                 description_value = getattr(sar_report, description_field, '')
 
                                 fault_images.append({
-                                    'path': image_field.path if image_field else '',
+                                    'path_url': image_field.url if image_field else '',
                                     'label': description_value.upper() or ''
                                 })
 
@@ -1139,13 +1153,24 @@ def claim_manager_generate_ppt(request, cir_uid):
                         filename = f"{base_filename.replace(' ', '_')}_{uuid.uuid4().hex[:8]}.pptx"
 
                         # --- Save to FileField in model ---
+
+                        cir_report.presentation_report_status="created"
+                        cir_report.claim_manager_last_save_date_time=datetime.now()
+                        cir_report.presentation_date_time=datetime.now()
+                        cir_report.presentation_date=date.today()
+                        cir_report.presentation_time=timezone.now()
+                        cir_report.claim_manager_name=request.user.first_name+ " " + request.user.last_name
+                        cir_report.claim_manager_id=request.user.username
                         cir_report.presentation_report.save(filename, ContentFile(ppt_buffer.getvalue()))
+
+                        cir_report.save()
+                        
 
                         return redirect('presentation_download', cir_uid=cir_report.pk)
                     
-                    except:
-                        messages.error(request, "Error in generating presentation !!")    
-                        return redirect('claim_manager_preview_cir', cir_uid=data.get('cir_uid'))        
+                    # except:
+                    #     messages.error(request, "Error in generating presentation !!")    
+                    #     return redirect('claim_manager_preview_cir', cir_uid=data.get('cir_uid'))        
                 
 
                 else:

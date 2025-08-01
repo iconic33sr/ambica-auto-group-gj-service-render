@@ -131,7 +131,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   ## Add this
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'   ## Add this
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -152,13 +152,13 @@ STORAGES = {
     }
   },
   "staticfiles": {
-    "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
   },
 }
 
 
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
@@ -266,25 +266,25 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'boto3': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'botocore': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'boto3': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#         'botocore': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'INFO',
+#         },
+#     },
+# }
