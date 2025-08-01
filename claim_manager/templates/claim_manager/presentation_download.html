@@ -38,6 +38,15 @@
       {% comment %} document.getElementById("doneBtn").onclick = function () {
         window.location.href = "{{ redirect_url }}";
       }; {% endcomment %}
+
+      <!-- Submission overlay -->
+    <div id="formSubmittingOverlay" style="display:none;">
+    <div class="form-submitting-modal">
+        <div class="spinner"></div>
+        <div class="submitting-text" id="submitting-text">Loading...</div>
+    </div>
+    </div>
+
     </script>
     <script id="redirectData" type="application/json">
       {{ redirect_url|json_script:"redirectURL" }}
