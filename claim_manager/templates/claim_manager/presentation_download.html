@@ -17,9 +17,6 @@
         </svg>
       </div>
 
-      
-
-
       <div class="downloading-text" id="downloadingText">
         Click the button below to download PPT.<br />
       </div>
@@ -38,9 +35,12 @@
         }, 2000); // 3000 ms = 3 seconds
         
       };
-      document.getElementById("doneBtn").onclick = function () {
+      {% comment %} document.getElementById("doneBtn").onclick = function () {
         window.location.href = "{{ redirect_url }}";
-      };
+      }; {% endcomment %}
+    </script>
+    <script id="redirectData" type="application/json">
+      {{ redirect_url|json_script:"redirectURL" }}
     </script>
   </body>
 </html>
