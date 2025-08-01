@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById("done_btn").addEventListener("click", async function (e) {
+    document.getElementById("doneBtn").addEventListener("click", async function (e) {
         e.preventDefault();
 
         if (!navigator.onLine) {
