@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,6 +149,13 @@ AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")  # e.g., 'blr1'
 AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")  # e.g., 'https://blr1.digitaloceanspaces.com'
+
+logger = logging.getLogger(__name__)
+logger.warning("### AWS_ACCESS_KEY_ID: %s", AWS_ACCESS_KEY_ID)
+logger.warning("### AWS_SECRET_ACCESS_KEY: %s", AWS_SECRET_ACCESS_KEY)
+logger.warning("### AWS_STORAGE_BUCKET_NAME: %s", AWS_STORAGE_BUCKET_NAME)
+logger.warning("### AWS_S3_REGION_NAME: %s", AWS_S3_REGION_NAME)
+logger.warning("### AWS_S3_ENDPOINT_URL: %s", AWS_S3_ENDPOINT_URL)
 
 # Optional: Make media files publicly accessible
 AWS_QUERYSTRING_AUTH = False
