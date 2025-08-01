@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from core.decorators import login_active_user_required
+import logging
 
 
 ########################################################################################################################################
@@ -94,6 +95,8 @@ def supervisor_cir_form(request):
                 # Convert and assign images from base64
                 if data.get('photo_0'):
                     report.vehicle_front_image = base64_to_image(data['photo_0'], 'vehicle_front_image')
+                    logger = logging.getLogger(__name__)
+                    logger.warning("PHOTO 0: %s", str(data.get('photo_0'))[:100])
                 if data.get('photo_1'):
                     report.vehicle_with_number_plate = base64_to_image(data['photo_1'], 'vehicle_number_plate')
                 if data.get('photo_2'):
