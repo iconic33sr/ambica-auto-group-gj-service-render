@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (responsePing.ok) {
-            const redirectUrl = JSON.parse(document.getElementById("redirectData").textContent);
+            const redirectUrl = JSON.parse(document.getElementById("redirectURL").textContent);
             window.location.href = redirectUrl;
         } else {
             // Server responded, but not OK (200)
