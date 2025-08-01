@@ -89,49 +89,49 @@ def supervisor_cir_form(request):
 
                 # Convert and assign images from base64
                 if data.get('photo_0'):
-                    report.vehicle_front_image = base64_to_image(data['photo_0'], 'vehicle_front_image')
-                    # image_file = base64_to_image(data['photo_0'], 'vehicle_front_image')
-                    # report.vehicle_front_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_0'], 'vehicle_front_image') This concept is not working for cloud
+                    image_file = base64_to_image(data['photo_0'], 'vehicle_front_image')
+                    report.vehicle_front_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_1'):
-                    report.vehicle_front_image = base64_to_image(data['photo_1'], 'vehicle_number_plate')
-                    # image_file = base64_to_image(data['photo_1'], 'vehicle_number_plate')
-                    # report.vehicle_with_number_plate.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_1'], 'vehicle_number_plate')
+                    image_file = base64_to_image(data['photo_1'], 'vehicle_number_plate')
+                    report.vehicle_with_number_plate.save(image_file.name, image_file, save=False)
                 if data.get('photo_2'):
-                    report.vehicle_front_image = base64_to_image(data['photo_2'], 'chasis')
-                    # image_file = base64_to_image(data['photo_2'], 'chasis')
-                    # report.chasis.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_2'], 'chasis')
+                    image_file = base64_to_image(data['photo_2'], 'chasis')
+                    report.chasis.save(image_file.name, image_file, save=False)
                 if data.get('photo_3'):
-                    report.vehicle_front_image = base64_to_image(data['photo_3'], 'odometer')
-                    # image_file = base64_to_image(data['photo_3'], 'odometer')
-                    # report.odometer.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_3'], 'odometer')
+                    image_file = base64_to_image(data['photo_3'], 'odometer')
+                    report.odometer.save(image_file.name, image_file, save=False)
                 if data.get('photo_4'):
-                    report.vehicle_front_image = base64_to_image(data['photo_4'], 'complaint_1')
-                    # image_file = base64_to_image(data['photo_4'], 'complaint_1')
-                    # report.complaint_1_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_4'], 'complaint_1')
+                    image_file = base64_to_image(data['photo_4'], 'complaint_1')
+                    report.complaint_1_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_5'):
-                    report.vehicle_front_image = base64_to_image(data['photo_5'], 'complaint_2')
-                    # image_file = base64_to_image(data['photo_5'], 'complaint_2')
-                    # report.complaint_2_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_5'], 'complaint_2')
+                    image_file = base64_to_image(data['photo_5'], 'complaint_2')
+                    report.complaint_2_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_6'):
-                    report.vehicle_front_image = base64_to_image(data['photo_6'], 'complaint_3')
-                    # image_file = base64_to_image(data['photo_6'], 'complaint_3')
-                    # report.complaint_3_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_6'], 'complaint_3')
+                    image_file = base64_to_image(data['photo_6'], 'complaint_3')
+                    report.complaint_3_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_7'):
-                    report.vehicle_front_image = base64_to_image(data['photo_7'], 'complaint_4')
-                    # image_file = base64_to_image(data['photo_7'], 'complaint_4')
-                    # report.complaint_4_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_7'], 'complaint_4')
+                    image_file = base64_to_image(data['photo_7'], 'complaint_4')
+                    report.complaint_4_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_8'):
-                    report.vehicle_front_image = base64_to_image(data['photo_8'], 'complaint_5')
-                    # image_file = base64_to_image(data['photo_8'], 'complaint_5')
-                    # report.complaint_5_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_8'], 'complaint_5')
+                    image_file = base64_to_image(data['photo_8'], 'complaint_5')
+                    report.complaint_5_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_9'):
-                    report.vehicle_front_image = base64_to_image(data['photo_9'], 'complaint_6')
-                    # image_file = base64_to_image(data['photo_9'], 'complaint_6')
-                    # report.complaint_6_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_9'], 'complaint_6')
+                    image_file = base64_to_image(data['photo_9'], 'complaint_6')
+                    report.complaint_6_image.save(image_file.name, image_file, save=False)
                 if data.get('photo_10'):
-                    report.vehicle_front_image = base64_to_image(data['photo_10'], 'complaint_7')
-                    # image_file = base64_to_image(data['photo_10'], 'complaint_7')
-                    # report.complaint_7_image.save(image_file.name, image_file, save=False)
+                    # report.vehicle_front_image = base64_to_image(data['photo_10'], 'complaint_7')
+                    image_file = base64_to_image(data['photo_10'], 'complaint_7')
+                    report.complaint_7_image.save(image_file.name, image_file, save=False)
 
                 report.save()
 

@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const generateBtn = this;
 
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Generating Presentation...";
+
         // Prevent double submit
         generateBtn.disabled = true;
 
@@ -18,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
         } catch {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server not reachable or network error. Please try again!");
             generateBtn.disabled = false;
             return;
@@ -40,9 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("generate_ppt_form").submit();
         } else {
             // Server responded, but not OK (200)
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server connection error. Please try again later!");
             generateBtn.disabled = false;
         }
     });
-
 });
