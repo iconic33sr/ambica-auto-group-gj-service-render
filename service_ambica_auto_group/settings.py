@@ -86,7 +86,7 @@ ASGI_APPLICATION = 'service_ambica_auto_group.asgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,  # persistent connections
+        conn_max_age=0,           # 🔐 Required with pgBouncer (Transaction mode)
         ssl_require=True
     )
 }
