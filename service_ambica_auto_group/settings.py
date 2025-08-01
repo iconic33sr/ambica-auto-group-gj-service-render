@@ -157,7 +157,6 @@ STORAGES = {
 }
 
 
-
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -166,7 +165,7 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")  # e.g., 'blr1'
 AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")  # e.g., 'https://blr1.digitaloceanspaces.com'
 
-# Optional: Make media files publicly accessible
+# Also keep it - Optional: Make media files publicly accessible
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'public-read'
 
@@ -265,26 +264,3 @@ CSP_HEADER = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-# LOGGING = {
-#     'version': 1,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'boto3': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#         'botocore': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'INFO',
-#         },
-#     },
-# }
