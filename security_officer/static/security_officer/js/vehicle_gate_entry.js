@@ -72,6 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (job_no !== "") {
         if (regex_to_send.test(job_no)) {
+          // Show overlay before processing
+          document.getElementById("formSubmittingOverlay").style.display = "flex";
+          document.getElementById("submitting-text").innerHTML ="Fetching Data...";
+
           const firstTwo = year.slice(2, 4); // "25"
           const lastTwo = year.slice(-2); // "26"
           const yearDigits = firstTwo + lastTwo;
@@ -86,6 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
             data: { job_no: job_no },
 
             success: function (response) {
+              document.getElementById("formSubmittingOverlay").style.display = "none";
+
               if (response["error_msg"]) {
                 showManualAlert("Job No not found !!");
               }
@@ -105,18 +111,16 @@ document.addEventListener("DOMContentLoaded", function () {
                   response["data"]["vehicle_no"];
 
                 if (response["data"]["entry"] == "not generated") {
-                  document.getElementById("details_cont").style.display =
-                    "block";
+                  document.getElementById("details_cont").style.display ="block";
                   document.getElementById("submit_btn").style.display = "block";
                 } else {
-                  document.getElementById(
-                    "entry_already_submitted"
-                  ).style.display = "block";
+                  document.getElementById("entry_already_submitted").style.display = "block";
                 }
               }
             },
             error: function (xhr, status, error) {
               // Handle server error, network issue, or server is down here
+              document.getElementById("formSubmittingOverlay").style.display = "none";
               showManualAlert(
                 "⚠️ Server not reachable or network error. Please try again."
               );
@@ -161,9 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // For submit button  //////////////////////////////
-  document
-    .getElementById("submit_btn")
-    .addEventListener("click", async function (e) {
+  document.getElementById("submit_btn").addEventListener("click", async function (e) {
       e.preventDefault();
 
       if (!navigator.onLine) {
@@ -199,30 +201,24 @@ document.addEventListener("DOMContentLoaded", function () {
               onConfirm: async function () {
                 toggleBodyScroll();
 
+                // Show overlay before processing
+                document.getElementById("formSubmittingOverlay").style.display = "flex";
+                document.getElementById("submitting-text").innerHTML ="Checking Data...";
+
                 ////////////// Image Compression And Form Submission Overlay Animation
 
                 // Ping server
                 let responsePing;
                 try {
-                  responsePing = await fetch("/ping/", {
-                    method: "HEAD",
-                    cache: "no-store",
-                  });
+                  responsePing = await fetch("/ping/", {method: "HEAD",cache: "no-store",});
                 } catch {
-                  showManualAlert(
-                    "⚠️ Server not reachable or network error. Please try again!"
-                  );
+                  document.getElementById("formSubmittingOverlay").style.display = "none";
+                  showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                   submitBtn.disabled = false;
                   return;
                 }
 
                 if (responsePing.ok) {
-                  // Show overlay before processing
-                  document.getElementById(
-                    "formSubmittingOverlay"
-                  ).style.display = "flex";
-                  document.getElementById("submitting-text").innerHTML =
-                    "Submitting...";
 
                   let imageFields = [];
                   for (let i = 0; i <= 1; i++) {
@@ -257,6 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   }
                 } else {
                   // Server responded, but not OK (200)
+                  document.getElementById("formSubmittingOverlay").style.display = "none";
                   showManualAlert(
                     "⚠️ Server connection error. Please try again later!"
                   );
@@ -268,6 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             });
           } else {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             form.reportValidity();
             submitBtn.disabled = false; // <-- re-enable for correction
           }

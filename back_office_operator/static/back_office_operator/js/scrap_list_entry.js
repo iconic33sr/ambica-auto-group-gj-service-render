@@ -227,9 +227,7 @@ function getCSRFToken() {
 
 // For Checking if the claim_no exists or not
 // For Submit Button -
-document
-  .getElementById("submit_btn")
-  .addEventListener("click", async function (e) {
+document.getElementById("submit_btn").addEventListener("click", async function (e) {
     e.preventDefault(); // Stop normal form submission
 
     if (!navigator.onLine) {
@@ -250,28 +248,6 @@ document
     // Prevent double submit
     submitBtn.disabled = true;
 
-    // Ping server
-    let responsePing;
-    try {
-      responsePing = await fetch("/ping/", {
-        method: "HEAD",
-        cache: "no-store",
-      });
-    } catch {
-      showManualAlert(
-        "⚠️ Server not reachable or network error. Please try again!"
-      );
-      submitBtn.disabled = false;
-      return;
-    }
-
-    if (responsePing.ok) {
-    } else {
-      // Server responded, but not OK (200)
-      showManualAlert("⚠️ Server connection error. Please try again later!");
-      submitBtn.disabled = false;
-      return;
-    }
 
     const prowacRows = document.querySelectorAll("#prowac_group tr");
     if (!prowacRows || prowacRows.length === 0) {
@@ -296,8 +272,27 @@ document
     });
 
     document.getElementById("formSubmittingOverlay").style.display = "flex";
-    document.getElementById("submitting-text").innerHTML =
-      "Checking Prowac No...";
+    document.getElementById("submitting-text").innerHTML ="Checking Prowac No...";
+
+    // Ping server
+    let responsePing;
+    try {
+      responsePing = await fetch("/ping/", {method: "HEAD",cache: "no-store",});
+    } catch {
+      document.getElementById("formSubmittingOverlay").style.display = "none";
+      showManualAlert("⚠️ Server not reachable or network error. Please try again!");
+      submitBtn.disabled = false;
+      return;
+    }
+
+    if (responsePing.ok) {
+    } else {
+      // Server responded, but not OK (200)
+      document.getElementById("formSubmittingOverlay").style.display = "none";
+      showManualAlert("⚠️ Server connection error. Please try again later!");
+      submitBtn.disabled = false;
+      return;
+    }
 
     // Send to backend
     $.ajax({
@@ -313,41 +308,30 @@ document
           const notFound = res.result.filter((item) => !item.exists);
 
           if (notFound.length > 0) {
-            document.getElementById("formSubmittingOverlay").style.display =
-              "none";
-            showManualAlert(
-              "Some prowac entries are not found in the database. Please correct them."
-            );
+            document.getElementById("formSubmittingOverlay").style.display ="none";
+            showManualAlert("Some prowac entries are not found in the database. Please correct them.");
             submitBtn.disabled = false;
             highlightMissingProwacs(notFound);
           } else {
             // ✅ All exist — submit
             if (form.checkValidity()) {
-              document.getElementById("formSubmittingOverlay").style.display =
-                "flex";
-              document.getElementById("submitting-text").innerHTML =
-                "Submitting...";
-              document.getElementById("prowacs_json").value = JSON.stringify(
-                res.exists_ids
-              );
-              document
-                .querySelectorAll(".prowac_data")
-                .forEach((input) => (input.disabled = true));
+              document.getElementById("formSubmittingOverlay").style.display ="flex";
+              document.getElementById("submitting-text").innerHTML ="Submitting...";
+              document.getElementById("prowacs_json").value = JSON.stringify(res.exists_ids);
+              document.querySelectorAll(".prowac_data").forEach((input) => (input.disabled = true));
               if (typeof form.requestSubmit === "function") {
                 form.requestSubmit();
               } else {
                 form.submit();
               }
             } else {
-              document.getElementById("formSubmittingOverlay").style.display =
-                "none";
+              document.getElementById("formSubmittingOverlay").style.display ="none";
               form.reportValidity();
               submitBtn.disabled = false; // <-- re-enable for correction
             }
           }
         } else {
-          document.getElementById("formSubmittingOverlay").style.display =
-            "none";
+          document.getElementById("formSubmittingOverlay").style.display ="none";
           showManualAlert("Server error while checking prowac numbers.");
           submitBtn.disabled = false;
         }

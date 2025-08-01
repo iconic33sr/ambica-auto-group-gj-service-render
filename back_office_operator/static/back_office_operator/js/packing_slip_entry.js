@@ -221,26 +221,6 @@ document.getElementById("submit_btn").addEventListener("click", async function (
     // Prevent double submit
     submitBtn.disabled = true;
 
-    // Ping server
-    let responsePing;
-    try {
-        responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
-    } catch {
-        showManualAlert("⚠️ Server not reachable or network error. Please try again!");
-        submitBtn.disabled = false;
-        return;
-    }
-
-    if (responsePing.ok) {
-
-    } else {
-        // Server responded, but not OK (200)
-        showManualAlert("⚠️ Server connection error. Please try again later!");
-        submitBtn.disabled = false;
-        return;
-    }
-
-
     const prowacRows = document.querySelectorAll("#prowac_group tr");
     if (!prowacRows || prowacRows.length === 0) {
         showManualAlert("Scrap Details can't be empty");
@@ -261,6 +241,27 @@ document.getElementById("submit_btn").addEventListener("click", async function (
 
     document.getElementById("formSubmittingOverlay").style.display = "flex";
     document.getElementById("submitting-text").innerHTML = "Checking Prowac No...";
+
+    // Ping server
+    let responsePing;
+    try {
+        responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
+    } catch {
+        document.getElementById("formSubmittingOverlay").style.display = "none";
+        showManualAlert("⚠️ Server not reachable or network error. Please try again!");
+        submitBtn.disabled = false;
+        return;
+    }
+
+    if (responsePing.ok) {
+
+    } else {
+        // Server responded, but not OK (200)
+        document.getElementById("formSubmittingOverlay").style.display = "none";
+        showManualAlert("⚠️ Server connection error. Please try again later!");
+        submitBtn.disabled = false;
+        return;
+    }
 
     // Send to backend
     $.ajax({

@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
         }
 
-        const generateBtn = this;
-
         document.getElementById("formSubmittingOverlay").style.display = "flex";
         document.getElementById("submitting-text").innerHTML = "Generating Presentation...";
+        
+        const generateBtn = this;
 
         // Prevent double submit
         generateBtn.disabled = true;

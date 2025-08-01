@@ -53,12 +53,17 @@ document.addEventListener("DOMContentLoaded", function () {
     if (claim_no !== "") {
         if (regex_to_send.test(claim_no)) {
 
+            document.getElementById("formSubmittingOverlay").style.display = "flex";
+            document.getElementById("submitting-text").innerHTML = "Fetching Data...";
+
             $.ajax({
                 type: "GET",
                 url: '/acm/fetch_claim_status_data/',
                 data: {'claim_no':claim_no, 'ac_year':ac_year},
 
                 success: function(response){
+
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
 
                     if (response["error_msg"]){
                         showManualAlert("Claim No not found !!");
@@ -89,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 error: function(xhr, status, error) {
                     // Handle server error, network issue, or server is down here
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
                     showManualAlert("⚠️ Server not reachable or network error. Please try again.");
                 }
             });
@@ -166,6 +172,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     toggleBodyScroll();
 
+                    // Show overlay before processing
+                    document.getElementById("formSubmittingOverlay").style.display = "flex";
+                    document.getElementById("submitting-text").innerHTML = "Checking Data...";
+
                     ////////////// Image Compression And Form Submission Overlay Animation
 
                     // Ping server
@@ -173,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     try {
                         responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
                     } catch {
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
                         showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                         submitBtn.disabled = false;
                         return;
@@ -209,16 +220,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     } else {
                         // Server responded, but not OK (200)
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
                         showManualAlert("⚠️ Server connection error. Please try again later!");
                         submitBtn.disabled = false;
                     }
                 },
                 onCancel: function () {
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
                     submitBtn.disabled = false; // ✅ Re-enable if user clicks NO
                 }
               });
 
             } else {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 form.reportValidity();
                 submitBtn.disabled = false; // <-- re-enable for correction
             }

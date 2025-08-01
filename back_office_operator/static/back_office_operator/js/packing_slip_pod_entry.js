@@ -33,12 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     document.getElementById("docket_no").classList.add("uneditable");
 
+                    document.getElementById("formSubmittingOverlay").style.display = "flex";
+                    document.getElementById("submitting-text").innerHTML = "Fetching Data...";
+
                     $.ajax({
                         type: "GET",
                         url: '/back_office_operator/check_docket_no_exist/',
                         data: {'docket_no':docket_no},
 
                         success: async function(response){
+                            document.getElementById("formSubmittingOverlay").style.display = "none";
+
                             if (response["error_msg"]){
                                 showManualAlert(response["error_msg"]);
                                 document.getElementById("docket_no").classList.remove("uneditable");
@@ -80,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         },
                         error: function(xhr, status, error) {
                             // Handle server error, network issue, or server is down here
+                            document.getElementById("formSubmittingOverlay").style.display = "none";
                             showManualAlert("⚠️ Server not reachable or network error. Please try again.");
                             saveBtn.disabled = false;
                             return;
@@ -121,6 +127,9 @@ document.getElementById("submit_btn").addEventListener("click", async function (
         return false;
     }
 
+    document.getElementById("formSubmittingOverlay").style.display = "flex";
+    document.getElementById("submitting-text").innerHTML = "Submitting...";
+
     const submitBtn = this;
 
     const form = document.getElementById("packing_slip_pod_form");
@@ -128,6 +137,7 @@ document.getElementById("submit_btn").addEventListener("click", async function (
     if (form.checkValidity()) {
     
     } else {
+        document.getElementById("formSubmittingOverlay").style.display = "none";
         form.reportValidity();
         return;
     }
@@ -140,6 +150,7 @@ document.getElementById("submit_btn").addEventListener("click", async function (
     try {
         responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
     } catch {
+        document.getElementById("formSubmittingOverlay").style.display = "none";
         showManualAlert("⚠️ Server not reachable or network error. Please try again!");
         submitBtn.disabled = false;
         return;
@@ -149,35 +160,17 @@ document.getElementById("submit_btn").addEventListener("click", async function (
 
     } else {
         // Server responded, but not OK (200)
+        document.getElementById("formSubmittingOverlay").style.display = "none";
         showManualAlert("⚠️ Server connection error. Please try again later!");
         submitBtn.disabled = false;
         return;
     }
 
     if (typeof form.requestSubmit === "function") {
-        document.getElementById("formSubmittingOverlay").style.display = "flex";
-        document.getElementById("submitting-text").innerHTML = "Submitting...";
+        
         form.requestSubmit();
     } else {
         form.submit();
     }
                     
 });
-
-
-function highlightMissingProwacs(missingList) {
-    const missingSet = new Set(missingList.map(d => `${d.prowac_no}-${d.prowac_year}`));
-    const rows = document.querySelectorAll("#prowac_group tr");
-
-    rows.forEach(row => {
-        const no = row.querySelector('input[name^="prowac_no"]').value.trim();
-        const yr = row.querySelector('input[name^="prowac_year"]').value.trim();
-        const key = `${no}-${yr}`;
-
-        if (missingSet.has(key)) {
-            row.style.backgroundColor = "#ff9595ff"; 
-        } else {
-            row.style.backgroundColor = ""; // reset others
-        }
-    });
-}

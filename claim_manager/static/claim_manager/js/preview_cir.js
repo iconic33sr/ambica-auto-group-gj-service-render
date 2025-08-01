@@ -57,6 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
     }
 
+    if (document.getElementById("cm_reject").checked) {
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Rejecting CIR...";
+    } else {
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Saving...";
+    }
+
     const saveBtn = this;
 
     // Prevent double submit
@@ -79,20 +87,13 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
         } catch {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server not reachable or network error. Please try again!");
             saveBtn.disabled = false;
             return;
         }
 
         if (responsePing.ok) {
-
-            if (document.getElementById("cm_reject").checked) {
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Rejecting CIR...";
-            } else {
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Saving...";
-            }
             
             if (typeof form.requestSubmit === "function") {
                 form.requestSubmit();
@@ -101,11 +102,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else {
             // Server responded, but not OK (200)
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server connection error. Please try again later!");
             saveBtn.disabled = false;
         }
 
     } else {
+        document.getElementById("formSubmittingOverlay").style.display = "none";
         form.reportValidity();
         saveBtn.disabled = false; // <-- re-enable for correction
     }
@@ -119,6 +122,9 @@ document.addEventListener("DOMContentLoaded", function () {
     showManualAlert("⚠️ No / Poor internet connection.");
     return false;
     }
+
+    document.getElementById("formSubmittingOverlay").style.display = "flex";
+    document.getElementById("submitting-text").innerHTML = "Checking Data...";
 
     const generateBtn = this;
 
@@ -138,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
         } catch {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server not reachable or network error. Please try again!");
             generateBtn.disabled = false;
             return;
@@ -153,11 +160,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else {
             // Server responded, but not OK (200)
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("⚠️ Server connection error. Please try again later!");
             generateBtn.disabled = false;
         }
         
     } else {
+        document.getElementById("formSubmittingOverlay").style.display = "none";
         form.reportValidity();
         generateBtn.disabled = false; // <-- re-enable for correction
     }

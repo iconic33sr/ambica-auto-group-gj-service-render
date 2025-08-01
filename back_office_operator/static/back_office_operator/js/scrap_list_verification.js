@@ -1,33 +1,10 @@
-document
-  .getElementById("scrap_verification_file")
-  .addEventListener("change", async function () {
+document.getElementById("scrap_verification_file").addEventListener("change", async function () {
     document.getElementById("slv_no").value = "";
 
     if (!navigator.onLine) {
       showManualAlert("⚠️ No / Poor internet connection.");
       document.getElementById("reset_btn").click();
       return false;
-    }
-
-    // Ping server
-    let responsePing;
-    try {
-      responsePing = await fetch("/ping/", {
-        method: "HEAD",
-        cache: "no-store",
-      });
-    } catch {
-      showManualAlert(
-        "⚠️ Server not reachable or network error. Please try again!"
-      );
-      return;
-    }
-
-    if (responsePing.ok) {
-    } else {
-      // Server responded, but not OK (200)
-      showManualAlert("⚠️ Server connection error. Please try again later!");
-      return;
     }
 
     // Only letting the user to select ppt file for the scrap_verification_file attachment
@@ -44,6 +21,28 @@ document
       return;
     }
 
+    document.getElementById("formSubmittingOverlay").style.display ="flex";
+    document.getElementById("submitting-text").innerHTML ="Fetching Data...";
+
+    // Ping server
+    let responsePing;
+    try {
+      responsePing = await fetch("/ping/", {method: "HEAD",cache: "no-store",});
+    } catch {
+      document.getElementById("formSubmittingOverlay").style.display ="none";
+      showManualAlert("⚠️ Server not reachable or network error. Please try again!");
+      return;
+    }
+
+    if (responsePing.ok) {
+    } else {
+      // Server responded, but not OK (200)
+      document.getElementById("formSubmittingOverlay").style.display ="none";
+      showManualAlert("⚠️ Server connection error. Please try again later!");
+      return;
+    }
+
+
     // Fetch pending scrap doc numbers from backend and checking file name
     let fileName = "";
     if (file) {
@@ -51,18 +50,17 @@ document
     }
 
     // const response = await fetch("/back_office_operator/get_pending_scrap_doc_nos/");
-    const response = await fetch(
-      `/back_office_operator/get_pending_scrap_doc_nos/?file_name=${fileName}`
-    );
+    const response = await fetch(`/back_office_operator/get_pending_scrap_doc_nos/?file_name=${fileName}`);
     const result = await response.json();
 
     resetScrapDocTable();
 
     if (result.status === "success") {
+      document.getElementById("formSubmittingOverlay").style.display ="none";
+
       if (result.doc_nos.length > 0) {
         document.getElementById("scrap_details_cont").style.display = "block";
-        document.getElementById("scrap_list_heading").innerHTML =
-          "PENDING SCRAP LISTS";
+        document.getElementById("scrap_list_heading").innerHTML ="PENDING SCRAP LISTS";
         result.doc_nos.forEach((doc_no) => addScrapDocRow(doc_no));
         document.getElementById("slv_no").classList.add("uneditable");
         document.getElementById("slv_no").disabled = true;
@@ -73,6 +71,7 @@ document
         document.getElementById("scrap_verification_file").value = "";
       }
     } else {
+      document.getElementById("formSubmittingOverlay").style.display ="none";
       showManualAlert(result.error_msg);
       document.getElementById("scrap_details_cont").style.display = "none";
       document.getElementById("scrap_verification_file").value = "";
@@ -97,18 +96,18 @@ document.addEventListener("DOMContentLoaded", function () {
           if (!navigator.onLine) {
             showManualAlert("⚠️ No / Poor internet connection.");
             resetScrapDocTable();
-            document.getElementById("scrap_details_cont").style.display =
-              "none";
+            document.getElementById("scrap_details_cont").style.display ="none";
             return;
           }
 
           document.getElementById("scrap_verification_file").value = "";
           document.getElementById("slv_no").classList.add("uneditable");
-          document
-            .getElementById("scrap_verification_file")
-            .classList.add("uneditable");
+          document.getElementById("scrap_verification_file").classList.add("uneditable");
           document.getElementById("slv_no").disabled = true;
           document.getElementById("scrap_verification_file").disabled = true;
+
+          document.getElementById("formSubmittingOverlay").style.display ="flex";
+          document.getElementById("submitting-text").innerHTML ="Fetching Data...";
 
           $.ajax({
             type: "GET",
@@ -116,49 +115,33 @@ document.addEventListener("DOMContentLoaded", function () {
             data: { slv_no: slv_no },
 
             success: async function (response) {
+              document.getElementById("formSubmittingOverlay").style.display ="none";
               if (response["error_msg"]) {
                 showManualAlert(response["error_msg"]);
-                document
-                  .getElementById("slv_no")
-                  .classList.remove("uneditable");
-                document
-                  .getElementById("scrap_verification_file")
-                  .classList.remove("uneditable");
+                document.getElementById("slv_no").classList.remove("uneditable");
+                document.getElementById("scrap_verification_file").classList.remove("uneditable");
                 document.getElementById("slv_no").disabled = false;
-                document.getElementById(
-                  "scrap_verification_file"
-                ).disabled = false;
+                document.getElementById("scrap_verification_file").disabled = false;
                 resetScrapDocTable();
-                document.getElementById("scrap_details_cont").style.display =
-                  "none";
+                document.getElementById("scrap_details_cont").style.display ="none";
                 return;
               } else if (response["slv_no_exist"] == "no") {
                 showManualAlert("SLV No. does not exists !!");
-                document
-                  .getElementById("slv_no")
-                  .classList.remove("uneditable");
-                document
-                  .getElementById("scrap_verification_file")
-                  .classList.remove("uneditable");
+                document.getElementById("slv_no").classList.remove("uneditable");
+                document.getElementById("scrap_verification_file").classList.remove("uneditable");
                 document.getElementById("slv_no").disabled = false;
-                document.getElementById(
-                  "scrap_verification_file"
-                ).disabled = false;
+                document.getElementById("scrap_verification_file").disabled = false;
                 resetScrapDocTable();
-                document.getElementById("scrap_details_cont").style.display =
-                  "none";
+                document.getElementById("scrap_details_cont").style.display ="none";
                 return;
               } else if (response["slv_no_exist"] == "yes") {
                 resetScrapDocTable();
 
                 if (
-                  response["pending_docs_list"].length > 0 ||
-                  response["attached_docs_list"].length > 0
+                  response["pending_docs_list"].length > 0 || response["attached_docs_list"].length > 0
                 ) {
-                  document.getElementById("scrap_details_cont").style.display =
-                    "block";
-                  document.getElementById("scrap_list_heading").innerHTML =
-                    "ATTACHED & PENDING SCRAP LISTS";
+                  document.getElementById("scrap_details_cont").style.display ="block";
+                  document.getElementById("scrap_list_heading").innerHTML ="ATTACHED & PENDING SCRAP LISTS";
                   response["attached_docs_list"].forEach((doc_no) =>
                     addScrapDocRow(doc_no, true)
                   ); // Checked
@@ -167,18 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
                   ); // Unchecked
                   updateSelectedDocCount();
                 } else {
-                  document
-                    .getElementById("slv_no")
-                    .classList.remove("uneditable");
-                  document
-                    .getElementById("scrap_verification_file")
-                    .classList.remove("uneditable");
+                  document.getElementById("slv_no").classList.remove("uneditable");
+                  document.getElementById("scrap_verification_file").classList.remove("uneditable");
                   document.getElementById("slv_no").disabled = false;
-                  document.getElementById(
-                    "scrap_verification_file"
-                  ).disabled = false;
-                  document.getElementById("scrap_details_cont").style.display =
-                    "none";
+                  document.getElementById("scrap_verification_file").disabled = false;
+                  document.getElementById("scrap_details_cont").style.display ="none";
                   showManualAlert("No Attached & Pending Scrap List Found !!");
                   document.getElementById("scrap_verification_file").value = "";
                   document.getElementById("slv_no").value = "";
@@ -187,13 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             error: function (xhr, status, error) {
               // Handle server error, network issue, or server is down here
-              showManualAlert(
-                "⚠️ Server not reachable or network error. Please try again."
-              );
+              document.getElementById("formSubmittingOverlay").style.display ="none";
+              showManualAlert("⚠️ Server not reachable or network error. Please try again.");
               saveBtn.disabled = false;
               resetScrapDocTable();
-              document.getElementById("scrap_details_cont").style.display =
-                "none";
+              document.getElementById("scrap_details_cont").style.display ="none";
               return;
             },
           });
@@ -294,9 +268,7 @@ document.getElementById("reset_btn").addEventListener("click", function () {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // For Submit Button -
-document
-  .getElementById("submit_btn")
-  .addEventListener("click", async function (e) {
+document.getElementById("submit_btn").addEventListener("click", async function (e) {
     e.preventDefault(); // Stop normal form submission
 
     const fileInput = document.getElementById("scrap_verification_file");
@@ -343,6 +315,9 @@ document
     // Prevent double submit
     submitBtn.disabled = true;
 
+    document.getElementById("formSubmittingOverlay").style.display = "flex";
+    document.getElementById("submitting-text").innerHTML = "Submitting...";
+
     // Ping server
     let responsePing;
     try {
@@ -351,9 +326,8 @@ document
         cache: "no-store",
       });
     } catch {
-      showManualAlert(
-        "⚠️ Server not reachable or network error. Please try again!"
-      );
+      document.getElementById("formSubmittingOverlay").style.display = "none";
+      showManualAlert("⚠️ Server not reachable or network error. Please try again!");
       submitBtn.disabled = false;
       return;
     }
@@ -361,20 +335,18 @@ document
     if (responsePing.ok) {
     } else {
       // Server responded, but not OK (200)
+      document.getElementById("formSubmittingOverlay").style.display = "none";
       showManualAlert("⚠️ Server connection error. Please try again later!");
       submitBtn.disabled = false;
       return;
     }
 
     if (form.checkValidity()) {
-      document.getElementById("formSubmittingOverlay").style.display = "flex";
-      document.getElementById("submitting-text").innerHTML = "Submitting...";
 
       document.getElementById("slv_no").disabled = false;
 
       // Set selected doc_nos as JSON string into hidden input
-      document.getElementById("doc_nos_json").value =
-        JSON.stringify(selectedDocs);
+      document.getElementById("doc_nos_json").value = JSON.stringify(selectedDocs);
 
       if (typeof form.requestSubmit === "function") {
         form.requestSubmit();

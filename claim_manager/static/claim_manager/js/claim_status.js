@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (job_no !== "") {
                     if (regex_to_send.test(job_no)) {
 
+                        document.getElementById("formSubmittingOverlay").style.display = "flex";
+                        document.getElementById("submitting-text").innerHTML = "Fetching Data...";
+
                         const firstTwo = year.slice(2, 4);       // "25"
                         const lastTwo = year.slice(-2);          // "26"
                         const yearDigits = firstTwo + lastTwo; 
@@ -54,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             success: function(response){
 
                                 if (response["error_msg"]){
+                                    document.getElementById("formSubmittingOverlay").style.display = "none";
                                     showManualAlert(response["error_msg"]);
 
                                 } else if (response["full_job_no"] && response["vehicle_no"]){
@@ -168,6 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             },
                             error: function(xhr, status, error) {
                                 // Handle server error, network issue, or server is down here
+                                document.getElementById("formSubmittingOverlay").style.display = "none";
                                 showManualAlert("⚠️ Server not reachable or network error. Please try again.");
                             }
 
@@ -303,6 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
         }
 
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Checking Data...";
+
         const saveBtn = this;
 
         saveBtn.disabled = true;
@@ -314,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (jobNoInput !== "") {
             if (!regex.test(jobNoInput.value)) {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 errorMsg.style.display = "block";
                 errorMsg.innerText = "Invalid Job No. Format !!";
                 jobNoInput.focus();
@@ -321,86 +330,96 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 errorMsg.style.display = "none";
 
-                    const form = document.getElementById('claim_status_form');
+                const form = document.getElementById('claim_status_form');
 
-                    if (form.checkValidity()) {
+                if (form.checkValidity()) {
 
-                        const claim_no = document.getElementById('claim_no').value;
-                        const ac_year = document.getElementById('year').value;
+                    const claim_no = document.getElementById('claim_no').value;
+                    const ac_year = document.getElementById('year').value;
 
-                        if (claim_no == "" && ac_year == ""){
-                            showManualAlert("Claim No. and Year can't be empty");
-                            return;
+                    if (claim_no == "" && ac_year == ""){
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
+                        showManualAlert("Claim No. and Year can't be empty");
+                        return;
 
-                        } else{
+                    } else{
 
-                            $.ajax({
-                                type: "GET",
-                                url: '/claim_manager/check_claim_no_exist/',
-                                data: {'ac_year':ac_year,
-                                       'claim_no':claim_no,
-                                       'job_no':jobNoInput.value},
+                        $.ajax({
+                            type: "GET",
+                            url: '/claim_manager/check_claim_no_exist/',
+                            data: {'ac_year':ac_year,
+                                    'claim_no':claim_no,
+                                    'job_no':jobNoInput.value},
 
-                                success: async function(response){
-                                    if (response["error_msg"]){
-                                        showManualAlert(response["error_msg"]);
-                                        saveBtn.disabled = false;
-                                        return;
-
-                                    } else if (response["claim_no_exists"] == "yes"){
-                                        showManualAlert("Claim No. already exists in the job no   "+response["existing_job_no"]+" !!");
-                                        saveBtn.disabled = false;
-                                        return;
-
-                                    } else if (response["claim_no_exists"] == "no"){
-
-                                        // Ping server
-                                        let responsePing;
-                                        try {
-                                            responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
-                                        } catch {
-                                            showManualAlert("⚠️ Server not reachable or network error. Please try again!");
-                                            saveBtn.disabled = false;
-                                            return;
-                                        }
-
-                                        if (responsePing.ok) {
-                                            document.getElementById("formSubmittingOverlay").style.display = "flex";
-                                            document.getElementById("submitting-text").innerHTML = "Saving...";
-                                            if (typeof form.requestSubmit === "function") {
-                                                amountFormFormatting(form);
-                                                form.requestSubmit();
-                                            } else {
-                                                amountFormFormatting(form);
-                                                form.submit();
-                                            }
-                                        } else {
-                                            // Server responded, but not OK (200)
-                                            showManualAlert("⚠️ Server connection error. Please try again later!");
-                                            saveBtn.disabled = false;
-                                        }
-
-
-                                    }
-
-                                },
-                                error: function(xhr, status, error) {
-                                    // Handle server error, network issue, or server is down here
-                                    showManualAlert("⚠️ Server not reachable or network error. Please try again.");
+                            success: async function(response){
+                                if (response["error_msg"]){
+                                    document.getElementById("formSubmittingOverlay").style.display = "none";
+                                    showManualAlert(response["error_msg"]);
                                     saveBtn.disabled = false;
                                     return;
+
+                                } else if (response["claim_no_exists"] == "yes"){
+                                    document.getElementById("formSubmittingOverlay").style.display = "none";
+                                    showManualAlert("Claim No. already exists in the job no   "+response["existing_job_no"]+" !!");
+                                    saveBtn.disabled = false;
+                                    return;
+
+                                } else if (response["claim_no_exists"] == "no"){
+
+                                    document.getElementById("formSubmittingOverlay").style.display = "flex";
+                                    document.getElementById("submitting-text").innerHTML = "Saving...";
+
+                                    // Ping server
+                                    let responsePing;
+                                    try {
+                                        responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
+                                    } catch {
+                                        document.getElementById("formSubmittingOverlay").style.display = "none";
+                                        showManualAlert("⚠️ Server not reachable or network error. Please try again!");
+                                        saveBtn.disabled = false;
+                                        return;
+                                    }
+
+                                    if (responsePing.ok) {
+                                        
+                                        if (typeof form.requestSubmit === "function") {
+                                            amountFormFormatting(form);
+                                            form.requestSubmit();
+                                        } else {
+                                            amountFormFormatting(form);
+                                            form.submit();
+                                        }
+                                    } else {
+                                        // Server responded, but not OK (200)
+                                        document.getElementById("formSubmittingOverlay").style.display = "none";
+                                        showManualAlert("⚠️ Server connection error. Please try again later!");
+                                        saveBtn.disabled = false;
+                                    }
+
+
                                 }
-                            });
 
-                        }
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle server error, network issue, or server is down here
+                                document.getElementById("formSubmittingOverlay").style.display = "none";
+                                showManualAlert("⚠️ Server not reachable or network error. Please try again.");
+                                saveBtn.disabled = false;
+                                return;
+                            }
+                        });
 
-                        
-                    } else {
-                        form.reportValidity();
-                        saveBtn.disabled = false; // <-- re-enable for correction
                     }
+
+                    
+                } else {
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
+                    form.reportValidity();
+                    saveBtn.disabled = false; // <-- re-enable for correction
+                }
             }
         } else {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             saveBtn.disabled = false;
         }
     });
