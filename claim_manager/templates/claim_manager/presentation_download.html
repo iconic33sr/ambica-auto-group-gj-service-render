@@ -30,6 +30,7 @@
       <button class="download-btn" id="downloadBtn">Download File</button>
       <button class="after-download-btn" id="doneBtn">Continue</button>
     </div>
+    {{ redirect_url|json_script:"redirectURL" }}
     <script>
       document.getElementById("downloadBtn").onclick = function () {
         // Open the file in a new tab/window (this will be allowed)
@@ -47,7 +48,6 @@
       }; {% endcomment %}
 
      {% comment %} Submission overlay {% endcomment %}
-     {{ redirect_url|json_script:"redirectURL" }}
     </script>
     <script src={% static "claim_manager/js/presentation_download.js" %}></script>
   </body>
