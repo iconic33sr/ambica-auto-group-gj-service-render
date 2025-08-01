@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
         }
 
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Saving...";
+
         const saveBtn = this;
 
         // Prevent double submit
@@ -22,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
             } catch {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                 saveBtn.disabled = false;
                 return;
@@ -29,19 +33,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (responsePing.ok) {
 
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Saving...";
                 if (typeof form.requestSubmit === "function") {
                     form.requestSubmit();
                 } else {
                     form.submit();
                 }
             } else {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server connection error. Please try again later!");
                 saveBtn.disabled = false;
             }
 
         } else {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             form.reportValidity();
             saveBtn.disabled = false; // <-- re-enable for correction
         }

@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
             onConfirm: async function() {
                 toggleBodyScroll();
 
+                document.getElementById("formSubmittingOverlay").style.display = "flex";
+                document.getElementById("submitting-text").innerHTML = "Saving...";
+
                 const form = document.getElementById("revise_form");
 
                 if (form.checkValidity()) {
@@ -65,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     try {
                         responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
                     } catch {
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
                         showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                         submitBtn.disabled = false;
                         return;
@@ -72,8 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (responsePing.ok) {
 
-                        document.getElementById("formSubmittingOverlay").style.display = "flex";
-                        document.getElementById("submitting-text").innerHTML = "Saving...";
                         if (typeof form.requestSubmit === "function") {
                             form.requestSubmit();
                         } else {
@@ -81,10 +83,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     } else {
                         // Server responded, but not OK (200)
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
                         showManualAlert("⚠️ Server connection error. Please try again later!");
                         submitBtn.disabled = false;
                     }
                 } else {
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
                     form.reportValidity();
                     submitBtn.disabled = false; // <-- re-enable for correction
                 }

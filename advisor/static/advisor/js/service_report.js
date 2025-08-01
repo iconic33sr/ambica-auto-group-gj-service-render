@@ -92,6 +92,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
             }
 
+            document.getElementById("formSubmittingOverlay").style.display = "flex";
+            document.getElementById("submitting-text").innerHTML = "Drafting...";
+
             const draftBtn = this;
 
             // Prevent double submit
@@ -100,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("service_advisor_report_form");
 
             if (!form.checkValidity()) {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 form.reportValidity();
                 draftBtn.disabled = false; // <-- re-enable for correction
                 return;               
@@ -112,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
             } catch {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                 draftBtn.disabled = false;
                 return;
@@ -119,8 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (responsePing.ok) {
                 // Show overlay before processing
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Drafting...";
 
                 let imageFields = [];
                 for (let i = 0; i <= 14; i++) {
@@ -159,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } else {
                 // Server responded, but not OK (200)
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server connection error. Please try again later!");
                 draftBtn.disabled = false;
             }
@@ -176,6 +180,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
             }
 
+            document.getElementById("formSubmittingOverlay").style.display = "flex";
+            document.getElementById("submitting-text").innerHTML = "Saving...";
+
             const saveBtn = this;
 
             // Prevent double submit
@@ -184,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("service_advisor_report_form");
 
             if (!form.checkValidity()) {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 form.reportValidity();
                 saveBtn.disabled = false; // <-- re-enable for correction
                 return;               
@@ -196,16 +204,13 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
             } catch {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                 saveBtn.disabled = false;
                 return;
             }
 
             if (responsePing.ok) {
-
-                // Show overlay before processing
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Saving...";
 
                 let imageFields = [];
                 for (let i = 0; i <= 14; i++) {
@@ -242,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 form.submit(); // Overlay will stay until page navigation or AJAX response
             
             } else {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server connection error. Please try again later!");
                 saveBtn.disabled = false;
             }
@@ -260,6 +266,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
             }
 
+            document.getElementById("formSubmittingOverlay").style.display = "flex";
+            document.getElementById("submitting-text").innerHTML = "Checking Data...";
+
             const submitBtn = this;
 
             // Prevent double submit
@@ -268,6 +277,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("service_advisor_report_form");
 
             if (!form.checkValidity()) {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 form.reportValidity();
                 submitBtn.disabled = false; // <-- re-enable for correction
                 return;               
@@ -281,10 +291,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 success: function(response){
 
                     if (response["error_msg"]){
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
                         showManualAlert(response["error_msg"]);
                         submitBtn.disabled = false;
 
                     } else if (response["exists"]){
+
+                        document.getElementById("formSubmittingOverlay").style.display = "none";
 
                         openConfirmModal({
                         message: "Submit the report?",
@@ -294,6 +307,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 toggleBodyScroll();
 
+                                document.getElementById("formSubmittingOverlay").style.display = "flex";
+                                document.getElementById("submitting-text").innerHTML = "Submitting...";
+
                                 ////////////// Image Compression And Form Submission Overlay Animation
 
                                 // Ping server
@@ -301,15 +317,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                 try {
                                     responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
                                 } catch {
+                                    document.getElementById("formSubmittingOverlay").style.display = "none";
                                     showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                                     submitBtn.disabled = false;
                                     return;
                                 }
 
                                 if (responsePing.ok) {
-                                    // Show overlay before processing
-                                    document.getElementById("formSubmittingOverlay").style.display = "flex";
-                                    document.getElementById("submitting-text").innerHTML = "Submitting...";
 
                                     let imageFields = [];
                                     for (let i = 0; i <= 14; i++) {
@@ -347,6 +361,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     form.submit(); // Overlay will stay until page navigation or AJAX response
                                     
                                 } else {
+                                    document.getElementById("formSubmittingOverlay").style.display = "none";
                                     showManualAlert("⚠️ Server connection error. Please try again later!");
                                     submitBtn.disabled = false;
                                 }
@@ -359,6 +374,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 error: function(xhr, status, error) {
                     // Handle server error, network issue, or server is down here
+                    document.getElementById("formSubmittingOverlay").style.display = "none";
                     showManualAlert("⚠️ Server not reachable or network error. Please try again.");
                     submitBtn.disabled = false;
                 }

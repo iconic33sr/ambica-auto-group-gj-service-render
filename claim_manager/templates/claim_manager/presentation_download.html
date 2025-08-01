@@ -8,6 +8,13 @@
 
   </head>
   <body>
+    <div id="formSubmittingOverlay" style="display:none;">
+    <div class="form-submitting-modal">
+        <div class="spinner"></div>
+        <div class="submitting-text" id="submitting-text">Loading...</div>
+    </div>
+    </div>
+
     <div class="overlay" id="downloadOverlay">
       <div id="ppt-icon" class="ppt-icon" style="margin-bottom: 12px;">
         <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
@@ -40,13 +47,6 @@
       }; {% endcomment %}
 
      {% comment %} Submission overlay {% endcomment %}
-    <div id="formSubmittingOverlay" style="display:none;">
-    <div class="form-submitting-modal">
-        <div class="spinner"></div>
-        <div class="submitting-text" id="submitting-text">Loading...</div>
-    </div>
-    </div>
-
     </script>
     <script id="redirectData" type="application/json">
       {{ redirect_url|json_script:"redirectURL" }}

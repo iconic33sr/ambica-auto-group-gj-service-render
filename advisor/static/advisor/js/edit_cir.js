@@ -165,6 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
         }
 
+        document.getElementById("formSubmittingOverlay").style.display = "flex";
+        document.getElementById("submitting-text").innerHTML = "Saving...";
+
         const saveBtn = this;
 
         saveBtn.disabled = true;
@@ -174,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ///////////////////////// Make sure form doesn't submit if photos are missing
         // ✅ Check built-in required field validation
         if (!form.checkValidity()) {
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             form.reportValidity();
             saveBtn.disabled = false; // <-- re-enable for correction
             return;               
@@ -213,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // If any photo is missing, stop form submission and showManualAlert the user
         if (!allPhotosTaken) {
             e.preventDefault(); // Prevent form from submitting
+            document.getElementById("formSubmittingOverlay").style.display = "none";
             showManualAlert("📸 Please take all required photos before submitting the form.");
             saveBtn.disabled = false; // <-- re-enable for correction
             return;
@@ -226,16 +231,13 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 responsePing = await fetch('/ping/', { method: 'HEAD', cache: 'no-store' });
             } catch {
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server not reachable or network error. Please try again!");
                 saveBtn.disabled = false;
                 return;
             }
 
             if (responsePing.ok) {
-
-                // Show overlay before processing
-                document.getElementById("formSubmittingOverlay").style.display = "flex";
-                document.getElementById("submitting-text").innerHTML = "Saving...";
 
                 // Adding Leading Zero
                 const jobNoInput = document.getElementById("job_no");
@@ -283,9 +285,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } else {
                 // Server responded, but not OK (200)
+                document.getElementById("formSubmittingOverlay").style.display = "none";
                 showManualAlert("⚠️ Server connection error. Please try again later!");
                 saveBtn.disabled = false;
             }
+        }else{
+            document.getElementById("formSubmittingOverlay").style.display = "none";
         }
 
     });
