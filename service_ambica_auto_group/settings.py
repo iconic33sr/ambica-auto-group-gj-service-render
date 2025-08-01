@@ -142,7 +142,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ---------------------------------------
 # DIGITALOCEAN SPACES MEDIA STORAGE
 # ---------------------------------------
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = os.getenv("DEFAULT_FILE_STORAGE", "django.core.files.storage.FileSystemStorage")
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
@@ -156,6 +157,7 @@ logger.warning("### AWS_SECRET_ACCESS_KEY: %s", AWS_SECRET_ACCESS_KEY)
 logger.warning("### AWS_STORAGE_BUCKET_NAME: %s", AWS_STORAGE_BUCKET_NAME)
 logger.warning("### AWS_S3_REGION_NAME: %s", AWS_S3_REGION_NAME)
 logger.warning("### AWS_S3_ENDPOINT_URL: %s", AWS_S3_ENDPOINT_URL)
+logger.warning("### DEFAULT_FILE_STORAGE: %s", DEFAULT_FILE_STORAGE)
 
 # Optional: Make media files publicly accessible
 AWS_QUERYSTRING_AUTH = False
