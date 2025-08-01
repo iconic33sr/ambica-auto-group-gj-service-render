@@ -96,6 +96,12 @@ def supervisor_cir_form(request):
                     logger = logging.getLogger(__name__)
                     logger.warning("FILENAME: %s", report.vehicle_front_image.name)
                     logger.warning("URL: %s", report.vehicle_front_image.url)
+
+                    from django.core.files.storage import default_storage
+                    import logging
+
+                    logger = logging.getLogger(__name__)
+                    logger.warning("Using storage: %s", default_storage.__class__)
                 if data.get('photo_1'):
                     image_file = base64_to_image(data['photo_1'], 'vehicle_number_plate')
                     report.vehicle_with_number_plate.save(image_file.name, image_file, save=False)
