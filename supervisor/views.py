@@ -15,7 +15,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from core.decorators import login_active_user_required
 import logging
-from django.core.files.storage import default_storage
+from django.core.files.storage import get_storage_class
 
 ########################################################################################################################################
 
@@ -93,11 +93,12 @@ def supervisor_cir_form(request):
                     # report.vehicle_front_image = base64_to_image(data['photo_0'], 'vehicle_front_image')
                     image_file = base64_to_image(data['photo_0'], 'vehicle_front_image')
                     report.vehicle_front_image.save(image_file.name, image_file, save=False)
+                    storage_backend = get_storage_class()()
                     logger = logging.getLogger(__name__)
-                    logger.warning("FILENAME: %s", report.vehicle_front_image.name)
-                    logger.warning("URL: %s", report.vehicle_front_image.url)
+                    logger.warning("Saved file: %s", report.vehicle_front_image.name)
+                    logger.warning("File URL: %s", report.vehicle_front_image.url)
 
-                    logger.warning("Using storage: %s", default_storage.__class__)
+                    logger.warning("Using storage: %s", storage_backend.__class__)
                 if data.get('photo_1'):
                     image_file = base64_to_image(data['photo_1'], 'vehicle_number_plate')
                     report.vehicle_with_number_plate.save(image_file.name, image_file, save=False)
