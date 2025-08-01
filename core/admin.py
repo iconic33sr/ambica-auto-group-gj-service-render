@@ -14,7 +14,7 @@ class designation_Admin(admin.ModelAdmin):
 
 @admin.register(User_Profile)
 class User_Profile_Admin(admin.ModelAdmin):
-    list_display = ['user', 'mobile_no', 'mobile_no_2', 'address', 'city', 'state', 'user_designation', 'user_branch']
+    list_display = ['user', 'mobile_no', 'mobile_no_2', 'address', 'city', 'state', 'alloted_advisor', 'alloted_workshop_manager', 'alloted_claim_manager', 'user_designation', 'user_branch']
 
 
 @admin.register(Claim_Category)
