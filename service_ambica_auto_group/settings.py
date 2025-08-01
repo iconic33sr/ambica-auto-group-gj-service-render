@@ -144,13 +144,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ---------------------------------------
 
 STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage"
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+  "default": {
+    "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    "OPTIONS": {
+      "default_acl": "public-read",
+      "querystring_auth": False
     }
+  },
+  "staticfiles": {
+    "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+  },
 }
+
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -161,16 +166,9 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")  # e.g., 'blr1'
 AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")  # e.g., 'https://blr1.digitaloceanspaces.com'
 
-logger = logging.getLogger(__name__)
-logger.warning("### AWS_ACCESS_KEY_ID: %s", AWS_ACCESS_KEY_ID)
-logger.warning("### AWS_SECRET_ACCESS_KEY: %s", AWS_SECRET_ACCESS_KEY)
-logger.warning("### AWS_STORAGE_BUCKET_NAME: %s", AWS_STORAGE_BUCKET_NAME)
-logger.warning("### AWS_S3_REGION_NAME: %s", AWS_S3_REGION_NAME)
-logger.warning("### AWS_S3_ENDPOINT_URL: %s", AWS_S3_ENDPOINT_URL)
-logger.warning("### DEFAULT_FILE_STORAGE: %s", DEFAULT_FILE_STORAGE)
-
 # Optional: Make media files publicly accessible
 AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = 'public-read'
 
 # ------------------------------------------
 
