@@ -56,8 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             success: function(response){
 
+                                document.getElementById("formSubmittingOverlay").style.display = "none";
+                                
                                 if (response["error_msg"]){
-                                    document.getElementById("formSubmittingOverlay").style.display = "none";
                                     showManualAlert(response["error_msg"]);
 
                                 } else if (response["full_job_no"] && response["vehicle_no"]){
