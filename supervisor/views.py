@@ -96,7 +96,8 @@ def supervisor_cir_form(request):
                 if data.get('photo_0'):
                     report.vehicle_front_image = base64_to_image(data['photo_0'], 'vehicle_front_image')
                     logger = logging.getLogger(__name__)
-                    logger.warning("PHOTO 0: %s", str(data.get('photo_0'))[:100])
+                    logger.warning("FILENAME: %s", report.vehicle_front_image.name)
+                    logger.warning("URL: %s", report.vehicle_front_image.url)
                 if data.get('photo_1'):
                     report.vehicle_with_number_plate = base64_to_image(data['photo_1'], 'vehicle_number_plate')
                 if data.get('photo_2'):
