@@ -29,29 +29,29 @@ if (
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Prevent form resubmission on refresh and back button navigation across all platforms
-function forceSingleHistory() {
-    // Replace current state in history to prevent form resubmission
-    if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
-        history.replaceState(null, '', location.href);
-    }
-    // Always replace state on page load to avoid history stacking
-    history.replaceState(null, '', location.href);
-}
+// function forceSingleHistory() {
+//     // Replace current state in history to prevent form resubmission
+//     if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
+//         history.replaceState(null, '', location.href);
+//     }
+//     // Always replace state on page load to avoid history stacking
+//     history.replaceState(null, '', location.href);
+// }
 
-// Initial execution
-forceSingleHistory();
+// // Initial execution
+// forceSingleHistory();
 
-// Reapply on back/forward navigation
-window.addEventListener('popstate', function () {
-    forceSingleHistory();
-});
+// // Reapply on back/forward navigation
+// window.addEventListener('popstate', function () {
+//     forceSingleHistory();
+// });
 
-// Optional: Clear form data from URL if using GET method
-if (window.location.search) {
-    const url = new URL(window.location);
-    url.search = "";
-    history.replaceState(null, '', url.toString());
-}
+// // Optional: Clear form data from URL if using GET method
+// if (window.location.search) {
+//     const url = new URL(window.location);
+//     url.search = "";
+//     history.replaceState(null, '', url.toString());
+// }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
