@@ -37,11 +37,11 @@ from urllib.request import urlopen
 from io import BytesIO
 
 ####################################################################################################################
-
+# , presentation_report_status="pending"
 @login_active_user_required
 def claim_manager_pending_cir_list(request):
     if request.user.user_profile.user_designation.designation == "claim_manager":
-        cir_reports = Customer_Information_Report.objects.filter(workshop_manager_verification="verified", presentation_report_status="pending",claim_manager_rejection="", branch=request.user.user_profile.user_branch, selected_claim_manager=request.user.username).values('cir_uid', 'job_no', 'vehicle_no', 'supervisor_name', 'cir_date_time', 'service_advisor_report__advisor_name', 'service_advisor_report__sar_date_time', 'workshop_manager_name', 'workshop_manager_verification_date_time', 'claim_manager_preview').order_by('cir_date_time')
+        cir_reports = Customer_Information_Report.objects.filter(workshop_manager_verification="verified",claim_manager_rejection="", branch=request.user.user_profile.user_branch, selected_claim_manager=request.user.username).values('cir_uid', 'job_no', 'vehicle_no', 'supervisor_name', 'cir_date_time', 'service_advisor_report__advisor_name', 'service_advisor_report__sar_date_time', 'workshop_manager_name', 'workshop_manager_verification_date_time', 'claim_manager_preview').order_by('cir_date_time')
         paginator = Paginator(cir_reports, 30)
         page_no = request.GET.get('page')
         page_obj = paginator.get_page(page_no)
