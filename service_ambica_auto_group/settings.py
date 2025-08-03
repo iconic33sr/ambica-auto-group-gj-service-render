@@ -46,11 +46,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'csp.middleware.CSPMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  
     'corsheaders.middleware.CorsMiddleware',       
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'core.middleware.TrackUserActivityMiddleware',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'core.middleware.AutoLogoutMiddleware',        
 ]
 
+APPEND_SLASH = True
 
 ROOT_URLCONF = 'service_ambica_auto_group.urls'
 
