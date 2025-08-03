@@ -24,7 +24,21 @@ function showSafariGuide() {
 
 // Device/platform checks
 function isInStandaloneMode() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    // Chrome, Edge, Android, iOS, desktop PWA (all cases)
+    return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+        window.navigator.standalone === true || // iOS
+        window.matchMedia('(display-mode: browser)').matches === false || // Some desktop browsers
+        document.referrer.startsWith('android-app://') ||
+        localStorage.getItem('pwa_installed') === 'yes'
+    );
+}
+
+if (!isInStandaloneMode()) {
+    localStorage.removeItem('pwa_installed');
 }
 
 function isSafariOniOS() {
@@ -53,6 +67,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 // Install button click
 if (installBtn) {
     installBtn.addEventListener('click', () => {
+        console.log("clicked");
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
@@ -70,6 +85,12 @@ if (installBtn) {
     });
 }
 
+// Listen for PWA installation event (works for Chrome/Edge)
+window.addEventListener('appinstalled', () => {
+    localStorage.setItem('pwa_installed', 'yes');
+    showInstalledMsg();
+});
+
 // Show installed message if already in app
 window.addEventListener('appinstalled', showInstalledMsg);
 
@@ -79,5 +100,7 @@ window.addEventListener('load', () => {
         showInstalledMsg();
     } else if (isSafariOniOS() || isSafariOnMac()) {
         showSafariGuide();
+    } else {
+        showInstallBtn();
     }
 });

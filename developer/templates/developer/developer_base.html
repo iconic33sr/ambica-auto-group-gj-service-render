@@ -58,32 +58,36 @@
     {% endif %}
 
     <nav>
-        <div class="left">
+        <div class="left" id="left">
             <ul>
-                <li><a href="#" class = "{% block entry_active_class %}{% endblock entry_active_class %} dropdown_link">Entry<i class="downarrow"></i></a>
+                {% comment %} <li><a href="#" class = "{% block entry_active_class %}{% endblock entry_active_class %} dropdown_link">Entry<i class="downarrow"></i></a>
                     <ul>
                         <li><a href="{% url "claim_manager_claim_status" %}" class="{% block claim_status_subactive %}{% endblock claim_status_subactive %}">Claim Status</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
 
                 {% comment %} ------------------------------------------------------------------------------------------------------------------------ {% endcomment %}
 
-                <li><a href="#" class = "{% block report_active_class %}{% endblock report_active_class %} dropdown_link">Reports<i class="downarrow"></i></a>
+                {% comment %} <li><a href="#" class = "{% block report_active_class %}{% endblock report_active_class %} dropdown_link">Reports<i class="downarrow"></i></a>
                     <ul>
                         <li><a href="{% url "claim_manager_cir_list" %}" class="{% block pending_cir_subactive %}{% endblock pending_cir_subactive %}">Pending CIR</a></li>
                         <li><a href="{% url "claim_manager_completed_cir_list" %}" class="{% block completed_cir_subactive %}{% endblock completed_cir_subactive %}">Completed CIR</a></li>
                         <li><a href="{% url "claim_manager_rejected_cir_list" %}" class="{% block rejected_cir_subactive %}{% endblock rejected_cir_subactive %}">Rejected CIR</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
 
                 {% comment %} ------------------------------------------------------------------------------------------------------------------------ {% endcomment %}
 
 
-                <li><a href="{% url "cm_my_profile" %}" class = "{% block my_profile_active_class %}{% endblock my_profile_active_class %}">MY PROFILE</a></li>
+                <li><a href="{% url "developer_dashboard" %}" class = "{% block developer_dashboard_active_class %}{% endblock developer_dashboard_active_class %}">Dashboard</a></li>
+
+                <li><a href="{% url "dev_user_dashboard" %}" class = "{% block user_dashboard_active_class %}{% endblock user_dashboard_active_class %}">User Dashboard</a></li>
+
+                <li><a href="{% url "dev_my_profile" %}" class = "{% block my_profile_active_class %}{% endblock my_profile_active_class %}">MY PROFILE</a></li>
             </ul>
         </div>
 
-        <div class="right">
+        <div class="right" id="right">
             <ul>
                 <li>
                     <form action="{% url "user_logout" %}" method="POST"  id="logout_form">
@@ -94,7 +98,27 @@
             </ul>
         </div>
 
+        <div class="hamburger" id="hamburger">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </div>
+
     </nav>
+
+    <div class="menubar" id="menubar">
+            <ul>
+                <li class = "{% block mobile_developer_dashboard_active_class %}{% endblock mobile_developer_dashboard_active_class %}"><a href="{% url "developer_dashboard" %}">Dashboard</a></li>
+                <li class = "{% block mobile_user_dashboard_active_class %}{% endblock mobile_user_dashboard_active_class %}"><a href="{% url "dev_user_dashboard" %}">User Dashboard</a></li>
+                <li class = "{% block mobile_my_profile_active_class %}{% endblock mobile_my_profile_active_class %}"><a href="{% url "dev_my_profile" %}">MY PROFILE</a></li>
+                <li>
+                    <form action="{% url "user_logout" %}" method="POST"  id="logout_form_mobile">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT"  id="logout_btn_mobile">
+                    </form>
+                </li>
+            </ul>
+    </div>
 
     {% block content %}{% endblock content %}
 

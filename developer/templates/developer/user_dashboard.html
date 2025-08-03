@@ -1,0 +1,74 @@
+{% extends "developer/developer_base.html" %}
+
+{% load static %}
+
+{% block title %}User Dashboard{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "developer/css/user_dashboard.css" %}>
+{% endblock manualcss %}
+
+{% block user_dashboard_active_class %}active{% endblock user_dashboard_active_class %}
+
+{% block content %}
+
+    <div class="body_cont">
+
+        <h2>🧑‍💼 User Dashboard</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SR NO.</th>
+                        <th>User Name</th>
+                        <th>User ID</th>
+                        <th>Designation</th>
+                        <th>Branch</th>
+                        <th>Login</th>
+                        <th>Status</th>
+                        <th>Devices Logged In</th>
+                        <th>Account Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in user_data %}
+                        <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.name }}</td>
+                        <td style="text-transform:none;">{{ user.user_id }}</td>
+                        <td class="designation">{{ user.designation }}</td>
+                        <td class="branch">{{ user.branch }}</td>
+                        <td>
+                            {% if user.login_status == 'online' %}
+                            <span class="dot green-dot"></span>
+                            {% else %}
+                            <span class="dot red-dot"></span>
+                            {% endif %}
+                        </td>
+                        <td style="font-weight:bold;">
+                            {% if user.login_status == 'online' %}
+                                <span class="status {{ user.active_status }}">{{ user.active_status }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        
+                        <td style="font-weight:bold;">
+                            {% if user.login_status == 'online' %}
+                                {{ user.device_count }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td><span class="status {{ user.is_active }}">{{ user.is_active }}</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock content %}

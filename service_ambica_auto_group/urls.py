@@ -45,7 +45,13 @@ urlpatterns = [
 
     path('back_office_operator/', include("back_office_operator.urls")),
 
+    path('developer/', include("developer.urls")),
+
     path('logout/', core_views.user_logout, name = "user_logout"),
 
     path('', include('pwa.urls')),
 ]
+
+# ✅ Add media URL pattern only in debug mode
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

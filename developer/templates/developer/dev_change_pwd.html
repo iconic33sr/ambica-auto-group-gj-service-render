@@ -1,0 +1,67 @@
+{% extends "developer/developer_base.html" %}
+
+{% load static %}
+
+{% block title %}CHANGE PASSWORD{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "developer/css/change_pwd.css" %}>
+{% endblock manualcss %}
+
+{% block my_profile_active_class %}active{% endblock my_profile_active_class %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <div class="page_heading_cont">
+                <div class="heading_side">
+                    <a style="text-decoration:none;" href="{% url "dev_my_profile" %}" class="danger_btn back_btn"  id="back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+
+                <h2 class="page_heading">CHANGE PASSWORD</h2>
+
+            </div>
+
+            <hr>    
+
+            <form  method="POST" autocomplete="off" id="change_pwd_form">
+                {% csrf_token %}
+
+                <div class="cir_data_cont">
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="old_password" class="form-label"><span class="red_star">*</span>OLD PASSWORD</label>
+                            {{pwd_form.old_password}} <span class="required_msg">{{pwd_form.old_password.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="new_password" class="form-label"><span class="red_star">*</span>NEW PASSWORD</label>
+                            {{pwd_form.new_password1}} <span class="required_msg">{{pwd_form.new_password1.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="new_password" class="form-label"><span class="red_star">*</span>CONFIRM NEW PASSWORD</label>
+                            {{pwd_form.new_password2}} <span class="required_msg">{{pwd_form.new_password2.errors | striptags}}</span>
+                        </div>
+                    </div>
+
+                    <div class="btn_cont">
+                    <input type="submit" class="btn btn-success" style="padding-left: 30px!important; padding-right: 30px!important;" value="SAVE" id="save_btn">
+                    </div>
+                </div>
+
+            </form>
+                
+        </div>
+
+    </div>
+
+    <script src={% static "developer/js/change_pwd.js" %}></script>
+
+{% endblock content %}

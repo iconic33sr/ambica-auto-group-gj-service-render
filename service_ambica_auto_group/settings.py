@@ -18,9 +18,6 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 GOOGLE_GEOCODE_API = os.environ.get("GOOGLE_GEOCODE_API")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
-
 
 # Application definition
 
@@ -44,6 +41,7 @@ INSTALLED_APPS = [
     'acm',
     'security_officer',
     'back_office_operator',
+    'developer',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.TrackUserActivityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.DeviceDetectionMiddleware',   
@@ -80,15 +79,6 @@ TEMPLATES = [
 ]
 
 ASGI_APPLICATION = 'service_ambica_auto_group.asgi.application'
-
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=0,           # 🔐 Required with pgBouncer (Transaction mode)
-        ssl_require=True
-    )
-}
 
 
 # Password validation
@@ -137,24 +127,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   ## Add this
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ---------------------------------------
-# DIGITALOCEAN SPACES MEDIA STORAGE
-# ---------------------------------------
-
-STORAGES = {
-  "default": {
-    "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-    "OPTIONS": {
-      "default_acl": "public-read",
-      "querystring_auth": False
-    }
-  },
-  "staticfiles": {
-    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-  },
-}
-
-
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -174,18 +146,6 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB # Maximum total uploaded
 FILE_UPLOAD_MAX_MEMORY_SIZE = 7 * 1024 * 1024   # 7 MB #Maximum memory size of a file
 
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.getenv("REDIS_URL")],
-            "expiry": 10,          # Message retention (seconds)
-            "group_expiry": 300,   # Group membership retention (seconds)  
-        },
-    },
-}
-
-
 LOGIN_URL = 'user_login'
 
 
@@ -193,17 +153,6 @@ LOGIN_URL = 'user_login'
 SESSION_COOKIE_AGE = 28800  # 8 hours in seconds
 SESSION_SAVE_EVERY_REQUEST = True  # Refresh session on every request
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Allow session to persist on close
-
-# For native app and also to download images because to download image blob is used so do not comment it
-
-domain = os.getenv("DOMAIN_NAME")
-if domain:
-    domain = domain.strip()
-    if not domain.startswith("http"):
-        domain = "https://" + domain
-    CORS_ALLOWED_ORIGINS = [domain]
-else:
-    CORS_ALLOW_ALL_ORIGINS = True
 
 
 ##################################################
@@ -231,20 +180,6 @@ PWA_APP_ICONS = [
 PWA_APP_DIR = "ltr"
 PWA_APP_LANG = "en-US"
 
-##################################################
-# For Security
-
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_REFERRER_POLICY = 'same-origin'
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_BROWSER_XSS_FILTER = True
 
 ##################################################
 # For CSP middleware, before this install django-csp and add its middleware
@@ -262,3 +197,97 @@ CSP_HEADER = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+
+# FOR CLOUD #####################################################################################################################################################
+
+DEBUG = os.environ.get("DEBUG")
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=0,           # 🔐 Required with pgBouncer (Transaction mode)
+        ssl_require=True
+    )
+}
+
+STORAGES = {
+  "default": {
+    "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    "OPTIONS": {
+      "default_acl": "public-read",
+      "querystring_auth": False
+    }
+  },
+  "staticfiles": {
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+  },
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL")],
+            "expiry": 10,          # Message retention (seconds)
+            "group_expiry": 300,   # Group membership retention (seconds)  
+        },
+    },
+}
+
+# For native app and also to download images because to download image blob is used so do not comment it
+domain = os.getenv("DOMAIN_NAME")
+if domain:
+    domain = domain.strip()
+    if not domain.startswith("http"):
+        domain = "https://" + domain
+    CORS_ALLOWED_ORIGINS = [domain]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
+
+# For Security
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_BROWSER_XSS_FILTER = True
+
+########################################################################################################################################################################
+
+
+# FOR LOCAL #####################################################################################################################################################
+
+# DEBUG = True
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# MEDIA_URL = '/media/'  
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)], 
+#         },
+#     },
+# }
+
+# CORS_ALLOW_ALL_ORIGINS = True
+
+########################################################################################################################################################################

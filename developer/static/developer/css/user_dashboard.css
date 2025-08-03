@@ -1,0 +1,119 @@
+.body_cont {
+    padding: 0 15px;
+}
+
+h2 {
+    color: #111827;
+    text-align: center;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+thead {
+    background-color: #1f2937;
+    color: white;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+th {
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.green-dot { background-color: #10b981; }
+.red-dot { background-color: #ef4444; }
+
+.status {
+    font-weight: 600;
+    text-transform: capitalize;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: white;
+}
+
+.status.active {
+    background-color: #22c55e;
+}
+
+.status.idle {
+    background-color: #6b7280;
+}
+
+.designation, .branch {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.status.active {
+  background-color: #22c55e;
+  color: white;
+}
+
+.status.deactive {
+  background-color: #ef4444;
+  color: white;
+}
+
+
+@media screen and (max-width: 768px) {
+    table {
+    font-size: 14px;
+    }
+
+    th, td {
+    padding: 12px 10px;
+    }
+
+    .status {
+    font-size: 12px;
+    padding: 3px 6px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h2 {
+    font-size: 20px;
+    }
+
+    th, td {
+    font-size: 13px;
+    padding: 10px 8px;
+    }
+}

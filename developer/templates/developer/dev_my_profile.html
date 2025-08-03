@@ -1,0 +1,77 @@
+{% extends "developer/developer_base.html" %}
+
+{% load static %}
+
+{% block title %}MY PROFILE{% endblock title %}
+
+{% block manualcss %}
+<link rel="stylesheet" href={% static "developer/css/my_profile.css" %}>
+{% endblock manualcss %}
+
+{% block my_profile_active_class %}active{% endblock my_profile_active_class %}
+
+{% block content %}
+    <div class="page_data_cont">
+        <div class="manual_card">
+
+            <div class="page_heading_cont">
+
+                <h2 class="page_heading">MY PROFILE</h2>
+
+            </div>
+
+            <hr>    
+
+            <div class="cir_data_cont">
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="user_id" class="form-label">USER_ID</label>
+                        <input type="text" name="user_id" id="user_id" class="form-control normal_text uneditable" autocomplete="off" value={{request.user.username}} readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="designation" class="form-label">DESIGNATION</label>
+                        <input type="text" name="designation" id="designation" class="form-control uneditable" autocomplete="off" value={{request.user.user_profile.user_designation.designation}} readonly>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="branch" class="form-label">BRANCH</label>
+                        <input type="text" name="branch" id="branch" class="form-control uneditable" autocomplete="off" value={{request.user.user_profile.user_branch.branch}} readonly>
+                    </div>
+                </div>
+            </div>
+
+            <form  method="POST" autocomplete="off" id="my_profile_form">
+                {% csrf_token %}
+
+                <div class="cir_data_cont">
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="user_name" class="form-label"><span class="red_star">*</span>NAME</label>
+                            {{mform.user_name}} <span class="required_msg">{{mform.user_name.errors | striptags}}</span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="mobile_no" class="form-label"><span class="red_star">*</span>MOBILE NO.</label>
+                            {{mform.mobile_no}} <span class="required_msg">{{mform.mobile_no.errors | striptags}}</span>
+                        </div>
+
+                    </div>
+                    <div class="btn_cont">
+                    <input type="submit" class="btn btn-success" style="padding-left: 30px!important; padding-right: 30px!important;" value="SAVE" id="save_btn">
+                    <a style="text-decoration:none;" href="{% url "dev_change_password" %}" class="yellow_btn">CHANGE PASSWORD</a>
+                    </div>
+                </div>
+
+            </form>
+    
+        </div>
+
+    </div>
+
+    <script src={% static "developer/js/my_profile.js" %}></script>
+
+{% endblock content %}

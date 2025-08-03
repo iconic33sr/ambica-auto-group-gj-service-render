@@ -32,8 +32,12 @@ def user_login(request):
                 return redirect('claim_manager_cir_list')
             elif request.user.user_profile.user_designation.designation == "acm":
                 return redirect('parts_dispatch_image')
+            elif request.user.user_profile.user_designation.designation == "security_officer":
+                return redirect('vehicle_gate_entry')
             elif request.user.user_profile.user_designation.designation == "back_office_operator":
                 return redirect('backo_scrap_list')
+            elif request.user.user_profile.user_designation.designation == "developer":
+                return redirect('developer_dashboard')
             else:
                 return redirect(f'{request.user.user_profile.user_designation.designation}_dashboard')
         
@@ -96,6 +100,9 @@ def user_login(request):
                         
                         elif designation == "back_office_operator":
                             return redirect('backo_scrap_list')
+                        
+                        elif designation == "developer":
+                            return redirect('developer_dashboard')
                         
                         else:
                             pass

@@ -1,6 +1,7 @@
 from user_agents import parse
 from django.shortcuts import redirect
-from django.contrib import messages
+from django.utils.timezone import now
+
 
 # To detect the user device
 class DeviceDetectionMiddleware:
@@ -36,3 +37,17 @@ class AutoLogoutMiddleware:
                 return redirect('login')  # Update with your login URL name
 
         return self.get_response(request)
+
+
+# To track if the user is active or not means having interaction with server or not
+class TrackUserActivityMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        if request.user.is_authenticated:
+            request.session['last_activity'] = now().isoformat()
+
+        return response
