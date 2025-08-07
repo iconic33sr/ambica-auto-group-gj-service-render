@@ -417,6 +417,7 @@ def claim_manager_preview_rejected_cir(request, cir_uid):
 
 ####################################################################################################################
 
+# Only for Server
 @login_active_user_required
 def claim_manager_generate_ppt(request, cir_uid):
     if request.user.user_profile.user_designation.designation == "claim_manager":
