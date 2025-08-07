@@ -18,7 +18,7 @@ Django
 django-cors-headers
 django-csp
 django-pwa
-# django-redis
+django-redis
 django-storages
 dj-database-url
 h11
@@ -39,7 +39,7 @@ PyMuPDF
 pyOpenSSL
 python-pptx
 python-dotenv
-# pywebpush
+pywebpush
 PyYAML
 redis
 requests
