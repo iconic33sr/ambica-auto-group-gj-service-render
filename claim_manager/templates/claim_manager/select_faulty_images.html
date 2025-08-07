@@ -17,7 +17,11 @@
 
             <div class="page_heading_cont">
                 <div class="heading_side">
-                    <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                    {% if report_status == "pending" %}
+                        <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                    {% else %}
+                        <a style="text-decoration:none;" href="{% url "claim_manager_preview_completed_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                    {% endif %}
                 </div>
 
                 <h2 class="page_heading">SELECT IMAGES</h2>
@@ -349,6 +353,11 @@
 
                     </div>
 
+                    <div class="select-toggle-btns">
+                        <button type="button" id="selectAllBtn" class="toggle_btn select_btn"><i class="fas fa-check-square"></i> Select All</button>
+                        <button type="button" id="deselectAllBtn" class="toggle_btn deselect_btn"><i class="fas fa-square"></i> Deselect All</button>
+                    </div>
+
                     <hr style="border: 3px solid #a52020; margin: 30px 0px;">
                     
                 </div>
@@ -359,7 +368,11 @@
 
             <div class="cir_data_cont">
                 <div class="btn_cont">
-                    <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+                    {% if report_status == "pending" %}
+                        <a style="text-decoration:none;" href="{% url "claim_manager_preview_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                    {% else %}
+                        <a style="text-decoration:none;" href="{% url "claim_manager_preview_completed_cir" cir_uid %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> Back</a>
+                    {% endif %}
 
                     <form  method="POST" id="generate_ppt_form" autocomplete="off">
                         {% csrf_token %}

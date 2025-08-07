@@ -42,7 +42,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     
 </head>
-<body id = "body">
+<body id = "body" data-user-designation="{{ request.user.user_profile.user_designation.designation }}">
     {% if messages %}
         {% for message in messages %}
             <div {% if message.tags %} class = "{{message.tags}}" {% endif %}>{{message}}</div>

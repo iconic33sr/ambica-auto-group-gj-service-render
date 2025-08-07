@@ -720,7 +720,7 @@
                 {% endif %}
                 
 
-                {% if cir_report.claim_manager_investigation or cir_report.claim_manager_action_taken %}
+                {% if cir_report.claim_manager_investigation or cir_report.claim_manager_action_taken or cir_report.claim_manager_rejection_reason %}
                     <div class="cir_data_cont">
                         <h4>CLAIM MANAGER</h4>
 
@@ -747,12 +747,24 @@
                                 </div>
                             {% endif %}
 
+                            {% if cir_report.claim_manager_rejection_reason %}
+                                <h5 class="sub_heading" style="margin-bottom: 10px;">REJECTION REASON</h5>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12" style="margin-bottom: 0!important;">
+                                        <textarea class="form-control multi_line_ta" id="claim_manager_rejection_reason" name="claim_manager_rejection_reason" readonly>{% if cir_report.claim_manager_rejection_reason %}{{cir_report.claim_manager_rejection_reason}}{% endif %}</textarea>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                         </div>
 
                         <hr style="border: 3px solid #a52020; margin: 30px 0px;">
                             
                     </div>
                 {% endif %}
+
+
             {% endif %}
 
             <div class="cir_data_cont">

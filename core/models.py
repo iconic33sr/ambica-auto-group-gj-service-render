@@ -49,6 +49,16 @@ class User_Profile(models.Model):
 
 ########################################################################################################################################
 
+class PushSubscription(models.Model):   
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscription_info = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_seen = models.DateTimeField(auto_now=True)  # Updated each time subscription is saved
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.subscription_info.get('endpoint', 'Unknown')}"
+########################################################################################################################################
+
 class Claim_Category(models.Model):
     claim = models.CharField(max_length = 300, null = True)
     def __str__(self):

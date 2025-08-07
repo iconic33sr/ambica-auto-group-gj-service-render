@@ -123,6 +123,44 @@ img{
     /* background-color: azure; */
 }
 
+/* --------------------------------------- */
+/* For Select and Deselect Buttons */
+
+.select-toggle-btns {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    gap: 20px;
+}
+
+.toggle_btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+    border: none;
+}
+
+.select_btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.deselect_btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.toggle_btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+
 /* ------------------ */
 
 .btn_cont {

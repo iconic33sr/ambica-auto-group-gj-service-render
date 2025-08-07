@@ -11,6 +11,7 @@ from django.shortcuts import render
 from collections import defaultdict
 from django.contrib.sessions.models import Session
 from datetime import datetime, timedelta
+from django.utils import timezone 
 
 
 @login_active_user_required
@@ -58,7 +59,7 @@ def user_dashboard(request):
                 except Exception as e:
                     continue
 
-        users = User.objects.order_by('first_name', 'last_name')
+        users = User.objects.order_by('user_profile__user_branch__branch', 'user_profile__user_designation__designation', 'first_name', 'last_name')
         user_data = []
 
         for user in users:
@@ -84,7 +85,7 @@ def user_dashboard(request):
         logout(request)
         messages.error(request, "Unauthorised Access !!")
         return redirect('user_login')
-    
+
 
 ########################################################################################################################################
 

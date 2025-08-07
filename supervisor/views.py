@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import base64
 import uuid
@@ -14,7 +13,7 @@ from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from core.decorators import login_active_user_required
-from django.core.files.storage import storages
+from core.utils import send_push_notification
 
 ########################################################################################################################################
 
@@ -147,10 +146,47 @@ def supervisor_cir_form(request):
                 }
                 notify_advisor_new_cir(report.selected_advisor, cir_data)
 
+                # try:
+                #     advisor_instance = User.objects.get(username=report.selected_advisor)
+
+                #     # send_push_notification(
+                #     #     user=advisor_instance,  
+                #     #     title="📋 New CIR Assigned",
+                #     #     body=f"Job No: {report.job_no}\nVehicle No: {report.vehicle_no}",
+                #     #     url=f"/advisor/complaint_information_report_list/"
+                #     # )
+
+                #     send_push_notification(
+                #         user=advisor_instance,  
+                #         title="New CIR Assigned",
+                #         body=f"Job No: {report.job_no}\nVehicle No: {report.vehicle_no}",
+                #         url=f"/advisor/complaint_information_report_list/"
+                #     )
+                # except User.DoesNotExist:
+                #     pass
+
+                # [For push_api notification]
+                # Prepare payload
+                # payload = {
+                #     "title": "New CIR Assigned",
+                #     "body": f"Job No: {report.job_no}\nVehicle No: {report.vehicle_no}",
+                #     "url": f"/advisor/complaint_information_report_list/"
+                # }
+
+                # user = User.objects.filter(username=report.selected_advisor).first()
+                # if user:
+                #     send_push_notification(user, payload)
+                
+                #     messages.success(request, "CIR submitted successfully")
+
+                # else:
+                #     messages.error(request, "Advisor not found !!")
+
                 messages.success(request, "CIR submitted successfully")
+                
 
             else:
-                messages.error(request, "Error occured !!")
+                    messages.error(request, "Invalid Data !!")
 
         complaint_information_report_form = Complaint_Information_Report_Form()
         advisor_list = User_Profile.objects.filter(user_designation=Designation.objects.get(designation='advisor'), user_branch=request.user.user_profile.user_branch).values('user__first_name','user__last_name','user__username')

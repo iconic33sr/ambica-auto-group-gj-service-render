@@ -44,7 +44,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 </head>
-<body id = "body">
+<body id = "body" data-user-designation="{{ request.user.user_profile.user_designation.designation }}">
     {% if messages %}
         {% for message in messages %}
             <div {% if message.tags %} class = "{{message.tags}}" {% endif %}>{{message}}</div>
@@ -99,6 +99,15 @@
 
     </script>
 
+    {% comment %} For push_api {% endcomment %}
+    {% comment %} <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("/service_worker.js", { scope: "/" })
+            .then(reg => console.log("✅ Service Worker registered"))
+            .catch(err => console.error("❌ SW registration failed", err));
+        }
+    </script> {% endcomment %}
+
     {% block content %}{% endblock content %}
 
     <!-- Confirmation Modal Overlay -->
@@ -149,6 +158,18 @@
     <script src={% static "core/js/navbar.js" %}></script>
     <script src={% static "core/js/base.js" %}></script>
     <script defer src={% static "core/js/prevent_back_navigation.js" %}></script>
+
+    {% comment %} <script src="{% static "core/js/notification_handler.js" %}"></script> {% endcomment %}
+    {% comment %} <script>
+        askNotificationPermission();
+        </script> {% endcomment %}
+        
+    {% comment %} For push_api {% endcomment %}
+    {% comment %} <script src="{% static "core/js/push_subscribe.js" %}"></script>
+    <script>
+        const userId = {{ request.user.id }};
+        subscribeToPush("BG9rr5kIK3wYGGU0KNw1Mmet6NS_eL114SGSIjaVEIfbrckqA5a5oZrbJBxgQkGmp8KwpBfF_58Zj3SH4eMR_Rg");
+    </script> {% endcomment %}
 
 </body>
 </html>

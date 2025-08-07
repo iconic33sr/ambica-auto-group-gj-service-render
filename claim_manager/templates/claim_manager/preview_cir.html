@@ -710,13 +710,15 @@
 
                     </div>
 
-                    <div class="form-check" id="cm_rejection_cont">
-                        <input type="checkbox" class="form-check-input" id="cm_reject" name="cm_reject" value="cm_rejected">
-                        <label class="form-check-label" for="cm_reject" id="cm_reject_label">Reject CIR</label>
-                    </div>
+                    {% comment %} <div class="form-check" id="cm_rejection_cont">
+                        <div>
+                            <label class="form-check-label" for="cm_reject" id="cm_reject_label">Reject CIR</label>
+                            <input type="checkbox" class="form-check-input" id="cm_reject" name="cm_reject" value="cm_rejected">
+                        </div>
+                    </div> {% endcomment %}
 
                     <div id="rejection_reason_cont" style="display:none;">
-                        <h5 class="sub_heading" style="margin-bottom: 10px;">REJECTION REASON</h5>
+                        <h5 class="sub_heading" style="margin-bottom: 10px;">REJECT CIR (REASON)</h5>
 
                         <div class="row">
                             <div class="form-group col-md-12" style="margin-bottom: 0!important;">
@@ -742,12 +744,16 @@
                             <input type="submit" class="success_btn" value="SAVE & GENERATE PPT" id="generate_btn">
                         </form>
                     </div>
+
+                    <div id="footer_msg_cont">
+                        <span id="footer_msg"><span style="color:red">Alt+R</span> - Reject CIR, &nbsp;&nbsp;<span style="color:red">Esc</span> - Cancel Rejection</span>
+                    </div>
+
                 </div>
-                
+
                 
             {% endif %}
         </div>
-
 
     </div>
 

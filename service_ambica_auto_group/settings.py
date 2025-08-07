@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'core.middleware.DailySubscriptionCleanupMiddleware', [For push_api]
     'core.middleware.TrackUserActivityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -110,7 +111,7 @@ TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Manually Added ################################################################################
@@ -119,7 +120,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   ## Add this
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   ## Add this.
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # ← include your static folder
+]
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -154,6 +158,12 @@ LOGIN_URL = 'user_login'
 SESSION_COOKIE_AGE = 28800  # 8 hours in seconds
 SESSION_SAVE_EVERY_REQUEST = True  # Refresh session on every request
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Allow session to persist on close
+
+
+# For Push Notification using Push API
+VAPID_PUBLIC_KEY = "BG9rr5kIK3wYGGU0KNw1Mmet6NS_eL114SGSIjaVEIfbrckqA5a5oZrbJBxgQkGmp8KwpBfF_58Zj3SH4eMR_Rg"
+VAPID_PRIVATE_KEY = "19EAr2ja0hlfiP4rJtwJuRD5FY0MYQthfU6WLnCrip0"
+VAPID_EMAIL = os.getenv("VAPID_EMAIL")
 
 
 ##################################################
@@ -261,6 +271,17 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 
+# Used to store the last subscription model cleanup date in the redis cache i.e database or ram [Do not uncomment this if not using push_api notification]
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": os.getenv("REDIS_URL") + "/1",  # Use DB 1 (Channels uses DB 0)
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
+
 ########################################################################################################################################################################
 
 
@@ -280,6 +301,7 @@ SECURE_BROWSER_XSS_FILTER = True
 # MEDIA_URL = '/media/'  
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
 
+# # This is for normal redis use without storing anything in the redis ram
 # CHANNEL_LAYERS = {
 #     "default": {
 #         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -290,5 +312,28 @@ SECURE_BROWSER_XSS_FILTER = True
 # }
 
 # CORS_ALLOW_ALL_ORIGINS = True
+
+# We are using this concept to store the last subscription model cleanup date in the redis cache and cache settings is just in the bottom of this [when using push_api notification]
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#             "capacity": 1000,
+#             "expiry": 10,
+#         },
+#     },
+# }
+
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',  # Use DB 1
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 ########################################################################################################################################################################

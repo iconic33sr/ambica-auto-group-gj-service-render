@@ -757,9 +757,19 @@
 
             <div class="cir_data_cont">
                 <div class="btn_cont">
-                    <a style="text-decoration:none;" href="{% url "claim_manager_completed_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
+
+                    <button style="flex:none;" class="primary_btn" onclick="redirectToGenerate()">REGENERATE PPT</button>
+
+                    <a href="{% url 'download_all_images' cir_report.cir_uid %}" class="yellow_btn" style="text-decoration:none;">Download Images</a>
 
                     <a href="{{ cir_report.presentation_report.url }}" download class="success_btn" id="download_ppt">DOWNLOAD PPT</a>
+
+                </div>
+            </div>
+
+            <div class="cir_data_cont">
+                <div class="btn_cont">
+                    <a style="text-decoration:none;" href="{% url "claim_manager_completed_cir_list" %}" class="danger_btn back_btn"><i class="fas fa-arrow-left"></i> BACK</a>
 
                 </div>
             </div>
@@ -768,6 +778,13 @@
 
 
     </div>
+
+    <script>
+        function redirectToGenerate() {
+            const cirUid = "{{ cir_report.cir_uid }}";
+            window.location.href = `/claim_manager/generate_ppt/${cirUid}/`;
+        }
+    </script>
 
     <script src={% static "claim_manager/js/preview_completed_cir.js" %}></script>
 

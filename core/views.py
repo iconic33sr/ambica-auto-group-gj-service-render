@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import PushSubscription
 from .forms import ManualAuthenticationForm
 import requests
 from django.http import JsonResponse, HttpResponse
@@ -11,11 +11,53 @@ import logging
 from core.decorators import login_active_user_required
 from django.conf import settings
 
+from django.http import FileResponse, Http404
+from django.contrib.auth.models import User
+import os
+
+# from cryptography.hazmat.primitives.asymmetric import ec
+# from cryptography.hazmat.primitives import serialization
+# import base64
+
+
 
 ############################################################################
 
+# def b64url(b):
+#     return base64.urlsafe_b64encode(b).rstrip(b'=').decode('utf-8')
+
 def install_app(request):
+    # # Generate EC private key
+    # private_key = ec.generate_private_key(ec.SECP256R1())
+    # public_key = private_key.public_key()
+
+    # # 🔐 Private key as raw 32-byte
+    # private_bytes = private_key.private_numbers().private_value.to_bytes(32, byteorder="big")
+
+    # # 📡 Public key (raw uncompressed point format): 0x04 || X || Y
+    # public_numbers = public_key.public_numbers()
+    # x = public_numbers.x.to_bytes(32, byteorder='big')
+    # y = public_numbers.y.to_bytes(32, byteorder='big')
+    # public_bytes = b'\x04' + x + y  # Uncompressed point format per RFC 5480
+
+    # # ✅ Base64 URL-safe encode
+    # vapid_public_key = b64url(public_bytes)
+    # vapid_private_key = b64url(private_bytes)
+
+    # print("✅ VAPID_PUBLIC_KEY =", vapid_public_key)
+    # print("✅ VAPID_PRIVATE_KEY =", vapid_private_key)
     return render(request, 'core/install_app.html')
+
+
+############################################################################
+
+def service_worker(request):
+    path = os.path.join(settings.BASE_DIR, 'service_worker.js')
+    if os.path.exists(path):
+        return FileResponse(open(path, 'rb'), content_type='application/javascript')
+    else:
+        raise Http404("Service Worker not found")
+
 
 ############################################################################
 
@@ -128,17 +170,90 @@ def user_login(request):
             login_form = ManualAuthenticationForm()
 
         return render(request, 'core/user_login.html', {'login_form':login_form})
+    
+    
 ######################################################################################################################################################################################
 
+# @csrf_exempt
+# @login_active_user_required
+# def save_subscription(request):
+#     if request.method == "POST":
+#         data = json.loads(request.body)
+#         endpoint = data.get("endpoint")
+
+#         # Check if this exact subscription already exists
+#         if not PushSubscription.objects.filter(user=request.user, subscription_info__endpoint=endpoint).exists():
+#             PushSubscription.objects.create(user=request.user, subscription_info=data)
+
+#         return JsonResponse({"status": "ok"})
+
+@csrf_exempt
+def save_subscription(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid method"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+        subscription = data.get("subscription")
+
+        if not user_id or not subscription:
+            return JsonResponse({"error": "Missing user_id or subscription"}, status=400)
+
+        if not User.objects.filter(id=user_id).exists():
+            return JsonResponse({"error": "Invalid user"}, status=403)
+
+        endpoint = subscription.get("endpoint")
+
+        # ✅ This will either create or update (including auto-updating last_seen)
+        PushSubscription.objects.update_or_create(
+            user_id=user_id,
+            subscription_info__endpoint=endpoint,
+            defaults={"subscription_info": subscription}
+        )
+
+        return JsonResponse({"status": "saved"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+
+@csrf_exempt
+def delete_subscription(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid method"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+        endpoint = data.get("endpoint")
+
+        if not user_id or not endpoint:
+            return JsonResponse({"error": "Missing user_id or endpoint"}, status=400)
+
+        if not User.objects.filter(id=user_id).exists():
+            return JsonResponse({"error": "Invalid user"}, status=403)
+
+        PushSubscription.objects.filter(
+            user_id=user_id,
+            subscription_info__endpoint=endpoint
+        ).delete()
+        return JsonResponse({"status": "deleted"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+######################################################################################################################################################################################
 
 #### LOGOUT FUNCTION
-@login_required(login_url='user_login')
+@login_active_user_required
 def user_logout(request):
     if request.method == "POST":
         logout(request)
         messages.success(request, "Logged Out")
         return redirect('user_login')
-    
+
+
 ######################################################################################################################################################################################
 
 #### PING FUNCTION

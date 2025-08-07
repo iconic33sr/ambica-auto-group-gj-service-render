@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Branch, Designation, User_Profile, Claim_Category, Accounting_Year, Customer_Information_Report, Service_Advisor_Report, Claim_Status, Scrap_List, Scrap_List_Verification, Packing_Slip, Vehicle_Gate_Entry
+from .models import Branch, Designation, User_Profile, PushSubscription, Claim_Category, Accounting_Year, Customer_Information_Report, Service_Advisor_Report, Claim_Status, Scrap_List, Scrap_List_Verification, Packing_Slip, Vehicle_Gate_Entry
 
 
 @admin.register(Branch)
@@ -15,6 +15,11 @@ class designation_Admin(admin.ModelAdmin):
 @admin.register(User_Profile)
 class User_Profile_Admin(admin.ModelAdmin):
     list_display = ['user', 'alloted_advisor', 'alloted_workshop_manager', 'alloted_claim_manager', 'user_designation', 'user_branch']
+
+
+@admin.register(PushSubscription)
+class PushSubscription_Admin(admin.ModelAdmin):
+    list_display = ['user', 'created_at']
 
 
 @admin.register(Claim_Category)

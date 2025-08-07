@@ -19,22 +19,47 @@ if (document.querySelector(".hamburger")){
 document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("logout_btn").addEventListener("click", async function (e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        form = document.getElementById('logout_form')
-
-        document.getElementById("formSubmittingOverlay").style.display = "flex";
-        document.getElementById("submitting-text").innerHTML = "Logging Out...";
-
-        form.submit();
-
+      const form = document.getElementById('logout_form');
+      
+      
+      // 👇 Only unsubscribe for specific designations [For push_api]
+      // const userDesignation = document.body.dataset.userDesignation;
+      // const pushAllowedDesignations = ["advisor", "workshop_manager", "claim_manager"];
+      
+      // if (pushAllowedDesignations.includes(userDesignation)) {
+      //   try {
+      //     await unsubscribePush();  // safely attempt
+      //   } catch (error) {
+        //     console.warn("Unsubscribe failed or not needed:", error);
+        //   }
+        // }
+        
+      document.getElementById("formSubmittingOverlay").style.display = "flex";
+      document.getElementById("submitting-text").innerHTML = "Logging Out...";
+      
+      form.submit();
     });
+
 
     if (document.getElementById("logout_btn_mobile")){
     document.getElementById("logout_btn_mobile").addEventListener("click", async function (e) {
         e.preventDefault();
 
-        form = document.getElementById('logout_form_mobile')
+        const form = document.getElementById('logout_form_mobile');
+        
+        // 👇 Only unsubscribe for specific designations [For push_api]
+        // const userDesignation = document.body.dataset.userDesignation;
+        // const pushAllowedDesignations = ["advisor", "workshop_manager", "claim_manager"];
+
+        // if (pushAllowedDesignations.includes(userDesignation)) {
+        //   try {
+        //     unsubscribePush(userId);  // safely attempt
+        //   } catch (error) {
+        //     console.warn("Unsubscribe failed or not needed:", error);
+        //   }
+        // }
 
         document.getElementById("formSubmittingOverlay").style.display = "flex";
         document.getElementById("submitting-text").innerHTML = "Logging Out...";

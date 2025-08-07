@@ -4,9 +4,21 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 import zipfile
 import io
-import os
 from PIL import Image
 from django.core.files.base import ContentFile
+
+from pywebpush import webpush, WebPushException
+from django.conf import settings
+from .models import PushSubscription
+import json
+
+from django.utils.timezone import now, timedelta
+from django.core.cache import cache
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 #######################################################################
 # Compressing PDF File
@@ -79,3 +91,108 @@ def compress_pptx_images(pptx_file):
     filename = pptx_file.name
     compressed_content = ContentFile(out_io.getvalue(), name=filename)
     return compressed_content
+
+
+##############################################################################################
+
+# def send_push_notification(user, title, body, url="/"):
+#     subs = PushSubscription.objects.filter(user=user)
+#     for sub in subs:
+#         try:
+#             webpush(
+#                 subscription_info=sub.subscription_info,
+#                 data=json.dumps({
+#                     "title": title,
+#                     "body": body,
+#                     "url": url
+#                 }),
+#                 vapid_private_key=settings.VAPID_PRIVATE_KEY,
+#                 vapid_claims={"sub": settings.VAPID_EMAIL}
+#             )
+#         except WebPushException as e:
+#             if e.response and e.response.status_code in [404, 410]:
+#                 sub.delete()
+
+
+# def send_push_notification(user, payload_dict):
+#     payload = json.dumps(payload_dict)
+#     vapid_private_key = settings.VAPID_PRIVATE_KEY
+#     vapid_claims = {
+#         "sub": "mailto:admin@example.com"
+#     }
+
+#     subscriptions = PushSubscription.objects.filter(user=user)
+
+#     for sub in subscriptions:
+#         try:
+#             webpush(
+#                 subscription_info=sub.subscription_info,
+#                 data=payload,
+#                 vapid_private_key=vapid_private_key,
+#                 vapid_claims=vapid_claims
+#             )
+#         except WebPushException as ex:
+#             if ex.response and ex.response.status_code == 410:
+#                 # Remove invalid subscription
+#                 sub.delete()
+#             else:
+#                 logger.warning(f"Failed to send push to {sub.id}: {ex}")
+
+
+def send_push_notification(user, payload_dict):
+    payload = json.dumps(payload_dict)
+    vapid_private_key = settings.VAPID_PRIVATE_KEY
+    vapid_claims = {
+        "sub": "mailto:admin@example.com"
+    }
+
+    subscriptions = PushSubscription.objects.filter(user=user)
+    success_count = 0
+    failure_count = 0
+
+    for sub in subscriptions:
+        try:
+            webpush(
+                subscription_info=sub.subscription_info,
+                data=payload,
+                vapid_private_key=vapid_private_key,
+                vapid_claims=vapid_claims
+            )
+            logger.info(f"[PUSH SENT] User: {user.username}, Endpoint: {sub.subscription_info.get('endpoint')}")
+            print(f"[PUSH SENT] User: {user.username}, Endpoint: {sub.subscription_info.get('endpoint')}")
+            success_count += 1
+        except WebPushException as ex:
+            failure_count += 1
+            if ex.response and ex.response.status_code in [404, 410]:
+                logger.warning(f"[PUSH EXPIRED] User: {user.username}, Endpoint: {sub.subscription_info.get('endpoint')} - Deleting")
+                sub.delete()
+            else:
+                logger.error(f"[PUSH FAILED] User: {user.username}, Endpoint: {sub.subscription_info.get('endpoint')}, Error: {str(ex)}")
+
+    logger.info(f"[PUSH SUMMARY] User: {user.username}, Success: {success_count}, Failed: {failure_count}")
+
+
+##############################################################################################
+
+def cleanup_stale_subscriptions_once_per_day():
+    """
+    Deletes push subscriptions not used in the last 8 hours.
+    Updates the same Redis key each day after successful cleanup.
+    """
+    cache_key = 'subscriptions_cleanup_last_run'
+
+    # Check if already cleaned today
+    last_run_str = cache.get(cache_key)
+    today_str = now().strftime('%Y-%m-%d')
+
+    if last_run_str == today_str:
+        return  # Already cleaned today
+
+    # Run cleanup
+    threshold = now() - timedelta(hours=8)
+    deleted_count, _ = PushSubscription.objects.filter(last_seen__lt=threshold).delete()
+
+    # Update Redis key with today's date (does not create new keys every day)
+    cache.set(cache_key, today_str, timeout=86400)  # expires after 1 day
+
+    print(f"[CLEANUP] Deleted {deleted_count} stale subscriptions at {now()}")

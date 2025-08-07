@@ -27,34 +27,6 @@ if (
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Prevent form resubmission on refresh and back button navigation across all platforms
-// function forceSingleHistory() {
-//     // Replace current state in history to prevent form resubmission
-//     if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
-//         history.replaceState(null, '', location.href);
-//     }
-//     // Always replace state on page load to avoid history stacking
-//     history.replaceState(null, '', location.href);
-// }
-
-// // Initial execution
-// forceSingleHistory();
-
-// // Reapply on back/forward navigation
-// window.addEventListener('popstate', function () {
-//     forceSingleHistory();
-// });
-
-// // Optional: Clear form data from URL if using GET method
-// if (window.location.search) {
-//     const url = new URL(window.location);
-//     url.search = "";
-//     history.replaceState(null, '', url.toString());
-// }
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Auto reloading the page after 8 hours of inactivity
 (function() {
   const INACTIVITY_LIMIT_MS = 28800000; // 8 hours in milliseconds

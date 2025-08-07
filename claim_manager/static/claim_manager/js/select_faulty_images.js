@@ -49,4 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
             generateBtn.disabled = false;
         }
     });
+
+    // Select All / Deselect All Buttons
+    document.getElementById("selectAllBtn")?.addEventListener("click", function () {
+        document.querySelectorAll(".form-check-input[type=checkbox]").forEach(cb => cb.checked = true);
+    });
+
+    document.getElementById("deselectAllBtn")?.addEventListener("click", function () {
+        document.querySelectorAll(".form-check-input[type=checkbox]").forEach(cb => cb.checked = false);
+    });
+
 });

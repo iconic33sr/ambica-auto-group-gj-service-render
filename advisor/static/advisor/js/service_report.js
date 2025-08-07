@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 onConfirm: function() {
                     toggleBodyScroll();
                     document.getElementById('task').value = "wm_redirect";
-                    document.getElementById('draft_btn').click();
+                    document.getElementById('save_btn').click();
                 }
             });
         }

@@ -143,7 +143,11 @@ function handleBaseSocketMessage(e) {
         document.getElementById('wm_dot').style.display = "inline-block";
       }
     }
-  }  
+  }
+  
+  // if (data.data.report_type === "new"){
+  //   showNativeNotification("📋 New CIR Received", `Job No: ${data.data.job_no} | Vehicle: ${data.data.vehicle_no}`);
+  // }
 }
 window.removeEventListener("WebSocketMessage", handleBaseSocketMessage);
 window.addEventListener("WebSocketMessage", handleBaseSocketMessage);

@@ -16,6 +16,8 @@ urlpatterns = [
     path('download_presentation/<str:cir_uid>/', views.presentation_download, name='presentation_download'),
 
     path('preview_completed_cir/<str:cir_uid>/', views.claim_manager_preview_completed_cir, name = "claim_manager_preview_completed_cir"),
+    path('download_all_images/<uuid:cir_uid>/', views.download_all_images, name='download_all_images'),
+
     path('preview_rejected_cir/<str:cir_uid>/', views.claim_manager_preview_rejected_cir, name = "claim_manager_preview_rejected_cir"),
 
     path('my_profile/', views.my_profile, name = "cm_my_profile"),

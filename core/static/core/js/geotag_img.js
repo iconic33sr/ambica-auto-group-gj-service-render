@@ -834,6 +834,12 @@ async function initMap() {
                         break;
                     default:
                         msg = "Unknown error while fetching location.";
+                        geoOverlay.innerHTML = `
+                                <div style="font-size: 1.2rem; color: #ffe600; font-weight: bold; text-shadow: 1px 1px 6px #000a; padding:1.5em;">
+                                  Error Fetching Location…
+                                </div>
+                        `;  
+                        break;
                 }
                 showManualAlert(msg);
                 isInitMapRunning = false;

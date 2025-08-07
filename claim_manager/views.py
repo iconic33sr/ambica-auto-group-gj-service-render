@@ -10,7 +10,11 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from core.decorators import login_active_user_required
+from urllib.parse import urlparse
 
+from django.http import HttpResponse
+from django.db.models import ImageField
+import zipfile
 
 # For Powerpoint Presentation
 import uuid
@@ -412,6 +416,790 @@ def claim_manager_preview_rejected_cir(request, cir_uid):
 
 
 ####################################################################################################################
+
+# @login_active_user_required
+# def claim_manager_generate_ppt(request, cir_uid):
+#     if request.user.user_profile.user_designation.designation == "claim_manager":
+
+#         if request.method == "POST":
+
+#             data = request.POST
+                
+#             cir_report = Customer_Information_Report.objects.filter(cir_uid=data.get('cir_uid')).first()
+#             sar_report = Service_Advisor_Report.objects.filter(cir=cir_report).first()
+
+#             if cir_report.selected_claim_manager == request.user.username:
+
+#                 selected_images = []
+
+#                 if data.getlist('selected_options[]'):
+#                     selected_images = data.getlist('selected_options[]')
+
+#                 if cir_report:
+
+#                     try:
+
+#                         branch_name = cir_report.branch.branch.strip().capitalize()
+
+#                         # For Powerpoint Presentation
+
+#                         prs = Presentation()
+
+#                         # Define standard slide dimensions (e.g., 16:9 aspect ratio)
+#                         # These are the overall slide dimensions, not the content area.
+#                         prs.slide_width = Inches(13.333)
+#                         prs.slide_height = Inches(7.5) # Standard 4:3 aspect ratio, common for presentations
+
+#                         # Define common dimensions for consistent layout within the content area
+#                         SLIDE_WIDTH = prs.slide_width
+#                         SLIDE_HEIGHT = prs.slide_height
+
+#                         # Template dimensions for content area within the slide
+#                         CONTENT_MARGIN = Inches(0.5) # Margin from slide edge to content area
+#                         CONTENT_LEFT = CONTENT_MARGIN
+#                         CONTENT_TOP = CONTENT_MARGIN
+#                         CONTENT_WIDTH = SLIDE_WIDTH - (2 * CONTENT_MARGIN)
+#                         CONTENT_HEIGHT = SLIDE_HEIGHT - (2 * CONTENT_MARGIN)
+
+#                         # Common font sizes
+#                         TITLE_FONT_SIZE = Pt(48)
+#                         SUBTITLE_FONT_SIZE = Pt(32)
+#                         SECTION_TITLE_FONT_SIZE = Pt(36)
+#                         BODY_FONT_SIZE = Pt(18)
+#                         LABEL_FONT_SIZE = Pt(14)
+
+
+#                         # Helper function to add a slide with the attractive template
+#                         def _add_slide_with_attractive_template(prs_obj, slide_layout_index=6):
+#                             slide = prs_obj.slides.add_slide(prs_obj.slide_layouts[slide_layout_index])
+#                             slide.background.fill.solid()
+#                             slide.background.fill.fore_color.rgb = RGBColor(255, 255, 255)  # White background
+
+#                             # Dimensions
+#                             SLIDE_WIDTH = prs_obj.slide_width
+#                             SLIDE_HEIGHT = prs_obj.slide_height
+#                             header_height = Inches(0.5)
+#                             footer_height = Inches(0.3)
+
+#                             # --- HEADER BAR ---
+#                             header_shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_WIDTH, header_height)
+#                             header_shape.fill.solid()
+#                             header_shape.fill.fore_color.rgb = RGBColor(7, 7, 191)  # Dark blue
+#                             header_shape.line.fill.background()
+
+#                             # --- TATA LOGO LEFT ---
+#                             tata_logo_path = os.path.join(settings.BASE_DIR, 'core', 'static', 'core', 'images', 'tata_logo_blue.png')
+#                             if os.path.exists(tata_logo_path):
+#                                 slide.shapes.add_picture(tata_logo_path, Inches(0.2), Inches(0.02), height=header_height - Inches(0.05))
+
+#                             # --- AMBICA LOGO CENTER ---
+#                             ambica_logo_path = os.path.join(settings.BASE_DIR, 'core', 'static', 'core', 'images', 'ambica_logo_blue.png')
+#                             if os.path.exists(ambica_logo_path):
+#                                 slide.shapes.add_picture(ambica_logo_path, (SLIDE_WIDTH - Inches(0.7)) / 2, Inches(0.02), height=header_height - Inches(0.05))
+
+#                             # --- TATA MOTORS BRANDING IMAGE RIGHT ---
+#                             tata_motors_branding_path = os.path.join(settings.BASE_DIR, 'core', 'static', 'core', 'images', 'tata_motors_branding_blue.png')
+#                             if os.path.exists(tata_motors_branding_path):
+#                                 branding_img_width = Inches(1.45)
+#                                 branding_img_height = Inches(0.15)
+#                                 branding_img_top = (header_height - branding_img_height) / 2
+
+#                                 slide.shapes.add_picture(
+#                                     tata_motors_branding_path,
+#                                     SLIDE_WIDTH - branding_img_width - Inches(0.2),  # Fully right-aligned with 0.2in padding
+#                                     branding_img_top,
+#                                     width=branding_img_width,
+#                                     height=branding_img_height
+#                                 )
+
+
+#                             # --- FOOTER BAR ---
+#                             footer_shape = slide.shapes.add_shape(
+#                                 MSO_SHAPE.RECTANGLE, 0, SLIDE_HEIGHT - footer_height, SLIDE_WIDTH, footer_height
+#                             )
+#                             footer_shape.fill.solid()
+#                             footer_shape.fill.fore_color.rgb = RGBColor(159, 0, 0)  # Dark red
+#                             footer_shape.line.fill.background()
+
+#                             # Footer text
+#                             footer_text = f"Shree Ambica Auto Sales & Service (2000480) – {branch_name}"
+#                             footer_text_box = slide.shapes.add_textbox(
+#                                 Inches(0.2),
+#                                 SLIDE_HEIGHT - footer_height,
+#                                 SLIDE_WIDTH - Inches(0.4),
+#                                 footer_height
+#                             )
+
+#                             footer_frame = footer_text_box.text_frame
+#                             footer_frame.clear()
+#                             footer_frame.vertical_anchor = MSO_ANCHOR.MIDDLE  # Vertically center the text
+#                             p = footer_frame.paragraphs[0]
+#                             p.text = footer_text
+#                             p.font.name = 'Segoe UI Semibold'
+#                             p.font.size = Pt(12)
+#                             p.font.bold = True
+#                             p.font.color.rgb = RGBColor(255, 255, 255)
+#                             p.alignment = PP_ALIGN.CENTER
+
+#                             return slide
+                        
+
+#                         def _add_subheading_box(slide_obj, heading_text):
+#                             subheading_top = Inches(0.6)  # Just below the header bar   
+#                             subheading_height = Inches(0.4)
+#                             subheading_width = CONTENT_WIDTH
+#                             subheading_left = CONTENT_LEFT
+
+#                             shape = slide_obj.shapes.add_shape(
+#                                 MSO_SHAPE.RECTANGLE,
+#                                 subheading_left,
+#                                 subheading_top,
+#                                 subheading_width,
+#                                 subheading_height
+#                             )
+#                             shape.fill.solid()
+#                             shape.fill.fore_color.rgb = RGBColor(198, 224, 180)  # Light green
+#                             shape.line.color.rgb = RGBColor(0, 100, 0)           # Dark green border
+#                             shape.line.width = Pt(2)
+
+#                             text_frame = shape.text_frame
+#                             text_frame.clear()
+#                             p = text_frame.paragraphs[0]
+#                             p.text = heading_text.upper()
+#                             p.font.name = 'Segoe UI Semibold'
+#                             p.font.size = Pt(20)
+#                             p.font.bold = True
+#                             p.font.color.rgb = RGBColor(0, 0, 0)
+#                             p.alignment = PP_ALIGN.CENTER
+
+
+
+#                         # Helper function to add and scale image
+#                         def _add_image_with_aspect_ratio_and_label(slide_obj, image_path, target_left, target_top, target_width, target_height, label_text):
+#                             """
+#                             Adds an image to the slide, scaling it to fit within the target box while preserving aspect ratio,
+#                             and adds a label below it. Includes robust error handling for missing/corrupt images.
+#                             """
+#                             if not image_path or not os.path.exists(image_path):
+#                                 # Add placeholder text for missing images
+#                                 error_text_box = slide_obj.shapes.add_textbox(target_left, target_top, target_width, target_height)
+#                                 error_tf = error_text_box.text_frame
+#                                 error_tf.clear()
+#                                 p = error_tf.paragraphs[0]
+#                                 p.text = f"{label_text} Not Available"
+#                                 p.alignment = PP_ALIGN.CENTER
+#                                 p.font.size = Pt(16)
+#                                 p.font.bold = True
+#                                 p.font.color.rgb = RGBColor(255, 0, 0)
+#                                 return
+
+#                             try:
+#                                 # Open image with PIL to get dimensions and DPI
+#                                 img = Image.open(image_path)
+#                                 img_width_px, img_height_px = img.size
+
+#                                 # Get DPI, default to 72 if not present
+#                                 dpi_x, dpi_y = img.info.get('dpi', (72, 72))
+#                                 dpi_x = int(dpi_x) if isinstance(dpi_x, (int, float)) else 72
+#                                 dpi_y = int(dpi_y) if isinstance(dpi_y, (int, float)) else 72
+
+#                                 # Convert pixels to EMUs (1 inch = 914400 EMUs)
+#                                 img_width_emu = Emu(int(img_width_px / dpi_x * 914400))
+#                                 img_height_emu = Emu(int(img_height_px / dpi_y * 914400))
+
+#                                 # Calculate scaling ratio to maintain aspect ratio
+#                                 ratio_w = target_width.emu / img_width_emu.emu
+#                                 ratio_h = target_height.emu / img_height_emu.emu
+#                                 ratio = min(ratio_w, ratio_h)
+
+#                                 # Final image size
+#                                 pic_width = Emu(int(img_width_emu.emu * ratio))
+#                                 pic_height = Emu(int(img_height_emu.emu * ratio))
+
+#                                 # Center image within target box
+#                                 pic_left = Emu(int(target_left.emu + (target_width.emu - pic_width.emu) / 2))
+#                                 pic_top = Emu(int(target_top.emu + (target_height.emu - pic_height.emu) / 2))
+
+#                                 # Add image to slide
+#                                 pic_shape = slide_obj.shapes.add_picture(image_path, pic_left, pic_top, width=pic_width, height=pic_height)
+
+#                                 # Optional: add a border
+#                                 pic_shape.line.color.rgb = RGBColor(100, 100, 100)
+#                                 pic_shape.line.width = Emu(9525)
+
+#                                 # Add label below image
+#                                 label_top = Emu(int(pic_top.emu + pic_height.emu + Inches(0.1).emu))
+#                                 label_height = Inches(0.3)
+#                                 label_box = slide_obj.shapes.add_textbox(target_left, label_top, target_width, label_height)
+#                                 label_frame = label_box.text_frame
+#                                 label_frame.clear()
+#                                 p = label_frame.paragraphs[0]
+#                                 p.text = label_text
+#                                 p.font.size = LABEL_FONT_SIZE
+#                                 p.font.bold = True
+#                                 p.alignment = PP_ALIGN.CENTER
+
+#                             except Exception as e:
+#                                 # Handle any image processing error
+#                                 error_text_box = slide_obj.shapes.add_textbox(target_left, target_top, target_width, target_height)
+#                                 error_tf = error_text_box.text_frame
+#                                 error_tf.clear()
+#                                 p = error_tf.paragraphs[0]
+#                                 p.text = f"Error loading {label_text}: {e}"
+#                                 p.alignment = PP_ALIGN.CENTER
+#                                 p.font.size = Pt(12)
+#                                 p.font.color.rgb = RGBColor(255, 0, 0)
+#                                 print(f"Error processing image {image_path}: {e}")
+
+
+#                         def _add_vehicle_details_middle_content(prs, slide, cir_report, sar_report):
+#                             SLIDE_WIDTH = prs.slide_width
+#                             SLIDE_HEIGHT = prs.slide_height
+#                             CONTENT_MARGIN = Inches(0.5)
+#                             CONTENT_LEFT = CONTENT_MARGIN
+#                             CONTENT_TOP = CONTENT_MARGIN
+#                             CONTENT_WIDTH = SLIDE_WIDTH - (2 * CONTENT_MARGIN)
+                            
+#                             heading_top = Inches(0.6)
+#                             heading_height = Inches(0.4)
+#                             details_top = heading_top + heading_height + Inches(0.36)
+#                             details_height = Inches(2.5) # before 2.25
+
+#                             # --- Details Grey Box ---
+#                             details_shape = slide.shapes.add_shape(
+#                                 MSO_SHAPE.RECTANGLE,
+#                                 CONTENT_LEFT,
+#                                 details_top,
+#                                 CONTENT_WIDTH,
+#                                 details_height
+#                             )
+#                             details_shape.fill.solid()
+#                             details_shape.fill.fore_color.rgb = RGBColor(245, 245, 245)
+#                             details_shape.line.fill.background()  # No border
+
+#                             details_tf = details_shape.text_frame
+#                             details_tf.clear()
+#                             details_tf.word_wrap = True
+
+#                             # Prepare points: (label, value)
+#                             detail_points = [
+#                                 ("REG NO", cir_report.vehicle_no.upper() or 'N/A'),
+#                                 ("CHASSIS NO", cir_report.chassis_no.upper() or 'N/A'),
+#                                 ("MODEL", cir_report.model.upper() if cir_report.model else 'N/A'),
+#                             ]
+#                             if cir_report.hours:
+#                                 detail_points.append(("KM / HRS", f"{cir_report.kilometer or 'N/A'} / {cir_report.hours}"))
+#                             else:
+#                                 detail_points.append(("KM", cir_report.kilometer or 'N/A'))
+#                             detail_points += [
+#                                 ("SALE DATE", cir_report.sale_date.strftime('%d/%m/%Y') if cir_report.sale_date else 'N/A'),
+#                                 ("JOB NO", cir_report.job_no or 'N/A'),
+#                             ]
+
+#                             for i, (point, value) in enumerate(detail_points):
+#                                 para = details_tf.add_paragraph() if i > 0 else details_tf.paragraphs[0]
+#                                 para.clear()
+#                                 para.alignment = PP_ALIGN.LEFT
+#                                 para.space_after = Pt(8)
+#                                 para.font.size = Pt(15)
+#                                 para.font.name = 'Arial'
+#                                 # Bullet
+#                                 run_bullet = para.add_run()
+#                                 run_bullet.text = "➤  "
+#                                 run_bullet.font.size = Pt(15)
+#                                 run_bullet.font.bold = True
+#                                 run_bullet.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_bullet.font.name = 'Arial'
+#                                 # Key (bold)
+#                                 run_key = para.add_run()
+#                                 run_key.text = f"{point}"
+#                                 run_key.font.bold = True
+#                                 run_key.font.size = Pt(15)
+#                                 run_key.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_key.font.name = 'Arial'
+#                                 # Colon and space
+#                                 run_colon = para.add_run()
+#                                 run_colon.text = " : "
+#                                 run_colon.font.bold = True
+#                                 run_colon.font.size = Pt(15)
+#                                 run_colon.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_colon.font.name = 'Arial'
+#                                 # Value (bold only for REG NO line)
+#                                 run_val = para.add_run()
+#                                 run_val.text = f"{value}"
+#                                 run_val.font.bold = True if i == 0 else False
+#                                 run_val.font.size = Pt(15)
+#                                 run_val.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_val.font.name = 'Arial'
+
+#                             # --- Purple Divider Line ---
+#                             line_top = details_top + details_height + Inches(0.10)
+#                             line_height = Inches(0.12)
+#                             line_shape = slide.shapes.add_shape(
+#                                 MSO_SHAPE.RECTANGLE,
+#                                 CONTENT_LEFT,
+#                                 line_top,
+#                                 CONTENT_WIDTH,
+#                                 line_height
+#                             )
+#                             line_shape.fill.solid()
+#                             line_shape.fill.fore_color.rgb = RGBColor(98, 0, 153)
+#                             line_shape.space_after = Pt(8)
+
+
+#                             # --- Bottom Info Box (Supervisor etc.) ---
+#                             box_top = line_top + line_height + Inches(0.14)
+#                             box_height = Inches(1.8) # before 1.3
+#                             box_shape = slide.shapes.add_shape(
+#                                 MSO_SHAPE.RECTANGLE,
+#                                 CONTENT_LEFT,
+#                                 box_top,
+#                                 CONTENT_WIDTH,
+#                                 box_height
+#                             )
+#                             box_shape.fill.solid()
+#                             box_shape.fill.fore_color.rgb = RGBColor(245, 245, 245)
+#                             box_shape.line.fill.background()
+
+#                             box_tf = box_shape.text_frame
+#                             box_tf.clear()
+#                             box_tf.word_wrap = True
+
+#                             supervisor = cir_report.supervisor_name.title() or 'N/A'
+#                             compl_date = cir_report.cir_date_time.strftime('%d/%m/%Y') if cir_report.cir_date_time else 'N/A'
+#                             advisor = getattr(sar_report, 'advisor_name', '').title() or 'N/A'
+#                             sub_date = sar_report.sar_date_time.strftime('%d/%m/%Y') if sar_report and sar_report.sar_date_time else 'N/A'
+
+#                             info_lines = [
+#                                 ("Supervisor", supervisor or 'N/A'),
+#                                 ("Complain Date", compl_date or 'N/A'),
+#                                 ("Service Advisor", advisor or 'N/A'),
+#                                 ("Sub Date", sub_date or 'N/A'),
+#                             ]
+
+#                             # for i, text in enumerate(info_lines):
+#                             for i, (point, value) in enumerate(info_lines):
+                                
+#                                 para = box_tf.add_paragraph() if i > 0 else box_tf.paragraphs[0]
+#                                 para.clear()
+#                                 para.alignment = PP_ALIGN.LEFT
+#                                 para.space_after = Pt(16) if i == 1 else Pt(8)
+#                                 para.font.size = Pt(15)
+#                                 para.font.name = 'Arial'
+#                                 # Bullet
+#                                 run_bullet = para.add_run()
+#                                 run_bullet.text = "➤  "
+#                                 run_bullet.font.size = Pt(15)
+#                                 run_bullet.font.bold = True
+#                                 run_bullet.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_bullet.font.name = 'Arial'
+#                                 # Key (bold)
+#                                 run_key = para.add_run()
+#                                 run_key.text = f"{point}"
+#                                 run_key.font.bold = True
+#                                 run_key.font.size = Pt(15)
+#                                 run_key.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_key.font.name = 'Arial'
+#                                 # Colon and space
+#                                 run_colon = para.add_run()
+#                                 run_colon.text = " : "
+#                                 run_colon.font.bold = True
+#                                 run_colon.font.size = Pt(15)
+#                                 run_colon.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_colon.font.name = 'Arial'
+#                                 # Value 
+#                                 run_val = para.add_run()
+#                                 run_val.text = f"{value}"
+#                                 run_val.font.bold = False
+#                                 run_val.font.size = Pt(15)
+#                                 run_val.font.color.rgb = RGBColor(0, 0, 0)
+#                                 run_val.font.name = 'Arial'
+
+
+#                         def add_label_and_image_optional(
+#                             slide, left, top, width, height, label=None, image_path=None,
+#                             font_size=14, label_height=0.6
+#                         ):
+#                             """
+#                             Add a label (wrapped, multi-line) over the image.
+#                             If label or image_path is None/blank, handle gracefully.
+#                             """
+#                             label = (label or '').strip()
+#                             label_present = bool(label)
+
+#                             def file_exists(path_or_url):
+#                                 if not path_or_url:
+#                                     return False
+#                                 try:
+#                                     if path_or_url.startswith('http://') or path_or_url.startswith('https://'):
+#                                         response = requests.head(path_or_url)
+#                                         return response.status_code == 200
+#                                     return os.path.exists(path_or_url)
+#                                 except Exception:
+#                                     return False
+
+#                             image_present = image_path and file_exists(image_path)
+
+#                             # -- Both present --
+#                             if image_present and label_present:
+#                                 print(label)
+#                                 # Add label box at top
+#                                 label_box = slide.shapes.add_textbox(left, top, width, Inches(label_height))
+#                                 tf = label_box.text_frame
+#                                 tf.clear()
+#                                 tf.word_wrap = True
+#                                 tf.vertical_anchor = MSO_ANCHOR.TOP
+#                                 wrapped = "\n".join(textwrap.wrap(label, 35))  # Adjust char-per-line as needed
+#                                 p = tf.paragraphs[0]
+#                                 p.text = wrapped
+#                                 p.font.name = 'Segoe UI Semibold'
+#                                 p.font.size = Pt(font_size)
+#                                 p.font.bold = True
+#                                 p.font.color.rgb = RGBColor(255, 255, 255)
+#                                 p.alignment = PP_ALIGN.CENTER
+#                                 # Semi-transparent bg
+#                                 fill = label_box.fill
+#                                 fill.solid()
+#                                 fill.fore_color.rgb = RGBColor(0, 0, 0)
+#                                 fill.transparency = 0.35
+#                                 # Reduce image height to fit label
+#                                 img_top = top + Inches(label_height)
+#                                 img_height = height - Inches(label_height)
+#                                 if img_height < Inches(1): img_height = Inches(1)
+#                                 if image_path.startswith('http://') or image_path.startswith('https://'):
+#                                     # It's a remote image — fetch and use as file-like object
+#                                     image_stream = BytesIO(urlopen(image_path).read())
+#                                     slide.shapes.add_picture(image_stream, left, img_top, width=width, height=img_height)
+#                                 else:
+#                                     # It's a local image path
+#                                     slide.shapes.add_picture(image_path, left, img_top, width=width, height=img_height)
+#                             # -- Only image --
+#                             elif image_present and not label_present:
+#                                 if image_path.startswith('http://') or image_path.startswith('https://'):
+#                                     # It's a remote image — fetch and use as file-like object
+#                                     image_stream = BytesIO(urlopen(image_path).read())
+#                                     slide.shapes.add_picture(image_stream, left, top, width=width, height=height)
+#                                 else:
+#                                     # It's a local image path
+#                                     slide.shapes.add_picture(image_path, left, top, width=width, height=height)
+#                             # -- Only label --
+#                             elif label_present and not image_present:
+#                                 label_box = slide.shapes.add_textbox(left, top, width, height)
+#                                 tf = label_box.text_frame
+#                                 tf.clear()
+#                                 tf.word_wrap = True
+#                                 tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+#                                 wrapped = "\n".join(textwrap.wrap(label, 35))
+#                                 p = tf.paragraphs[0]
+#                                 p.text = wrapped
+#                                 p.font.name = 'Segoe UI Semibold'
+#                                 p.font.size = Pt(font_size)
+#                                 p.font.bold = True
+#                                 p.font.color.rgb = RGBColor(0, 0, 0)
+#                                 p.alignment = PP_ALIGN.CENTER
+#                                 fill = label_box.fill
+#                                 fill.solid()
+#                                 fill.fore_color.rgb = RGBColor(235, 235, 200)
+#                                 fill.transparency = 0.0
+#                             # -- Neither present --
+#                             else:
+#                                 # Optional: show a placeholder or skip
+#                                 placeholder = slide.shapes.add_textbox(left, top, width, height)
+#                                 tf = placeholder.text_frame
+#                                 tf.text = "No image/label"
+#                                 tf.paragraphs[0].font.size = Pt(13)
+#                                 tf.paragraphs[0].font.color.rgb = RGBColor(200, 0, 0)
+#                                 tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+
+#                         def _add_image_slide(prs_obj, title_text, image_data_list): ############################################################
+#                             def add_new_slide(prs_obj, title_text):
+#                                 slide = _add_slide_with_attractive_template(prs_obj, 6)  # Blank layout
+#                                 _add_subheading_box(slide, title_text)  # Subheading box below header
+
+#                                 return slide
+
+#                             # Layout constants
+#                             image_width = Inches(4)
+#                             if title_text in ["Vehicle Images", "Fault Parts"]:
+#                                 image_height = Inches(5.8)
+#                             else:    
+#                                 image_height = Inches(5.8)
+
+#                             spacing_x = Inches(1.0)
+
+#                             if title_text in ["Vehicle Images", "Fault Parts"]:
+#                                 spacing_top = Inches(0.7)   # Below title
+#                             else:
+#                                 spacing_top = Inches(0.7)   # Below title
+
+#                             label_height = Inches(0.4)
+#                             images_per_row = 2
+
+#                             idx = 0
+#                             slide = add_new_slide(prs_obj, title_text)
+#                             while idx < len(image_data_list):
+#                                 # How many images in this row? (1 or 2)
+#                                 row_img_count = min(images_per_row, len(image_data_list) - idx)
+#                                 # Total width taken by images + spacings
+#                                 total_block_width = row_img_count * image_width + (row_img_count - 1) * spacing_x
+#                                 # Left margin to center this block
+#                                 block_left = CONTENT_LEFT + (CONTENT_WIDTH - total_block_width) / 2
+
+#                                 for col in range(row_img_count):
+#                                     img_data = image_data_list[idx]
+#                                     left = block_left + col * (image_width + spacing_x)
+#                                     top = CONTENT_TOP + spacing_top
+#                                     label = img_data.get('label')
+#                                     image_path = img_data.get('path_url')
+#                                     add_label_and_image_optional(
+#                                         slide, left, top, image_width, image_height,
+#                                         label=label, image_path=image_path, font_size=14, label_height=0.6
+#                                     )
+#                                     idx += 1
+
+
+#                                 # If more images remain, start a new slide
+#                                 if idx < len(image_data_list):
+#                                     slide = add_new_slide(prs_obj, title_text)
+
+
+
+
+#                         def _add_text_slide(prs_obj, title_text, content_text):
+#                             """
+#                             Adds a slide with a title and a main text body.
+#                             """
+#                             if not content_text or not content_text.strip():
+#                                 return  # Skip empty content
+
+#                             # Add a blank slide
+#                             slide = _add_slide_with_attractive_template(prs_obj, 6)
+#                             _add_subheading_box(slide, title_text)
+
+#                             # --- Main Content Text Box ---
+#                             text_left = CONTENT_LEFT + Inches(0.2)
+#                             text_top = CONTENT_TOP + Inches(0.2) + Inches(0.8) + Inches(0.2)  # Top + title height + gap
+#                             text_width = CONTENT_WIDTH - Inches(0.4)
+#                             text_height = SLIDE_HEIGHT - text_top - CONTENT_MARGIN
+
+#                             content_box = slide.shapes.add_textbox(text_left, text_top, text_width, text_height)
+#                             content_frame = content_box.text_frame
+#                             content_frame.word_wrap = True
+#                             content_frame.clear()
+
+#                             # Add each non-empty line as a new paragraph
+#                             for idx, line in enumerate(content_text.split('\n')):
+#                                 clean_line = line.strip()
+#                                 if not clean_line:
+#                                     continue
+#                                 para = content_frame.add_paragraph() if idx > 0 else content_frame.paragraphs[0]
+#                                 para.text = clean_line
+#                                 para.font.size = BODY_FONT_SIZE
+#                                 para.font.bold = False
+#                                 para.alignment = PP_ALIGN.LEFT
+
+
+#                         # --- Start Presentation Generation ---
+
+#                         # Slide 1: Title Slide
+#                         slide = _add_slide_with_attractive_template(prs, 6)  # Use blank slide layout for full control
+
+#                         # --- Main Title ---
+#                         box_left = CONTENT_LEFT  # usually Inches(0.5)
+#                         box_top = CONTENT_TOP + Inches(1.1)   # adjust top as needed to center vertically
+#                         box_width = CONTENT_WIDTH
+#                         box_height = Inches(1.3)  # adjust as needed
+
+#                         # Add rectangle for the heading box
+#                         heading_box_shape = slide.shapes.add_shape(
+#                             MSO_SHAPE.RECTANGLE,
+#                             box_left,
+#                             box_top,
+#                             box_width,
+#                             box_height
+#                         )
+#                         heading_box_shape.fill.solid()
+#                         heading_box_shape.fill.fore_color.rgb = RGBColor(252, 213, 181)  # white, or light color
+#                         heading_box_shape.line.color.rgb = RGBColor(0, 100, 0)           # dark green or your border color
+#                         heading_box_shape.line.width = Pt(3)                             # adjust border thickness
+
+#                         # Now add your title text INSIDE this box (so the text overlaps the shape)
+#                         title_box = slide.shapes.add_textbox(
+#                             box_left,
+#                             box_top,
+#                             box_width,
+#                             box_height
+#                         )
+#                         title_tf = title_box.text_frame
+#                         title_tf.clear()
+#                         p = title_tf.paragraphs[0]
+#                         p.text = "COMPLAIN INFORMATION REPORT"
+#                         p.font.size = Pt(60)
+#                         p.font.bold = True
+#                         p.font.color.rgb = RGBColor(0, 32, 128)  # deep blue
+#                         p.alignment = PP_ALIGN.CENTER
+#                         title_tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+
+
+#                         # Adjust font size to fit within textbox
+#                         max_font_size = 44  # Start from large size
+#                         min_font_size = 18  # Do not go below this
+
+#                         # Function to check if text fits
+#                         def text_fits(paragraph, textbox):
+#                             # Rough estimate: decrease font size if text is too long for the box width
+#                             text_length = len(paragraph.text)
+#                             box_width_inches = textbox.width.inches
+#                             return text_length * paragraph.font.size.pt * 0.01 < box_width_inches * 72
+
+#                         font_size = max_font_size
+#                         while font_size >= min_font_size:
+#                             p.font.size = Pt(font_size)
+#                             if text_fits(p, title_box):
+#                                 break
+#                             font_size -= 2
+
+#                         # --- Registration Number ---
+#                         reg_no_box = slide.shapes.add_textbox(
+#                             CONTENT_LEFT,
+#                             CONTENT_TOP + Inches(1) + Inches(1.5) + Inches(0.5),
+#                             CONTENT_WIDTH,
+#                             Inches(0.75)
+#                         )
+#                         reg_no_tf = reg_no_box.text_frame
+#                         reg_no_tf.clear()
+#                         p = reg_no_tf.paragraphs[0]
+#                         p.text = f"VEHICLE NO : {cir_report.vehicle_no.upper() or 'N/A'}"
+#                         p.font.size = SUBTITLE_FONT_SIZE
+#                         p.font.bold = False
+#                         p.alignment = PP_ALIGN.CENTER
+#                         p.font.color.rgb = RGBColor(0, 0, 128)
+
+
+#                         # --- Slide 2: VEHICLE DETAILS ---
+#                         vehicle_details_slide = _add_slide_with_attractive_template(prs, 6)
+#                         _add_subheading_box(vehicle_details_slide, "VEHICLE DETAILS")
+#                         _add_vehicle_details_middle_content(prs, vehicle_details_slide, cir_report, sar_report)
+
+
+#                         # --- Vehicle Images ---
+#                         vehicle_images = []
+#                         if cir_report.vehicle_front_image:
+#                             vehicle_images.append({'path_url': cir_report.vehicle_front_image.url, 'label': 'VEHICLE FRONT'})
+#                         if cir_report.vehicle_with_number_plate:
+#                             vehicle_images.append({'path_url': cir_report.vehicle_with_number_plate.url, 'label': 'VEHICLE WITH NUMBER PLATE'})
+#                         if cir_report.chasis:
+#                             vehicle_images.append({'path_url': cir_report.chasis.url, 'label': 'CHASSIS'})
+#                         if cir_report.odometer:
+#                             vehicle_images.append({'path_url': cir_report.odometer.url, 'label': 'ODOMETER'})
+
+#                         if vehicle_images:
+#                             _add_image_slide(prs, "Vehicle Images", vehicle_images)
+
+#                         # --- Complaint Images ---
+#                         complaint_images = []
+#                         if cir_report.complaint_1_image or cir_report.complaint_1:
+#                             complaint_images.append({'path_url': cir_report.complaint_1_image.url if cir_report.complaint_1_image else '', 'label': cir_report.complaint_1.upper() or ''})
+#                         if cir_report.complaint_2_image  or cir_report.complaint_2:
+#                             complaint_images.append({'path_url': cir_report.complaint_2_image.url if cir_report.complaint_2_image else '', 'label': cir_report.complaint_2.upper() or ''})
+#                         if cir_report.complaint_3_image  or cir_report.complaint_3:
+#                             complaint_images.append({'path_url': cir_report.complaint_3_image.url if cir_report.complaint_3_image else '', 'label': cir_report.complaint_3.upper() or ''})
+#                         if cir_report.complaint_4_image  or cir_report.complaint_4:
+#                             complaint_images.append({'path_url': cir_report.complaint_4_image.url if cir_report.complaint_4_image else '', 'label': cir_report.complaint_4.upper() or ''})
+#                         if cir_report.complaint_5_image  or cir_report.complaint_5:
+#                             complaint_images.append({'path_url': cir_report.complaint_5_image.url if cir_report.complaint_5_image else '', 'label': cir_report.complaint_5.upper() or ''})
+#                         if cir_report.complaint_6_image  or cir_report.complaint_6:
+#                             complaint_images.append({'path_url': cir_report.complaint_6_image.url if cir_report.complaint_6_image else '', 'label': cir_report.complaint_6.upper() or ''})
+#                         if cir_report.complaint_7_image  or cir_report.complaint_7:
+#                             complaint_images.append({'path_url': cir_report.complaint_7_image.url if cir_report.complaint_7_image else '', 'label': cir_report.complaint_7.upper() or ''})
+
+#                         if complaint_images:
+#                             _add_image_slide(prs, "Customer Complain", complaint_images)
+
+#                         # --- Fault Images ---
+
+#                         # For both images and description
+#                         fault_images = []
+#                         if selected_images:
+#                             for image_name in selected_images:  # selected_images = ['faulty_image_1', 'faulty_image_2', ...]
+#                                 # Extract index after the second underscore
+#                                 image_name_index = image_name.split('_')[2]  # e.g. '1' from 'faulty_image_1'
+#                                 description_field = f"faulty{image_name_index}_description"
+
+#                                 # Get the image field and description field from sar_report
+#                                 image_field = getattr(sar_report, image_name, None)
+#                                 description_value = getattr(sar_report, description_field, '')
+
+#                                 fault_images.append({
+#                                     'path_url': image_field.url if image_field else '',
+#                                     'label': description_value.upper() or ''
+#                                 })
+
+
+#                         if fault_images:
+#                             _add_image_slide(prs, "Fault Parts", fault_images)
+
+#                         # --- Text-Only Slides ---
+#                         if cir_report.claim_manager_investigation:
+#                             _add_text_slide(prs, "Investigation", cir_report.claim_manager_investigation.upper())
+
+#                         if cir_report.claim_manager_action_taken:
+#                             _add_text_slide(prs, "Action Taken", cir_report.claim_manager_action_taken.upper())
+
+#                         # --- Save presentation to memory ---
+#                         ppt_buffer = io.BytesIO()
+#                         prs.save(ppt_buffer)
+#                         ppt_buffer.seek(0)
+
+#                         # --- Generate filename ---
+#                         base_filename = cir_report.job_no or str(cir_report.vehicle_no)
+#                         filename = f"{base_filename.replace(' ', '_')}_{uuid.uuid4().hex[:8]}.pptx"
+
+#                         # --- Save to FileField in model ---
+
+#                         cir_report.presentation_report_status="created"
+#                         cir_report.claim_manager_last_save_date_time=datetime.now()
+#                         cir_report.presentation_date_time=datetime.now()
+#                         cir_report.presentation_date=date.today()
+#                         cir_report.presentation_time=timezone.now()
+#                         cir_report.claim_manager_name=request.user.first_name+ " " + request.user.last_name
+#                         cir_report.claim_manager_id=request.user.username
+#                         cir_report.presentation_report.save(filename, ContentFile(ppt_buffer.getvalue()))
+
+#                         cir_report.save()
+                        
+
+#                         return redirect('presentation_download', cir_uid=cir_report.pk)
+                    
+#                     except:
+#                         messages.error(request, "Error in generating presentation !!")    
+#                         return redirect('claim_manager_preview_cir', cir_uid=data.get('cir_uid'))        
+                
+
+#                 else:
+#                     messages.error(request, "Error !!")
+#                     return redirect('claim_manager_preview_cir', cir_uid=data.get('cir_uid'))        
+
+#             else:
+#                 messages.error(request, "Unauthorised Access !!")
+#                 return redirect('claim_manager_cir_list')
+
+#         else:
+#             cir_report = Customer_Information_Report.objects.filter(cir_uid=cir_uid).first()
+
+#             if cir_report.selected_claim_manager == request.user.username:
+#                 sar_report = Service_Advisor_Report.objects.filter(cir=cir_report).first()
+#                 return render(request, 'claim_manager/select_faulty_images.html', {'cir_uid':cir_report.cir_uid, 'job_no':cir_report.job_no, 'vehicle_no':cir_report.vehicle_no, 'report_status':cir_report.presentation_report_status, 'sar_report':sar_report})
+#             else:
+#                 logout(request)
+#                 messages.error(request, "Unauthorised Access !!")
+#                 return redirect('user_login')                    
+        
+#     else:
+#         logout(request)
+#         messages.error(request, "Unauthorised Access !!")
+#         return redirect('user_login')
 
 @login_active_user_required
 def claim_manager_generate_ppt(request, cir_uid):
@@ -826,12 +1614,25 @@ def claim_manager_generate_ppt(request, cir_uid):
                             def file_exists(path_or_url):
                                 if not path_or_url:
                                     return False
+
                                 try:
-                                    if path_or_url.startswith('http://') or path_or_url.startswith('https://'):
-                                        response = requests.head(path_or_url)
-                                        return response.status_code == 200
-                                    return os.path.exists(path_or_url)
-                                except Exception:
+                                    parsed = urlparse(path_or_url)
+
+                                    # Remote URL case
+                                    if parsed.scheme in ('http', 'https'):
+                                        response = requests.head(path_or_url, timeout=3, allow_redirects=True)
+                                        if response.status_code == 200:
+                                            return True
+                                        else:
+                                            return False
+
+                                    # Local path case
+                                    if os.path.isabs(path_or_url):
+                                        return os.path.exists(path_or_url)
+                                    else:
+                                        return False
+
+                                except Exception as e:
                                     return False
 
                             image_present = image_path and file_exists(image_path)
@@ -947,7 +1748,8 @@ def claim_manager_generate_ppt(request, cir_uid):
                                     left = block_left + col * (image_width + spacing_x)
                                     top = CONTENT_TOP + spacing_top
                                     label = img_data.get('label')
-                                    image_path = img_data.get('path_url')
+                                    image_path = img_data.get('path') or img_data.get('path_url')
+                                    print(image_path)
                                     add_label_and_image_optional(
                                         slide, left, top, image_width, image_height,
                                         label=label, image_path=image_path, font_size=14, label_height=0.6
@@ -1082,13 +1884,13 @@ def claim_manager_generate_ppt(request, cir_uid):
                         # --- Vehicle Images ---
                         vehicle_images = []
                         if cir_report.vehicle_front_image:
-                            vehicle_images.append({'path_url': cir_report.vehicle_front_image.url, 'label': 'VEHICLE FRONT'})
+                            vehicle_images.append({'path_url': cir_report.vehicle_front_image.url, 'path': cir_report.vehicle_front_image.path if cir_report.vehicle_front_image and cir_report.vehicle_front_image.storage.exists(cir_report.vehicle_front_image.name) else '', 'label': 'VEHICLE FRONT'})
                         if cir_report.vehicle_with_number_plate:
-                            vehicle_images.append({'path_url': cir_report.vehicle_with_number_plate.url, 'label': 'VEHICLE WITH NUMBER PLATE'})
+                            vehicle_images.append({'path_url': cir_report.vehicle_with_number_plate.url, 'path': cir_report.vehicle_with_number_plate.path if cir_report.vehicle_with_number_plate and cir_report.vehicle_with_number_plate.storage.exists(cir_report.vehicle_with_number_plate.name) else '', 'label': 'VEHICLE WITH NUMBER PLATE'})
                         if cir_report.chasis:
-                            vehicle_images.append({'path_url': cir_report.chasis.url, 'label': 'CHASSIS'})
+                            vehicle_images.append({'path_url': cir_report.chasis.url, 'path': cir_report.chasis.path if cir_report.chasis and cir_report.chasis.storage.exists(cir_report.chasis.name) else '', 'label': 'CHASSIS'})
                         if cir_report.odometer:
-                            vehicle_images.append({'path_url': cir_report.odometer.url, 'label': 'ODOMETER'})
+                            vehicle_images.append({'path_url': cir_report.odometer.url, 'path': cir_report.odometer.path if cir_report.odometer and cir_report.odometer.storage.exists(cir_report.odometer.name) else '', 'label': 'ODOMETER'})
 
                         if vehicle_images:
                             _add_image_slide(prs, "Vehicle Images", vehicle_images)
@@ -1096,19 +1898,19 @@ def claim_manager_generate_ppt(request, cir_uid):
                         # --- Complaint Images ---
                         complaint_images = []
                         if cir_report.complaint_1_image or cir_report.complaint_1:
-                            complaint_images.append({'path_url': cir_report.complaint_1_image.url if cir_report.complaint_1_image else '', 'label': cir_report.complaint_1.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_1_image.url if cir_report.complaint_1_image else '', 'path': cir_report.complaint_1_image.path if cir_report.complaint_1_image and cir_report.complaint_1_image.storage.exists(cir_report.complaint_1_image.name) else '', 'label': cir_report.complaint_1.upper() or ''})
                         if cir_report.complaint_2_image  or cir_report.complaint_2:
-                            complaint_images.append({'path_url': cir_report.complaint_2_image.url if cir_report.complaint_2_image else '', 'label': cir_report.complaint_2.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_2_image.url if cir_report.complaint_2_image else '', 'path': cir_report.complaint_2_image.path if cir_report.complaint_2_image and cir_report.complaint_2_image.storage.exists(cir_report.complaint_2_image.name) else '', 'label': cir_report.complaint_2.upper() or ''})
                         if cir_report.complaint_3_image  or cir_report.complaint_3:
-                            complaint_images.append({'path_url': cir_report.complaint_3_image.url if cir_report.complaint_3_image else '', 'label': cir_report.complaint_3.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_3_image.url if cir_report.complaint_3_image else '', 'path': cir_report.complaint_3_image.path if cir_report.complaint_3_image and cir_report.complaint_3_image.storage.exists(cir_report.complaint_3_image.name) else '', 'label': cir_report.complaint_3.upper() or ''})
                         if cir_report.complaint_4_image  or cir_report.complaint_4:
-                            complaint_images.append({'path_url': cir_report.complaint_4_image.url if cir_report.complaint_4_image else '', 'label': cir_report.complaint_4.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_4_image.url if cir_report.complaint_4_image else '', 'path': cir_report.complaint_4_image.path if cir_report.complaint_4_image and cir_report.complaint_4_image.storage.exists(cir_report.complaint_4_image.name) else '', 'label': cir_report.complaint_4.upper() or ''})
                         if cir_report.complaint_5_image  or cir_report.complaint_5:
-                            complaint_images.append({'path_url': cir_report.complaint_5_image.url if cir_report.complaint_5_image else '', 'label': cir_report.complaint_5.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_5_image.url if cir_report.complaint_5_image else '', 'path': cir_report.complaint_5_image.path if cir_report.complaint_5_image and cir_report.complaint_5_image.storage.exists(cir_report.complaint_5_image.name) else '', 'label': cir_report.complaint_5.upper() or ''})
                         if cir_report.complaint_6_image  or cir_report.complaint_6:
-                            complaint_images.append({'path_url': cir_report.complaint_6_image.url if cir_report.complaint_6_image else '', 'label': cir_report.complaint_6.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_6_image.url if cir_report.complaint_6_image else '', 'path': cir_report.complaint_6_image.path if cir_report.complaint_6_image and cir_report.complaint_6_image.storage.exists(cir_report.complaint_6_image.name) else '', 'label': cir_report.complaint_6.upper() or ''})
                         if cir_report.complaint_7_image  or cir_report.complaint_7:
-                            complaint_images.append({'path_url': cir_report.complaint_7_image.url if cir_report.complaint_7_image else '', 'label': cir_report.complaint_7.upper() or ''})
+                            complaint_images.append({'path_url': cir_report.complaint_7_image.url if cir_report.complaint_7_image else '', 'path': cir_report.complaint_7_image.path if cir_report.complaint_7_image and cir_report.complaint_7_image.storage.exists(cir_report.complaint_7_image.name) else '', 'label': cir_report.complaint_7.upper() or ''})
 
                         if complaint_images:
                             _add_image_slide(prs, "Customer Complain", complaint_images)
@@ -1129,6 +1931,7 @@ def claim_manager_generate_ppt(request, cir_uid):
 
                                 fault_images.append({
                                     'path_url': image_field.url if image_field else '',
+                                    'path': image_field.path if image_field else '', 
                                     'label': description_value.upper() or ''
                                 })
 
@@ -1165,7 +1968,6 @@ def claim_manager_generate_ppt(request, cir_uid):
 
                         cir_report.save()
                         
-
                         return redirect('presentation_download', cir_uid=cir_report.pk)
                     
                     # except:
@@ -1198,6 +2000,8 @@ def claim_manager_generate_ppt(request, cir_uid):
         return redirect('user_login')
         
 
+        
+
 ####################################################################################################################
 
 @login_active_user_required
@@ -1208,6 +2012,7 @@ def presentation_download(request, cir_uid):
         if cir_report.selected_claim_manager == request.user.username:
 
             file_url = cir_report.presentation_report.url
+
             redirect_url = reverse('claim_manager_cir_list')
             return render(request, 'claim_manager/presentation_download.html', {
                 'file_url': file_url,
@@ -1222,6 +2027,46 @@ def presentation_download(request, cir_uid):
         logout(request)
         messages.error(request, "Unauthorised Access !!")
         return redirect('user_login')
+    
+
+########################################################################################################################################
+
+@login_active_user_required
+def download_all_images(request, cir_uid):
+    cir = Customer_Information_Report.objects.filter(cir_uid=cir_uid).first()
+    if not cir:
+        return HttpResponse("CIR not found", status=404)
+
+    job_no = cir.job_no or "unknown_job"
+    zip_filename = f"{job_no.replace('/', '_')}.zip"
+
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+
+        def add_model_images(instance, prefix):
+            if not instance:
+                return
+            for field in instance._meta.fields:
+                if isinstance(field, ImageField):
+                    image_field = getattr(instance, field.name)
+                    if image_field and image_field.name:
+                        try:
+                            with image_field.open('rb') as img_file:
+                                data = img_file.read()
+                                ext = os.path.splitext(image_field.name)[1]
+                                filename = f"{prefix}_{field.name}{ext}"
+                                zip_file.writestr(filename, data)
+                        except Exception as e:
+                            print(f"Error adding {field.name}: {e}")
+
+        # Order: CIR images first, then SAR images
+        add_model_images(cir, "CIR")
+        add_model_images(getattr(cir, 'service_advisor_report', None), "SAR")
+
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+    return response
 
 
 ########################################################################################################################################

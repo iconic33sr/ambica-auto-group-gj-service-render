@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                     
                             if (responsePing.ok) {
-
+                                document.getElementById("revision_remark").value = "";
                                 form.submit();
                             } else {
                                 // Server responded, but not OK (200)

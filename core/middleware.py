@@ -1,6 +1,7 @@
 from user_agents import parse
 from django.shortcuts import redirect
 from django.utils.timezone import now
+from core.utils import cleanup_stale_subscriptions_once_per_day
 
 
 # To detect the user device
@@ -51,3 +52,13 @@ class TrackUserActivityMiddleware:
             request.session['last_activity'] = now().isoformat()
 
         return response
+    
+
+# To delete the unused Subscription from database
+class DailySubscriptionCleanupMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        cleanup_stale_subscriptions_once_per_day()
+        return self.get_response(request)
