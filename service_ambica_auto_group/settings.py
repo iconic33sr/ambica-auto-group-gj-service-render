@@ -213,63 +213,63 @@ AUTHENTICATION_BACKENDS = [
 
 # FOR CLOUD #####################################################################################################################################################
 
-DEBUG = os.environ.get("DEBUG")
+# DEBUG = os.environ.get("DEBUG")
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=0,           # 🔐 Required with pgBouncer (Transaction mode)
-        ssl_require=True
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.getenv('DATABASE_URL'),
+#         conn_max_age=0,           # 🔐 Required with pgBouncer (Transaction mode)
+#         ssl_require=True
+#     )
+# }
 
-STORAGES = {
-  "default": {
-    "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-    "OPTIONS": {
-      "default_acl": "public-read",
-      "querystring_auth": False
-    }
-  },
-  "staticfiles": {
-    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-  },
-}
+# STORAGES = {
+#   "default": {
+#     "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+#     "OPTIONS": {
+#       "default_acl": "public-read",
+#       "querystring_auth": False
+#     }
+#   },
+#   "staticfiles": {
+#     "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+#   },
+# }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.getenv("REDIS_URL")],
-            "expiry": 10,          # Message retention (seconds)
-            "group_expiry": 300,   # Group membership retention (seconds)  
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [os.getenv("REDIS_URL")],
+#             "expiry": 10,          # Message retention (seconds)
+#             "group_expiry": 300,   # Group membership retention (seconds)  
+#         },
+#     },
+# }
 
-# For native app and also to download images because to download image blob is used so do not comment it
-domain = os.getenv("DOMAIN_NAME")
-if domain:
-    domain = domain.strip()
-    if not domain.startswith("http"):
-        domain = "https://" + domain
-    CORS_ALLOWED_ORIGINS = [domain]
-else:
-    CORS_ALLOW_ALL_ORIGINS = True
+# # For native app and also to download images because to download image blob is used so do not comment it
+# domain = os.getenv("DOMAIN_NAME")
+# if domain:
+#     domain = domain.strip()
+#     if not domain.startswith("http"):
+#         domain = "https://" + domain
+#     CORS_ALLOWED_ORIGINS = [domain]
+# else:
+#     CORS_ALLOW_ALL_ORIGINS = True
 
-# For Security
+# # For Security
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_REFERRER_POLICY = 'same-origin'
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_BROWSER_XSS_FILTER = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_REFERRER_POLICY = 'same-origin'
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = 'DENY'
+# SECURE_BROWSER_XSS_FILTER = True
 
 # Used to store the last subscription model cleanup date in the redis cache i.e database or ram [Do not uncomment this if not using push_api notification]
 # CACHES = {
@@ -287,31 +287,33 @@ SECURE_BROWSER_XSS_FILTER = True
 
 # FOR LOCAL #####################################################################################################################################################
 
-# DEBUG = True
+DEBUG = True
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# MEDIA_URL = '/media/'  
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
+MEDIA_URL = '/media/'  
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
 
-# # This is for normal redis use without storing anything in the redis ram
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)], 
-#         },
-#     },
-# }
+# This is for normal redis use without storing anything in the redis ram
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)], 
+        },
+    },
+}
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
+
+
 
 # We are using this concept to store the last subscription model cleanup date in the redis cache and cache settings is just in the bottom of this [when using push_api notification]
 # CHANNEL_LAYERS = {
