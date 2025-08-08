@@ -11,6 +11,8 @@ from channels.layers import get_channel_layer
 from django.core.paginator import Paginator
 from core.decorators import login_active_user_required
 from django.http import JsonResponse
+from core.utils import get_zone_date_time
+
 
 ########################################################################################################################
 
@@ -69,10 +71,15 @@ def works_preview_cir(request, cir_uid):
 
                 if data.get('task') == "submission":
 
+                    dt_val, date_val, time_val = get_zone_date_time()
+
                     report.workshop_manager_verification="verified"
-                    report.workshop_manager_verification_date_time=datetime.now()
-                    report.workshop_manager_verification_date=date.today()
-                    report.workshop_manager_verification_time=timezone.now()
+                    # report.workshop_manager_verification_date_time=datetime.now()
+                    # report.workshop_manager_verification_date=date.today()
+                    # report.workshop_manager_verification_time=timezone.now()
+                    report.workshop_manager_verification_date_time=dt_val
+                    report.workshop_manager_verification_date=date_val
+                    report.workshop_manager_verification_time=time_val
                     report.workshop_manager_name=request.user.first_name+ " " + request.user.last_name
                     report.workshop_manager_userid=request.user.username
                     report.workshop_manager_remark=(data.get('workshop_manager_remark') or '').lower()

@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from core.decorators import login_active_user_required
+from core.utils import get_zone_date_time
 from urllib.parse import urlparse
 
 from django.http import HttpResponse
@@ -108,6 +109,8 @@ def claim_manager_preview_cir(request, cir_uid):
 
                     if report:
 
+                        dt_val = get_zone_date_time(need_datetime=True, need_date=False, need_time=False)
+
                         if data.get('job_no'):
                             report.job_no=data.get('job_no')
                         if data.get('vehicle_no'):
@@ -185,7 +188,7 @@ def claim_manager_preview_cir(request, cir_uid):
                             report.claim_manager_rejection='rejected'
                             report.claim_manager_rejection_reason=data.get('claim_manager_rejection_reason')
 
-                        report.claim_manager_last_save_date_time=datetime.now()
+                        report.claim_manager_last_save_date_time=dt_val
                         report.claim_manager_name=request.user.first_name+ " " + request.user.last_name
                         report.claim_manager_id=request.user.username
                         
@@ -1159,11 +1162,13 @@ def claim_manager_generate_ppt(request, cir_uid):
 
                         # --- Save to FileField in model ---
 
+                        dt_val, date_val, time_val = get_zone_date_time()
+
                         cir_report.presentation_report_status="created"
-                        cir_report.claim_manager_last_save_date_time=datetime.now()
-                        cir_report.presentation_date_time=datetime.now()
-                        cir_report.presentation_date=date.today()
-                        cir_report.presentation_time=timezone.now()
+                        cir_report.claim_manager_last_save_date_time=dt_val
+                        cir_report.presentation_date_time=dt_val
+                        cir_report.presentation_date=date_val
+                        cir_report.presentation_time=time_val
                         cir_report.claim_manager_name=request.user.first_name+ " " + request.user.last_name
                         cir_report.claim_manager_id=request.user.username
                         cir_report.presentation_report.save(filename, ContentFile(ppt_buffer.getvalue()))

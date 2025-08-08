@@ -51,12 +51,12 @@ def install_app(request):
 
 ############################################################################
 
-def service_worker(request):
-    path = os.path.join(settings.BASE_DIR, 'service_worker.js')
-    if os.path.exists(path):
-        return FileResponse(open(path, 'rb'), content_type='application/javascript')
-    else:
-        raise Http404("Service Worker not found")
+# def service_worker(request):
+#     path = os.path.join(settings.BASE_DIR, 'service_worker.js')
+#     if os.path.exists(path):
+#         return FileResponse(open(path, 'rb'), content_type='application/javascript')
+#     else:
+#         raise Http404("Service Worker not found")
 
 
 ############################################################################
@@ -187,61 +187,61 @@ def user_login(request):
 
 #         return JsonResponse({"status": "ok"})
 
-@csrf_exempt
-def save_subscription(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid method"}, status=405)
+# @csrf_exempt
+# def save_subscription(request):
+#     if request.method != "POST":
+#         return JsonResponse({"error": "Invalid method"}, status=405)
 
-    try:
-        data = json.loads(request.body)
-        user_id = data.get("user_id")
-        subscription = data.get("subscription")
+#     try:
+#         data = json.loads(request.body)
+#         user_id = data.get("user_id")
+#         subscription = data.get("subscription")
 
-        if not user_id or not subscription:
-            return JsonResponse({"error": "Missing user_id or subscription"}, status=400)
+#         if not user_id or not subscription:
+#             return JsonResponse({"error": "Missing user_id or subscription"}, status=400)
 
-        if not User.objects.filter(id=user_id).exists():
-            return JsonResponse({"error": "Invalid user"}, status=403)
+#         if not User.objects.filter(id=user_id).exists():
+#             return JsonResponse({"error": "Invalid user"}, status=403)
 
-        endpoint = subscription.get("endpoint")
+#         endpoint = subscription.get("endpoint")
 
-        # ✅ This will either create or update (including auto-updating last_seen)
-        PushSubscription.objects.update_or_create(
-            user_id=user_id,
-            subscription_info__endpoint=endpoint,
-            defaults={"subscription_info": subscription}
-        )
+#         # ✅ This will either create or update (including auto-updating last_seen)
+#         PushSubscription.objects.update_or_create(
+#             user_id=user_id,
+#             subscription_info__endpoint=endpoint,
+#             defaults={"subscription_info": subscription}
+#         )
 
-        return JsonResponse({"status": "saved"})
+#         return JsonResponse({"status": "saved"})
 
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+#     except Exception as e:
+#         return JsonResponse({"error": str(e)}, status=400)
 
 
 
-@csrf_exempt
-def delete_subscription(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid method"}, status=405)
+# @csrf_exempt
+# def delete_subscription(request):
+#     if request.method != "POST":
+#         return JsonResponse({"error": "Invalid method"}, status=405)
 
-    try:
-        data = json.loads(request.body)
-        user_id = data.get("user_id")
-        endpoint = data.get("endpoint")
+#     try:
+#         data = json.loads(request.body)
+#         user_id = data.get("user_id")
+#         endpoint = data.get("endpoint")
 
-        if not user_id or not endpoint:
-            return JsonResponse({"error": "Missing user_id or endpoint"}, status=400)
+#         if not user_id or not endpoint:
+#             return JsonResponse({"error": "Missing user_id or endpoint"}, status=400)
 
-        if not User.objects.filter(id=user_id).exists():
-            return JsonResponse({"error": "Invalid user"}, status=403)
+#         if not User.objects.filter(id=user_id).exists():
+#             return JsonResponse({"error": "Invalid user"}, status=403)
 
-        PushSubscription.objects.filter(
-            user_id=user_id,
-            subscription_info__endpoint=endpoint
-        ).delete()
-        return JsonResponse({"status": "deleted"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+#         PushSubscription.objects.filter(
+#             user_id=user_id,
+#             subscription_info__endpoint=endpoint
+#         ).delete()
+#         return JsonResponse({"status": "deleted"})
+#     except Exception as e:
+#         return JsonResponse({"error": str(e)}, status=400)
 
 ######################################################################################################################################################################################
 

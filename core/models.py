@@ -247,6 +247,9 @@ class Claim_Status(models.Model):
     part_dispatch_image3 = models.ImageField(upload_to='parts_dispatch_images/', null = True, blank = True)
     part_dispatch_image4 = models.ImageField(upload_to='parts_dispatch_images/', null = True, blank = True)
     part_dispatch_image5 = models.ImageField(upload_to='parts_dispatch_images/', null = True, blank = True)
+    # claim_manager_name
+    # claim_manager_id
+    # claim_status_date_time
 
     acm_name = models.CharField(max_length = 200, blank = True)
     acm_id = models.CharField(max_length = 100, blank = True)

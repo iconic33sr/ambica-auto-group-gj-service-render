@@ -767,8 +767,8 @@ async function initMap() {
                         lng
                     );
 
-                    if (distance < 250) {
-                        // Less than 250m, do not update
+                    if (distance < 400) {
+                        // Less than 400m, do not update
                         isInitMapRunning = false;
                         return;
                     }

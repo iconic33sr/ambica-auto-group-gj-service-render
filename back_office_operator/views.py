@@ -10,6 +10,8 @@ from core.decorators import login_active_user_required
 from django.http import JsonResponse
 import json
 import os
+from core.utils import get_zone_date_time
+
 
 ########################################################################################################################################
 
@@ -30,13 +32,15 @@ def scrap_list_entry(request):
                     if scrap_list_pdf_file and scrap_list_pdf_file.name.endswith(".pdf"):
                         compressed_pdf_file = compress_pdf_file(scrap_list_pdf_file)
 
+                        dt_val = get_zone_date_time(need_datetime=True, need_date=False, need_time=False)
+
                         scrap_list_report = sform.save(commit=False)
                         scrap_list_report.doc_no = sform.cleaned_data["doc_no"].lower()
                         scrap_list_report.plant = sform.cleaned_data["plant"].lower()
                         scrap_list_report.scrap_list_pdf = compressed_pdf_file
                         scrap_list_report.back_office_operator_name = request.user.first_name+ " " + request.user.last_name
                         scrap_list_report.back_office_operator_id = request.user.username
-                        scrap_list_report.scrap_list_date_time = datetime.now()
+                        scrap_list_report.scrap_list_date_time = dt_val
                         scrap_list_report.save()
 
                         claim_objs = Claim_Status.objects.filter(pk__in=prowacs_list)
@@ -142,11 +146,13 @@ def scrap_list_verification(request):
                             # Use compressed file if available, else fallback
                             final_ppt = compressed_ppt if compressed_ppt else ppt_file
 
+                            dt_val = get_zone_date_time(need_datetime=True, need_date=False, need_time=False)
+
                             scrap_verification_report = sform.save(commit=False)
                             scrap_verification_report.scrap_verification_ppt_file = final_ppt
                             scrap_verification_report.back_office_operator_name = request.user.first_name+ " " + request.user.last_name
                             scrap_verification_report.back_office_operator_id = request.user.username
-                            scrap_verification_report.scrap_verification_ppt_date_time = datetime.now()
+                            scrap_verification_report.scrap_verification_ppt_date_time = dt_val
                             scrap_verification_report.save()
 
                             for doc_no in selected_doc_nos:
@@ -305,6 +311,8 @@ def packing_slip_entry(request):
                     if packing_slip_pdf_file and packing_slip_pdf_file.name.endswith(".pdf"):
                         compressed_pdf_file = compress_pdf_file(packing_slip_pdf_file)
 
+                        dt_val = get_zone_date_time(need_datetime=True, need_date=False, need_time=False)
+
                         packing_slip_report = pform.save(commit=False)
                         packing_slip_report.packing_slip_no = pform.cleaned_data["packing_slip_no"].lower()
                         packing_slip_report.place_of_supply = pform.cleaned_data["place_of_supply"].lower()
@@ -313,7 +321,7 @@ def packing_slip_entry(request):
                         packing_slip_report.delivery_challan_pdf = compressed_pdf_file
                         packing_slip_report.back_office_operator_name = request.user.first_name+ " " + request.user.last_name
                         packing_slip_report.back_office_operator_id = request.user.username
-                        packing_slip_report.packing_slip_date_time = datetime.now()
+                        packing_slip_report.packing_slip_date_time = dt_val
                         packing_slip_report.save()
 
                         claim_objs = Claim_Status.objects.filter(pk__in=prowacs_list)

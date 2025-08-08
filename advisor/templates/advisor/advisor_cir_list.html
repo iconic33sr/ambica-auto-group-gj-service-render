@@ -48,18 +48,26 @@
 
     <div class="cards_cont">
         {% if cir_reports %}
-
-            {% for cir_report in cir_reports %}
+        
+        {% for cir_report in cir_reports %}
                 {% if cir_report.advisor_preview == "pending" %}
                     <div class="manual_card" style="background-color: rgb(255, 150, 150);" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
                         <div class="report_heading_cont">
                             <div class="report_heading">
-                                {{cir_report.vehicle_no}}
-                            </div>
-                            <div class="report_heading">
                                 <span class="normal_text">{{cir_report.job_no}}</span>
                             </div>
+                            <div class="report_heading">
+                                {{cir_report.vehicle_no}}
+                            </div>
                         </div>
+                        {% comment %} <div class="report_heading_cont">
+                            <div class="report_heading">
+                                <span style="color:purple;">{{cir_report.claim_category}}</span>
+                            </div>
+                            <div class="report_heading">
+                                {{cir_report.kilometer}}(Km)
+                            </div>
+                        </div> {% endcomment %}
                         <div class="report_sub_heading_cont">
                             <div>
                                 {{cir_report.supervisor_name}}
@@ -79,13 +87,21 @@
                 {% else %}
                     <div class="manual_card" data-cir-date="{{ cir_report.cir_date_time }}" data-cir-uid="{{ cir_report.cir_uid }}">
                         <div class="report_heading_cont">
-                            <div class="report_heading">
-                                {{cir_report.vehicle_no}}
-                            </div>
                             <div class="report_heading normal_text">
                                 {{cir_report.job_no}}
                             </div>
+                            <div class="report_heading">
+                                {{cir_report.vehicle_no}}
+                            </div>
                         </div>
+                        {% comment %} <div class="report_heading_cont">
+                            <div class="report_heading">
+                                <span style="color:purple;">{{cir_report.claim_category}}</span>
+                            </div>
+                            <div class="report_heading">
+                                {{cir_report.kilometer}}(Km)
+                            </div>
+                        </div> {% endcomment %}
                         <div class="report_sub_heading_cont">
                             <div>
                                 {{cir_report.supervisor_name}}

@@ -7,8 +7,13 @@ import io
 from PIL import Image
 from django.core.files.base import ContentFile
 
-from pywebpush import webpush, WebPushException
+from datetime import datetime, time
+from typing import Tuple, Union
+from zoneinfo import ZoneInfo
 from django.conf import settings
+from django.utils import timezone
+
+from pywebpush import webpush, WebPushException
 from .models import PushSubscription
 import json
 
@@ -196,3 +201,76 @@ def cleanup_stale_subscriptions_once_per_day():
     cache.set(cache_key, today_str, timeout=86400)  # expires after 1 day
 
     print(f"[CLEANUP] Deleted {deleted_count} stale subscriptions at {now()}")
+
+
+#################################################################################################
+
+# Resolve project timezone, defaulting to IST
+def _get_project_tz() -> ZoneInfo:
+    tzname = getattr(settings, "TIME_ZONE", "Asia/Kolkata") or "Asia/Kolkata"
+    try:
+        return ZoneInfo(tzname)
+    except Exception:
+        # Fallback to IST if TIME_ZONE is invalid
+        return ZoneInfo("Asia/Kolkata")
+
+PROJECT_TZ = _get_project_tz()
+
+def _naive_time(t: time) -> time:
+    """Ensure 'time' is naive (tzinfo=None) for Django TimeField."""
+    return t.replace(tzinfo=None) if t.tzinfo is not None else t
+
+def get_zone_date_time(
+    need_datetime: bool = True,
+    need_date: bool = True,
+    need_time: bool = True
+) -> Union[
+    Tuple[datetime, datetime.date, time],
+    Tuple[datetime, datetime.date],
+    Tuple[datetime, time],
+    datetime,
+    datetime.date,
+    time
+]:
+    """
+    Flexible helper to get IST-aware/naive DateTime, Date, and Time
+    for populating report fields.
+
+    Params:
+        need_datetime: return DateTime value
+        need_date:     return Date value
+        need_time:     return Time value
+
+    Returns:
+        - If all three True: (datetime_value, date_value, time_value)
+        - If two True: tuple of two values in the order of params
+        - If only one True: the single value directly
+
+    Behavior:
+        - USE_TZ=True:
+            * DateTime = aware UTC (timezone.now())
+            * Date/Time = from IST-localized instant
+            * Time always naive
+        - USE_TZ=False:
+            * All values naive IST
+    """
+    if getattr(settings, "USE_TZ", False):
+        # Aware UTC for DB DateTimeField
+        now_utc = timezone.now()
+        # Convert that to IST for date/time snapshot
+        now_local = timezone.localtime(now_utc, PROJECT_TZ)
+        dt_val = now_utc if need_datetime else None
+        date_val = now_local.date() if need_date else None
+        time_val = _naive_time(now_local.time()) if need_time else None
+    else:
+        # Naive IST everywhere
+        now_local = datetime.now(PROJECT_TZ).replace(tzinfo=None)
+        dt_val = now_local if need_datetime else None
+        date_val = now_local.date() if need_date else None
+        time_val = now_local.time() if need_time else None
+
+    # Return based on how many were requested
+    results = [v for v in (dt_val, date_val, time_val) if v is not None]
+    if len(results) == 1:
+        return results[0]
+    return tuple(results)

@@ -20,6 +20,7 @@ from channels.layers import get_channel_layer
 from django.core.paginator import Paginator
 from core.decorators import login_active_user_required
 from django.http import JsonResponse
+from core.utils import get_zone_date_time
 
 
 ########################################################################################################################################
@@ -41,7 +42,7 @@ def notify_workshopmanager_new_cir(selected_workshop_manager, cir_data):
 def advisor_cir_list(request):
     if request.user.user_profile.user_designation.designation == "advisor":
         no_of_revision_report = 0
-        cir_reports = Customer_Information_Report.objects.filter(sar_status__in=["pending", "drafted"], selected_advisor=request.user.username, report_type="new").values('cir_uid', 'advisor_preview', 'job_no', 'vehicle_no', 'supervisor_name', 'cir_date_time', 'sar_status').order_by('cir_date_time')
+        cir_reports = Customer_Information_Report.objects.filter(sar_status__in=["pending", "drafted"], selected_advisor=request.user.username, report_type="new").values('cir_uid', 'advisor_preview', 'job_no', 'vehicle_no', 'claim_category', 'kilometer','supervisor_name', 'cir_date_time', 'sar_status').order_by('cir_date_time')
         paginator = Paginator(cir_reports, 30)
         page_no = request.GET.get('page')
         page_obj = paginator.get_page(page_no)
@@ -264,7 +265,10 @@ def advisor_service_report(request, cir_uid):
                 if sar_form.is_valid():
                     if cir_report:
 
-                        now = timezone.now()
+                        # now = timezone.now()
+
+                        dt_val, date_val, time_val = get_zone_date_time()
+
                         # Try fetching existing draft for update
                         report = Service_Advisor_Report.objects.filter(cir=cir_report).first()
 
@@ -309,9 +313,12 @@ def advisor_service_report(request, cir_uid):
                         report.advisor_description = (sar_form.cleaned_data.get('advisor_description') or '').lower()
                         report.advisor_name = request.user.first_name + " " + request.user.last_name
                         report.advisor_id = request.user.username
-                        report.sar_date_time = now
-                        report.sar_date = now.date()
-                        report.sar_time = now.time()
+                        # report.sar_date_time = now
+                        # report.sar_date = now.date()
+                        # report.sar_time = now.time()
+                        report.sar_date_time = dt_val
+                        report.sar_date = date_val
+                        report.sar_time = time_val
 
                         dataset_urls = json.loads(request.POST.get("imageUrlsJSONPassed", "{}"))
 

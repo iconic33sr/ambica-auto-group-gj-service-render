@@ -1,3 +1,24 @@
+// Temporary service worker cleanup (safe if none are registered)                   Remove after some days - added on 08-08-2025, remove on 15-08-2025
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    if (registrations.length > 0) {
+      console.log(`Found ${registrations.length} service worker(s). Removing...`);
+    }
+    for (let reg of registrations) {
+      reg.unregister().then(success => {
+        if (success) {
+          console.log("Service worker unregistered");
+        }
+      });
+    }
+  }).catch(err => {
+    console.warn("Service worker cleanup error:", err);
+  });
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // To restrict zoom in for mobiles and tablets
 if ('ontouchstart' in document.documentElement) {
     const meta = document.querySelector('meta[name=viewport]');

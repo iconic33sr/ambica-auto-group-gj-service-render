@@ -100,7 +100,7 @@ socket.addEventListener("message", function(event) {
 
             <div class="field_buttons">
                 <form method="get" class="preview_cir_btn" action="/claim_manager/preview_cir/${data.cir_uid}/">
-                    <button class="primary_btn" style="margin:auto;">Preview CIR</button>
+                    <button class="primary_btn" style="margin:auto;">PREVIEW CIR</button>
                 </form>
             </div>
         `;

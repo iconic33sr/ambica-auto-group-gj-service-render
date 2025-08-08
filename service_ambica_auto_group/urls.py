@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core.views import save_subscription, delete_subscription
+# from core.views import save_subscription, delete_subscription
 from core import views as core_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('install_app/', core_views.install_app, name="install_app"),
 
-    path('service_worker.js', core_views.service_worker, name='service_worker'),
+    # path('service_worker.js', core_views.service_worker, name='service_worker'),
     
     # path("save-subscription/", save_subscription, name="save_subscription"),
     

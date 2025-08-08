@@ -10,6 +10,8 @@ import uuid
 from django.core.files.base import ContentFile
 from django.utils import timezone
 from core.decorators import login_active_user_required
+from core.utils import get_zone_date_time
+
 
 ########################################################################################################################################
 
@@ -45,7 +47,8 @@ def vehicle_gate_entry(request):
                                 entry = "donot exist"
 
                             if entry == "donot exist":
-                                now = timezone.now()
+                                # now = timezone.now()
+                                dt_val, date_val, time_val = get_zone_date_time()
 
                                 if data.get('photo_0'):
                                     vehicle_gate_entry_report.gate_pass_image = base64_to_image(data['photo_0'], 'gate_pass_image')
@@ -57,9 +60,12 @@ def vehicle_gate_entry(request):
                                 vehicle_gate_entry_report.gate_pass_no = data['gate_pass_no']
                                 vehicle_gate_entry_report.security_officer_name = request.user.first_name + " " + request.user.last_name
                                 vehicle_gate_entry_report.security_officer_id = request.user.username
-                                vehicle_gate_entry_report.vehicle_gate_entry_image_date_time = now
-                                vehicle_gate_entry_report.vehicle_gate_entry_image_date = now.date()
-                                vehicle_gate_entry_report.vehicle_gate_entry_image_time = now.time()
+                                # vehicle_gate_entry_report.vehicle_gate_entry_image_date_time = now
+                                # vehicle_gate_entry_report.vehicle_gate_entry_image_date = now.date()
+                                # vehicle_gate_entry_report.vehicle_gate_entry_image_time = now.time()
+                                vehicle_gate_entry_report.vehicle_gate_entry_image_date_time = dt_val
+                                vehicle_gate_entry_report.vehicle_gate_entry_image_date = date_val
+                                vehicle_gate_entry_report.vehicle_gate_entry_image_time = time_val
 
                                 vehicle_gate_entry_report.save()
                                 messages.success(request, "Entry saved successfully")    

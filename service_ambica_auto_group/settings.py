@@ -121,9 +121,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   ## Add this.
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # ← include your static folder
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),  # ← include your static folder
+# ]
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type

@@ -10,6 +10,8 @@ import uuid
 from django.core.files.base import ContentFile
 from django.utils import timezone
 from core.decorators import login_active_user_required
+from core.utils import get_zone_date_time
+
 
 ########################################################################################################################################
 
@@ -40,7 +42,9 @@ def parts_dispatch_image(request):
                                 claim_status_report = None
 
                             if claim_status_report:
-                                now = timezone.now()
+                                # now = timezone.now()
+
+                                dt_val, date_val, time_val = get_zone_date_time()
 
                                 if data.get('photo_0'):
                                     claim_status_report.part_dispatch_image1 = base64_to_image(data['photo_0'], 'part_dispatch_image1')
@@ -55,9 +59,12 @@ def parts_dispatch_image(request):
 
                                 claim_status_report.acm_name = request.user.first_name + " " + request.user.last_name
                                 claim_status_report.acm_id = request.user.username
-                                claim_status_report.part_dispatch_image_date_time = now
-                                claim_status_report.part_dispatch_image_date = now.date()
-                                claim_status_report.part_dispatch_image_time = now.time()
+                                # claim_status_report.part_dispatch_image_date_time = now
+                                # claim_status_report.part_dispatch_image_date = now.date()
+                                # claim_status_report.part_dispatch_image_time = now.time()
+                                claim_status_report.part_dispatch_image_date_time = dt_val
+                                claim_status_report.part_dispatch_image_date = date_val
+                                claim_status_report.part_dispatch_image_time = time_val
 
                                 claim_status_report.save()
                                 messages.success(request, "Data saved successfully")    
