@@ -444,7 +444,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (lastFaultyDescriptionIndex){
         for (let i = 0; i <= lastFaultyDescriptionIndex; i++) {
-            document.getElementById("card_cont_" + i).style.display = "block";
+            if (lastFaultyDescriptionIndex < 15){
+                document.getElementById("card_cont_" + i).style.display = "block";
+            }
         }
         multi_line_ta_fun();
     }
